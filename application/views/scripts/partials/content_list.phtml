@@ -1,0 +1,17 @@
+<?php if (!empty($this->dtf)) {echo '<br/>', $this->dtf;}?>
+<br/>
+<a href=/<?php echo $this->view->contentItemUri;?>/<?php echo $this->id;?>/><?php echo $this->title;?></a>
+<br/>
+<?php
+if (!empty($this->announce)) {
+	echo $this->announce;
+} else {
+	$pos = strpos($this->txt, '.');
+	if ($pos) {
+		echo substr($this->txt, 0, $pos+1);
+	} else {
+		echo $this->txt;
+	}
+}
+?>
+<br/>

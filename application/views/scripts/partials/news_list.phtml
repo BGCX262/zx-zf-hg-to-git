@@ -1,0 +1,19 @@
+<p>
+<span><?php echo $this->dtf;?></span>
+<a href='/news/item/<?php echo $this->id;?>/'><?php echo $this->title;?></a>
+<br/>
+<a href='/news/item/<?php echo $this->id;?>/'>
+<?php
+if (!empty($this->announce)) {
+    echo $this->announce;
+} else {
+    $pos = strpos($this->txt, '.');
+    if ($pos) {
+        echo substr($this->txt, 0, $pos+1);
+    } else {
+        echo $this->txt;
+    }
+}
+?>
+</a>
+</p>

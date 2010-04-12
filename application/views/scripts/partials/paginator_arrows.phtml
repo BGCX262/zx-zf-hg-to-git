@@ -1,0 +1,58 @@
+<?php
+$msg = Zend_Registry::get('conf')->msg->paginator->toArray();
+if ($this->pageCount > 1) {
+#if (Zend_Registry::get('pages_count') > 1){
+?>
+<div id='paginator'>
+
+	<p><?php echo $msg['pages']?>:</p>
+
+	<!-- Previous page link -->
+	<?php
+	if (isset($this->previous))
+	{
+	?>
+	  <a href="<?php echo $this->url(array('page' => $this->previous))?>"><img src='/images/arrow_left.gif' width='10' height='9' alt='<?php echo $msg['prev']?>' /></a>
+	<?php
+	}
+	else
+	{
+	?>
+	  <span class="disabled"><img src='/images/arrow_left.gif' width='10' height='9' alt='<?php echo $msg['prev']?>' /></span> 
+	<?php
+	}
+
+	// Numbered page links
+	foreach ($this->pagesInRange as $page)
+	{
+		if ($page != $this->current)
+		{
+		?>
+		    	<a href="<?=$this->url( array( 'page' => $page ) );?>"><?php echo $page?></a> 
+		<?php
+		}
+		else
+		{
+		?>
+		    <?php echo $page?> 
+		<?php
+		}
+	}
+
+
+	// Next page link
+	if (isset($this->next))
+	{
+	?>
+		<a href="<?php echo $this->url(array('page' => $this->next))?>"><img src='/images/arrow_right.gif' width='10' height='9' alt='<?php echo $msg['next']?>' /></a>
+	<?php
+	}
+	else
+	{
+	?>
+		<span class="disabled"><img src='/images/arrow_right.gif' width='10' height='9' alt='<?php echo $msg['next']?>' /></span>
+	<?php
+	}
+	?>
+</div>
+<?php }?>

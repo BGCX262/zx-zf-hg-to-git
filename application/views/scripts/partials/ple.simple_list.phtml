@@ -1,0 +1,10 @@
+<br/>
+<a href='<?php
+if (!empty($this->view->contentItemUri)) {
+	echo $this->view->contentItemUri . '/' . $this->id; // @deprecated
+} else {
+	echo $this->view->url(array('id' => $this->id), 'content_item');	
+}
+?>/'/><?php echo $this->title;?></a>
+<?php echo $this->view->announce($this)?>
+<br/>

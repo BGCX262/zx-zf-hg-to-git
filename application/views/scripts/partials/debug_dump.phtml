@@ -1,0 +1,62 @@
+<style type="text/css"><!--
+ul, ul li {
+	margin:0;
+	padding:0;
+	list-style-type: none;
+}
+
+.debug {
+	width: 100%;
+	/* background-color: #F5F5F5; */
+}
+
+.debugHeader {
+	color: #000000;
+	background-color: #9BB2CF;
+	font-size: 100%;
+	font-weight: bold;
+	height: 20px;
+	vertical-align: middle;
+	padding-top: 3px;
+}
+
+.debug #num {
+	width: 50px;
+	color: #000;
+	background: #D5D5D5;
+	text-align: center;
+}
+
+/* dumpQueries */
+
+.debug #common, .debug #query {
+	font-size: 12px;
+	color: #000;
+	background: #D3DCE3;
+	padding: 3px 3px;
+}
+
+.debug #time {
+	font-size: 10px;
+	color: #000;
+	background: #F5F5F5;
+	padding: 3px 4px;
+}
+
+.debug #totalNumQueries, .debug #totalElapsedSecs, .debug #longestQuery, .debug #longestTime, .debug #averageQueryLength, .debug #queriesPerSecond {
+	font-size: 12px;
+	color: #000;
+	background: #D3DCE3;/* #E0EBEF */
+	padding: 3px 3px;
+	margin: 2px 0px 2px 0px;
+}
+
+
+--></style>
+
+<div class=debug>
+Debug dump:<br/>
+<?php
+echo $this->content;
+?>
+</div>

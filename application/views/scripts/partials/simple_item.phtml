@@ -1,0 +1,11 @@
+<!--
+<br/>
+<?php echo $this->model->title?>
+<br/><br/>-->
+<?php
+if (!empty($this->model->flag_ait)) {
+	echo "<b>" . $this->model->announce . "</b><br/>";
+}
+echo $this->model->txt;
+?>
+<br/>

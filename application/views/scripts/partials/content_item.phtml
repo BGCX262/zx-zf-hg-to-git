@@ -1,0 +1,17 @@
+<?php
+if (!empty($this->model->dtf)) {echo $this->model->dtf, '<br/>';}
+?>
+<!--
+<br/>
+<?php echo $this->model->title?>
+<br/><br/>-->
+<?php
+if ( !empty($this->model->flag_ait) && !empty($this->model->announce) ) {
+	echo "<b>" . $this->model->announce . "</b><br/>";
+}
+if (!empty($this->model->txt))
+{
+	echo $this->model->txt;
+}
+?>
+<br/>
