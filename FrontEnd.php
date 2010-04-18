@@ -7,7 +7,7 @@
 class Zx_FrontEnd extends Zx_Site
 {
 	protected $_pages = array();
-	protected $_page = -1;
+	protected $_page = 1;
 	protected $pageTitle = '';
 	#protected $_pathParts = array();
 
@@ -227,13 +227,15 @@ class Zx_FrontEnd extends Zx_Site
 	}
 
 	/**
-	*
+	* Forget cp1251!
+	* @deprecated
 	* @param
 	* @return
 	* @static
 	*/
-	function getCP1251($s) {
-		return iconv('UTF-8', 'CP1251', $s);
+	function s1251($s)
+	{
+		return iconv('utf-8', 'cp1251', $s);
 	}
 
 
@@ -241,7 +243,8 @@ class Zx_FrontEnd extends Zx_Site
 	* Шрифт для GD (например, для генерации CAPTCHA)
 	* @return string
 	*/
-	function getFont() {
+	function getFont()
+	{
 		// for CAPTCHA (Zend_Form_Element_Captcha)
 		#$this->_captchaFont = '/usr/share/fonts/ttf/ttf.ms/arial';
 		#$this->_captchaFont = '/usr/share/fonts/ttf/dejavu/DejaVuSans.ttf';
@@ -259,7 +262,8 @@ class Zx_FrontEnd extends Zx_Site
 	* @return string
 	* @static
 	*/
-	function getMsg($id) {
+	function getMsg($id)
+	{
 		$conf = Zend_Registry::get('conf');
 		if (!empty($conf->msg->$id)) {
 			return $conf->msg->$id;

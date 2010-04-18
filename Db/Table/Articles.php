@@ -31,4 +31,3 @@ class Zx_Db_Table_Articles extends Zx_Db_Table
  */	
 	#protected $debug = true;
 }
-//jEdit :indentSize=4:tabSize=4:noTabs=false:lineSeparator=\n:mode=php:

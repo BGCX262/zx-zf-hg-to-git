@@ -14,4 +14,3 @@ class UserController extends MainController
 	}
 
 }
-// jEdit :indentSize=4:tabSize=4:noTabs=false:lineSeparator=\n:mode=php:

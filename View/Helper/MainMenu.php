@@ -60,4 +60,3 @@ class Zx_View_Helper_MainMenu extends Zend_View_Helper_Abstract
 		return $content;
 	}
 }
-//jEdit:indentSize=4:tabSize=4:noTabs=false:lineSeparator=\n:mode=php:

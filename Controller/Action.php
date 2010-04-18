@@ -362,16 +362,17 @@ Array
 	* @param boolean $load
 	* @return boolean
 	*/
-	function setVar($name, $s, $load = false, $rewrite = false) {
+	function setVar($name, $s, $load = false, $rewrite = false)
+	{
 		// load from .phtml
 		if ($load) {
 			$s = $this->view->render($s . ".phtml");
 		}
 
-		// iconv
-		$s = $this->_($s);
+		#$s = $this->_($s); // iconv
 
-		if (is_array($this->view->$name)) {
+		if (is_array($this->view->$name))
+		{
 			array_push($this->view->$name, $s);
 		} else {
 			if ( !$this->rewriteViewVars && !$rewrite && !empty($this->view->$name) ) {
@@ -402,12 +403,15 @@ Array
 
 	/**
 	* iconv
+	* @deprecated we use UTF-8 only!
 	* @param
 	* @return
 	*/
-	function _($s) {
-		if ( !empty($s) && ($this->_charset != 'UTF-8') && !is_array($s) ) {
-			return FrontEnd::getCP1251($s);
+	function _($s)
+	{
+		if ( ($this->_charset != 'UTF-8') && !empty($s) && !is_array($s) )
+		{
+			return FrontEnd::s1251($s);
 		} else {
 			return $s;
 		}
