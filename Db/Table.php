@@ -74,6 +74,8 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			'conditionWhere' => false,
 			/* 'paginatorFile' => 'partials/paginator.phtml' */
 		);
+
+		$this->imgs['folder'] = $this->_name;
 	}
 
 	/**
@@ -678,28 +680,61 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	}
 
 	/**
+	 * Filter image name
+	 * @todo validator/filter method? see http://www.zfforums.com/zend-framework-components-13/core-infrastructure-19/add-filter-zend-form-file-element-3713.html
+	 * @param string $s
+	 */
+	static function filterImageName($s)
+	{
+		#$lowerCaseFilter = new Zend_Filter_File_LowerCase();
+		$s = strip_tags($s);
+		$s = stripcslashes($s);
+		$res = strtolower($s);
+		return $res;
+	}
+
+	/**
 	* Get full/preview image
 	* @param mixed $id
-	* @param boolean $full
-	* @param boolean $fs
+	* @param array $conf
 	* @return string
 	*/
-	function getImage($id, $full = true, $fs = false)
+	function getImage($id, $conf = null)
 	{
-		if (is_array($id)) {
-			$fn = sprintf("%0" . $this->imgs['length'] . "d", $id[0]) . '_' . sprintf("%02d", $id[1]) . $this->imgs['ext'];
+		$full = isset($conf['full']) ? $conf['full'] : true;
+		$fs = isset($conf['fs']) ? $conf['fs'] : false;
+		$path = isset($conf['path']) ? '/' . $conf['path'] : '';
+
+		// named image! since 04/18/10
+		if (is_string($full))
+		{
+			$s = self::filterImageName($full);
+			if (is_array($id)) {
+				$fn = $s . '_' . $id[0] . '_' . $id[1] . $this->imgs['ext']; // addition images, eg lalalala_1_1.jpg
+			} else {
+				$fn = $s . '_' . $id . $this->imgs['ext']; // image, eg lalalala_1.jpg
+			}
+
+		// std way - ID-generated image name
 		} else {
-			$fn = sprintf("%0" . $this->imgs['length'] . "d", $id) . $this->imgs['ext'];
+			if (is_array($id)) {
+				$fn = sprintf("%0" . $this->imgs['length'] . "d", $id[0]) . '_' . sprintf("%02d", $id[1]) . $this->imgs['ext']; // addition images, eg 00000010_02.jpg
+			} else {
+				$fn = sprintf("%0" . $this->imgs['length'] . "d", $id) . $this->imgs['ext'];
+			}
 		}
 		
 		$name = $this->_name;
 
+/*
 		if (!empty($this->imgs['folder']))
 		{
 			$fo = $this->imgs['folder'];
 		} else {
 			$fo = $this->_name;
 		}
+ */
+		$fo = $this->imgs['folder'] . $path;
 
 		// fullsize picture
 		if ($full) {

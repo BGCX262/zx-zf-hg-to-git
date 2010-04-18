@@ -2,7 +2,7 @@
 /**
 * Front End class
 * @author Дерягин Алексей (aleksey@deryagin.ru)
-* @version 6/17/2009
+* @version 4/18/2010
 */
 class Zx_FrontEnd extends Zx_Site
 {
@@ -187,6 +187,8 @@ class Zx_FrontEnd extends Zx_Site
 
 	/**
 	* Get image
+	* @deprecated
+	* @see Zx_Db_Table::getImage()
 	* @param
 	* @return
 	*/

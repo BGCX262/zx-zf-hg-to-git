@@ -33,25 +33,24 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 
 	/**
 	* Get full/preview image
-	* @param boolean $full
+	* @param mixed $full boolean or string image type (true for full image, false for preview if boolean)
 	* @param boolean $fs
 	* @return string
 	*/
-	function getImage($full = true, $fs = false)
+	function getImage($conf = null)
 	{
-		return $this->getTable()->getImage($this->id, $full, $fs);
+		return $this->getTable()->getImage($this->id, $conf);
 	}
 
 	/**
 	* Get TN image
 	* @param integer $tn_id
-	* @param boolean $full
-	* @param boolean $fs
+	* @param array $conf
 	* @return string
 	*/
-	function getTN($tn_id, $full = true, $fs = false)
+	function getTN($tn_id, $conf = null)
 	{
-		return $this->getTable()->getImage(array($this->id, $tn_id), $full, $fs);
+		return $this->getTable()->getImage(array($this->id, $tn_id), $conf);
 	}
 
 	/**
