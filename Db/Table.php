@@ -58,7 +58,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		'prefixes' => true,
 	);
 
-	protected $paginator = true;
+	protected $_paginator = false;
 
 	protected $cprefix = ''; // child table prefix
 	protected $pprefix = ''; // parent table prefix
@@ -405,10 +405,12 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			$select = $this->getSelect($where, $conf);
 			if (!empty($conf['select'])) {return $select;} // compatibility patch
 		}
-		#echo "DEBUG:<br><textarea rows=10 cols=100>" . $select . "</textarea><br>";die;
+		#d($select, 0);
 
-		$rows = $this->fetchAll($select);
-		#echo "DEBUG getRows:<br><textarea rows=10 cols=100>" . print_r($rows, 1) . "</textarea><br>";die;
+		if ( (!empty($conf['paginator'])) ) { $this->setPaginator($conf['paginator']); }
+		$rows = $this->paginator($select);
+		#d($rows);
+		#d($this->getPaginator());
 
 		if (!count($rows)) {return false;}
 		
@@ -727,15 +729,6 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		return $s;
 	}
 
-	function getPaginator()
-	{
-		if ($this->isPaginator){
-			return $this->paginator;
-		} else {
-			return false;
-		}
-	}
-
 	/**
 	* http://www.nabble.com/Zend_Db::insertSelect()---INSERT-INTO-...-SELECT---td20824639.html
 	* @todo
@@ -771,27 +764,44 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		$row = $rows->current();
 		return $row;
 	}
+/*
+	function isPaginator()
+	{
+		return $this->isPaginator;
+	}
+*/
 
+	function getPaginator()
+	{
+		return $this->_paginator;
+	}
+
+	function setPaginator($v = true)
+	{
+		$this->isPaginator = (bool) $v;
+	}
 
 	/**
 	* Set Zend_Paginator
-	* @param
-	* @return
+	* @param Zend_Db_Table_Select $select
+	* @return Zx_Db_Table_Rowset
 	*/
-	function setPaginator($select)
+	function paginator($select)
 	{
-		if (!$this->isPaginator){
-			$rows = $this->getRows($select);
+		if (!$this->isPaginator)
+		{
+			$rows = $this->fetchAll($select);
 			return $rows;
 		}
-		$this->paginator = new Zend_Paginator(new Zend_Paginator_Adapter_DbTableSelect($select));
-		$this->paginator->setItemCountPerPage($this->ItemCountPerPage);#$this->get('ItemCountPerPage')
-		$this->paginator->setCurrentPageNumber(Zend_Registry::get('page'));
+		$this->_paginator = new Zend_Paginator(new Zend_Paginator_Adapter_DbTableSelect($select));
+		$this->_paginator->setItemCountPerPage($this->ItemCountPerPage);#$this->get('ItemCountPerPage')
+		$this->_paginator->setCurrentPageNumber(Zend_Registry::get('page'));
+		#d($this->_paginator);
 
-		$this->pagescount = $this->paginator->count();
+		$this->pagescount = $this->_paginator->count();
 		#Zend_Registry::set('pages_count', $this->pagescount); // YAGNI! see partials/paginator.phtml
 
-		$rows = $this->paginator->getCurrentItems();
+		$rows = $this->_paginator->getCurrentItems();
 		Zend_Registry::set('rows_count', $rows->count()); // why for?
 		return $rows;
 	}

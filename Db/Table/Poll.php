@@ -115,7 +115,7 @@ class Zx_Db_Table_Poll extends Zx_Db_Table
 
 		$select = $this->getSelect($this->getTopicWhere($topicId), $conf);
 		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($select->__toString(), 1) . "</textarea><br>";die;
-		$rows = $this->setPaginator($select);
+		$rows = $this->paginator($select);
 		return $rows;
 	}
 */

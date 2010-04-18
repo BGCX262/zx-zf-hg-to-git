@@ -74,3 +74,19 @@ if ($precision) {
 	return number_format($price, 0, '-', '.');
 }
 }
+
+/**
+ * Pure zen debug
+ * @param mixed $v
+ * @param boolena $exit
+ */
+function d($v, $exit = true)
+{
+	if ($v instanceof Zend_Db_Table_Select) {
+		$dump = $v->__toString();
+	} else{
+		$dump = print_r($v, 1);
+	}
+	echo 'DEBUG:<br><textarea rows=10 cols=100>' . $dump . '</textarea><br>';
+	if ($exit) {exit;}
+}

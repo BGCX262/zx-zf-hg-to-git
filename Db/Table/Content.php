@@ -155,7 +155,7 @@ class Zx_Db_Table_Content extends Zx_Db_Table
 		
 		$select = $this->getSelect($this->getTopicWhere($topicId), $conf);
 		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($select->__toString(), 1) . "</textarea><br>";die;
-		$rows = $this->setPaginator($select);
+		$rows = $this->paginator($select);
 		return $rows;
 	}
 
@@ -190,7 +190,7 @@ class Zx_Db_Table_Content extends Zx_Db_Table
 		if ($limit == 0) {
 			#$res = $this->getRow($conf);
 			$select = $this->getSelect($conf);
-			$res = $this->setPaginator($select);
+			$res = $this->paginator($select);
 		} elseif ($limit == 1) {
 			$res = $this->getRow($conf);
 		} else {
