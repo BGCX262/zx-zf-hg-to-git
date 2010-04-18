@@ -1,6 +1,11 @@
 <?php
 class Zx_Db_Table_Row_Users extends Zx_Db_Table_Row
 {
+	function url($view)
+	{
+		return $view->url(array('id' => $this->id), 'user');
+	}
+
 }
 
 class Zx_Db_Table_Rowset_Users extends Zx_Db_Table_Rowset
