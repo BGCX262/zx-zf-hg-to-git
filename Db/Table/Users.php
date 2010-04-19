@@ -1,11 +1,12 @@
 <?php
 class Zx_Db_Table_Row_Users extends Zx_Db_Table_Row
 {
-	function url($view)
+	function url()
 	{
-		return $view->url(array('id' => $this->id), 'user');
+		$router = Zend_Controller_Front::getInstance()->getRouter();
+		return $router->assemble(array('id' => $this->id), 'user');
+		#return $view->url(array('id' => $this->id), 'user'); // WRONG!
 	}
-
 }
 
 class Zx_Db_Table_Rowset_Users extends Zx_Db_Table_Rowset
