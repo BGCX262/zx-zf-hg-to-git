@@ -67,9 +67,11 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	{
 		parent::init();
 
+		// NB! если свойство должно быть не в data, то прописывать его индивидуально!
 		$this->_data = array(
 			'ItemCountPerPage' => 10,
 			'isPaginator' => true,
+			'isReturnPaginator' => false,
 			'generalWhere' => '',
 			'conditionWhere' => false,
 			/* 'paginatorFile' => 'partials/paginator.phtml' */
@@ -390,10 +392,10 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 
 
 	/**
-	* Записи контента
+	* Записи контента - изворотливая выборка
 	* @param string $where условие / id / code
 	* @param array $conf
-	* @return Zend_Db_Table_Rowset or FALSE
+	* @return Zend_Db_Table_Rowset or Zend_Paginator or FALSE
 	* @todo
 	*/
 	public function getRows($where = '', $conf = array())
@@ -410,19 +412,32 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		#d($select, 0);
 
 		if ( (!empty($conf['paginator'])) ) { $this->setPaginator($conf['paginator']); }
+		if ( $this->isPaginator && (!empty($conf['returnPaginator'])) ) { $this->isReturnPaginator = true; }# else { $this->isReturnPaginator = false; }
 		$rows = $this->paginator($select);
 		#d($rows);
 		#d($this->getPaginator());
+		if ( $this->isReturnPaginator ) {return $this->getPaginator();}
 
 		if (!count($rows)) {return false;}
 		
 		if (!empty($conf['array']))
 		{ // returns all data as an array (DEPRECATED SINCE 4/28/2009)
-			$res = $rows->toArray();
-			return $res;
+			return $rows->toArray();
 		} else {
 			return $rows;
 		}
+	}
+
+	/**
+	 * getRows() wrapper
+	 * @param <type> $where
+	 * @param <type> $conf
+	 * @return <type>
+	 */
+	public function fetchPaginator($where = '', $conf = array())
+	{
+		$this->setReturnPaginator(true);
+		return $this->getRows($where, $conf);
 	}
 
 
@@ -816,6 +831,14 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		$this->isPaginator = (bool) $v;
 	}
 
+	function setReturnPaginator($v = true)
+	{
+		$this->isReturnPaginator = (bool) $v;
+		if ($this->isReturnPaginator) {
+			$this->setPaginator(true);
+		}
+	}
+
 	/**
 	* Set Zend_Paginator
 	* @param Zend_Db_Table_Select $select
@@ -833,12 +856,18 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		$this->_paginator->setCurrentPageNumber(Zend_Registry::get('page'));
 		#d($this->_paginator);
 
-		$this->pagescount = $this->_paginator->count();
+		#$this->pagescount = $this->_paginator->count();
 		#Zend_Registry::set('pages_count', $this->pagescount); // YAGNI! see partials/paginator.phtml
 
-		$rows = $this->_paginator->getCurrentItems();
-		Zend_Registry::set('rows_count', $rows->count()); // why for?
-		return $rows;
+		// return paginator ot rowset!
+		if ($this->isReturnPaginator)
+		{
+			return $this->_paginator;
+		} else {
+			$rows = $this->_paginator->getCurrentItems();
+			#Zend_Registry::set('rows_count', $rows->count()); // why for?
+			return $rows;
+		}
 	}
 
 	function updateHits($id)
