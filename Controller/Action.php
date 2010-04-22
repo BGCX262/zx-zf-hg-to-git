@@ -145,9 +145,12 @@ class Zx_Controller_Action extends Zend_Controller_Action
  */
 
  		// Создание экземпляров классов
- 		if (!empty($this->conf->libload)) {
+ 		if (!empty($this->conf->libload))
+		{
 			$a = $this->conf->libload->toArray();
-			foreach ($a as $k => $v) {
+			foreach ($a as $k => $v)
+			{
+				if ($v === true) {$v = $k;}
 				$this->$k = new $v();
 			}
 		}

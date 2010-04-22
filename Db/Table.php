@@ -419,7 +419,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		$rows = $this->paginator($select);
 		#d($rows);
 		#d($this->getPaginator());
-		if ( $this->isStoredRows ) {$this->_storeRows($rows);}
+		if ( $this->isStoredRows || !empty($conf['store']) ) {$this->_storeRows($rows);}
 		if ( $this->isReturnPaginator ) {return $this->getPaginator();}
 
 		if (!count($rows)) {return false;}
@@ -715,7 +715,66 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			$rows = $this->_paginator->getCurrentItems();
 		}
 
-		echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r($rows, 1) . '</textarea><br>'; die;
+		#$a = $rows->toArray();
+		$name = get_class($rows->getTable()) . 'Rows'; // eg. UsersRows
+		#d($name);
+
+		Zend_Registry::set($name, $rows);
+		#$res = Zend_Registry::get($name);
+		#d($res);
+		return true;
+
+		// TODO: add rows into rowset!
+		if (Zend_Registry::isRegistered($name))
+		{
+			$res = Zend_Registry::get($name);
+		} else {
+			Zend_Registry::set($name, $rows);
+			#$res = Zend_Registry::get($name);
+			#d($res);
+			return true;
+		}
+		d($res);
+
+		// rewrite data
+		foreach ($a as $k => $v)
+		{
+			$res[$v['id']] = $v;
+		}
+
+		Zend_Registry::set($name, $res);
+		return true;
+		#d(Zend_Registry::get($name));
+	}
+
+	/**
+	 * Wake-up from registry
+	 */
+	static function row($id, $name = null)
+	{
+		if ($name === null)
+		{
+			$name = get_class($this);
+		}
+		
+		$name .= 'Rows';
+		#d($name);
+
+		if (Zend_Registry::isRegistered($name))
+		{
+			$rows = Zend_Registry::get($name);
+
+			foreach ($rows as $row)
+			{
+				if ($row->id == $id)
+				{
+					return $row;
+				}
+			}
+		}
+		
+		// TODO: fetch row by id and class!!!
+		return false;
 	}
 
 	/**
