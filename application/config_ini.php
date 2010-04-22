@@ -4,7 +4,7 @@ define('T0', microtime(1));
 
 #echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r(get_include_path(), 1) . '</textarea><br>'; die;
 #echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r(getcwd(), 1) . '</textarea><br>'; die;
-set_include_path('../../library'); // for early Zend_Logger loading
+set_include_path($root . 'library'); // for early Zend_Logger loading
 
 error_reporting(E_ALL);
 ini_set('log_errors', 1);
@@ -26,7 +26,7 @@ if (!defined('LOCATION'))
 }
 //-->
 
-function __autoload($path) {include str_replace('_','/',$path) . '.php'; return $path;}
+function __autoload($path) {include str_replace('_','/',$path) . '.php'; return $path;} // $autoloader->setDefaultAutoloader(create_function('$class', "include str_replace('_', '/', \$class) . '.php';"));
 
 /**
 * Firebug (or any other writer) debug

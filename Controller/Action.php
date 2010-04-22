@@ -459,8 +459,14 @@ Array
 		return $this->$model;
 	}
 	
+
+/**
+* DEPRECATED!
+*/
 	/**
 	* Slashed Zend_View::url()
+	* @deprecated
+	* @see Zx_View_Helper_Urlt
 	* @param array $urlOptions
 	* @param string $name
 	* @return string
@@ -468,12 +474,9 @@ Array
 	*/
 	function url($urlOptions, $name, $reset = false)
 	{
-		return $this->view->url($urlOptions, $name, $reset) . '/';	
+		return $this->view->url($urlOptions, $name, $reset) . '/';
 	}
 
-/**
-* DEPRECATED!
-*/
 	/**
 	* model() alias
 	* @deprecated

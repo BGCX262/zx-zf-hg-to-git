@@ -20,6 +20,7 @@ if (LOCATION == 'stable') {
 }
 
 define('ZX_DEBUG', $debug);
+#echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r(ZX_DEBUG, 1) . '</textarea><br>';die;
 
 #if (!defined('CMS')) {
 
@@ -145,7 +146,7 @@ if (!empty($config_project['locales'])) {
 
 
 //--> TODO: remove constants from code!
-define('PATH_ROOT', $root);
+define('PATH_ROOT', $root); #realpath
 
 // Zend Framework 1.8
 defined('APPLICATION_PATH') || define('APPLICATION_PATH', PATH_ROOT . 'application');
@@ -154,6 +155,12 @@ defined('APPLICATION_ENV') || define('APPLICATION_ENV', (getenv('APPLICATION_ENV
 define('PATH_PUB', $root . 'public/');
 if (!defined('PATH_FW'))
 {
+	if (class_exists('Zend_Db')) {
+		$blob = true; // Zend framework in one file!
+	} else {
+		$blob = false;
+	}
+
 	// 1.7 way
 	if (!empty($config_project['deprecated']['version'])) {
 		// Windows / XAMMP patch!
@@ -290,6 +297,7 @@ if (!empty($config['site']['url']) && (!strpos(ini_get('error_log'), '-php.log')
 #$paths = implode(PATH_SEPARATOR, array('.', PATH_FW, PATH_MY, $config['path']['controllers'], $config['path']['models'], $config['path']['system']));
 #if (defined('PATH_MY')) {$paths .= PATH_SEPARATOR . PATH_MY;}
 set_include_path(implode(PATH_SEPARATOR, array('.', PATH_FW, PATH_MY, $config['path']['controllers'], $config['path']['models'], $config['path']['system'])));
+#echo ini_get('include_path') . '<br/>';die;
 #echo ini_get('error_log') . '<br/>';die;
 
 if ( ZX_DEBUG )

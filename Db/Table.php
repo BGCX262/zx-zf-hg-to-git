@@ -63,6 +63,8 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	protected $cprefix = ''; // child table prefix
 	protected $pprefix = ''; // parent table prefix
 
+	protected $_stored = null; // registry-stored rows! (since 10/4/22)
+
 	function init()
 	{
 		parent::init();
@@ -74,6 +76,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			'isReturnPaginator' => false,
 			'generalWhere' => '',
 			'conditionWhere' => false,
+			'isStoredRows' => false,
 			/* 'paginatorFile' => 'partials/paginator.phtml' */
 		);
 
@@ -416,6 +419,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		$rows = $this->paginator($select);
 		#d($rows);
 		#d($this->getPaginator());
+		if ( $this->isStoredRows ) {$this->_storeRows($rows);}
 		if ( $this->isReturnPaginator ) {return $this->getPaginator();}
 
 		if (!count($rows)) {return false;}
@@ -494,6 +498,26 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			}
 		}
 */
+		// WHERE: ID IN () - выборка зависимых записей (см. zf_ac - выборка авторов для роликов)
+		if ( !empty($conf['in']))
+		{
+			#echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r($conf['in'], 1) . '</textarea><br>'; die;
+			if(!empty($conf['in']['rows']))
+			{
+				if ($conf['in']['rows'] instanceof Zend_Paginator)
+				{
+					$rows = $conf['in']['rows']->getCurrentItems()->toArray();
+				} else {
+					$rows = $conf['in']['rows']->toArray();
+				}
+				$id = array();
+				foreach ($rows as $row)
+				{
+					$id[$row[$conf['in']['field']]] = 1;
+				}
+				$where[] = 'id IN (' . implode(',', (array_keys($id))) . ')';
+			}
+		}
 
 		// array to string
 		if (!empty($where) && is_array($where)) {
@@ -676,6 +700,25 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
     }
 
 	/**
+	 * Store rows to registry
+	 * @param mixed $rows
+	 */
+	protected function _storeRows($rows)
+	{
+		if (empty($rows))
+		{
+			return false;
+		}
+
+		if ($rows instanceof Zend_Paginator)
+		{
+			$rows = $this->_paginator->getCurrentItems();
+		}
+
+		echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r($rows, 1) . '</textarea><br>'; die;
+	}
+
+	/**
 	 * @param integer $id
 	 * @param string $field
 	 * @return mixed
@@ -837,6 +880,11 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		if ($this->isReturnPaginator) {
 			$this->setPaginator(true);
 		}
+	}
+
+	function setStoredRows($v = true)
+	{
+		$this->isStoredRows = (bool) $v;
 	}
 
 	/**
