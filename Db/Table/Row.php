@@ -118,5 +118,19 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 	{
 		return $this->getTable()->updateHits($this->id);
 	}
+
+
+	/**
+	 * Count comments for row
+	 * @param array $where
+	 * @return integer
+	 */
+	function countComments($where = null)
+	{
+		$comment = new Zx_Db_Table_Comment();
+		$name = $this->getTable()->info(Zend_Db_Table::NAME);
+		return $comment->countComments($this->id, $name, $where);
+	}
+
 }
 

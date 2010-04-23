@@ -1,31 +1,28 @@
 <?php
 class Zx_View_Helper_FormatDate// extends Zend_View_Helper_Abstract
 {
-    private $date_formats = array(
-    	"short" => "H:m (dd MMMM)",
-    	"standard" => "dd MMMM yy",
-    	"long" => "dd MMMM yy (H:m)",
-    	"today" => "H:m"
+    private $_formats = array(
+		'short' => 'H:m (dd MMMM)',
+		'standard' => 'dd MMMM yy',
+		'long' => 'dd MMMM yy (H:m)',
+		'full' => 'dd.MM.YYYY (H:m:s)',
+		'today' => 'H:m',
+		'dm' => 'dd.MM', // day and month
+		'dmy' => 'dd.MM.YYYY',
+		'complete' => 'EEEE, d MMMM Y'
     );
 	
-    public function formatDate($date, $format = "short", $formatStr = "dd MMMM yy")
+    public function formatDate($date, $format = 'dmy', $formatStr = 'dd.mm.yy')
     {
-    	$locale = new Zend_Locale('ru_RU.CP1251');
+    	$locale = new Zend_Locale('ru_RU.UTF-8');
     	if (!($date instanceof Zend_Date)) {
 			$date = new Zend_Date($date, 'YYYY-MM-dd HH:mm:ss', $locale);
     	}
-		if ($format == "short") {
-			//return iconv('utf8', 'cp1251', $date->toString($this->date_formats[$date->isToday() ? "today" : "short"], null, $locale));
-            if($date->isToday())
-                return '<font color="red">'.$date->toString($this->date_formats['today']).' (сегодня)</font>';
-            else
-            return iconv('UTF-8', 'WINDOWS-1251', $date->toString($this->date_formats[ "short"], null, $locale));
-		}
-		elseif (($format != null) && (array_key_exists($format, $this->date_formats))) {
-			return iconv('UTF-8', 'WINDOWS-1251', $date->toString($this->date_formats[$format], null, $locale));
-            
-		} elseif ($formatStr != null){
-			return iconv('UTF-8', 'WINDOWS-1251', $date->toString($formatStr, null, $locale));
+		if (($format != null) && (array_key_exists($format, $this->_formats)))
+		{
+			return $date->toString($this->_formats[$format], null, $locale);
+		} elseif ($formatStr != null) {
+			return $date->toString($formatStr, null, $locale);
 		} else {
 			return $date;
 		}
