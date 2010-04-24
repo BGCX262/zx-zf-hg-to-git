@@ -10,16 +10,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
     protected $_rowClass = 'Zx_Db_Table_Row';
     protected $_rowsetClass = 'Zx_Db_Table_Rowset';
 
-	/**
-	* Constructor
-	* @param  mixed $config Array of user-specified config options, or just the Db Adapter.
-	* @return void
-	*/
-/*
-	public function __construct($config = array()) {
-		parent::__construct($config);
-	}
-*/
+	protected $_alias = null; // alias instead _name for images etc
 
 	protected $search = array(); // search conf
 
@@ -47,9 +38,13 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	
 	protected $imgs = array(
 		'folder' => '',
+		'folderFiles' => 0, // max files (files IDs exactly) per folder
+		'folderSubfolders' => 0, // max subfolder per folder
+		'folderFill' => 4, // zero fill symbols
 		'length' => 8,
 		'ext' => '.jpg',
 		'prefixes' => false,
+		'hash' => '',
 	);
 
 	protected $files = array(
@@ -80,7 +75,11 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			/* 'paginatorFile' => 'partials/paginator.phtml' */
 		);
 
-		$this->imgs['folder'] = $this->_name;
+		if ($this->_alias === null) {
+			$this->imgs['folder'] = $this->_name;
+		} else {
+			$this->imgs['folder'] = $this->_alias;
+		}
 	}
 
 	/**
@@ -820,38 +819,55 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	{
 		$full = isset($conf['full']) ? $conf['full'] : true;
 		$fs = isset($conf['fs']) ? $conf['fs'] : false;
-		$path = isset($conf['path']) ? '/' . $conf['path'] : '';
+		$path = isset($conf['path']) ? $conf['path'] : '';
 
 		// named image! since 04/18/10
 		if (is_string($full))
 		{
 			$s = self::filterImageName($full);
 			if (is_array($id)) {
-				$fn = $s . '_' . $id[0] . '_' . $id[1] . $this->imgs['ext']; // addition images, eg lalalala_1_1.jpg
+				$fn = $s . '_' . $id[0] . '_' . $id[1]; // addition images, eg lalalala_1_1.jpg
 			} else {
-				$fn = $s . '_' . $id . $this->imgs['ext']; // image, eg lalalala_1.jpg
+				$fn = $s . '_' . $id; // image, eg lalalala_1.jpg
 			}
 
 		// std way - ID-generated image name
 		} else {
 			if (is_array($id)) {
-				$fn = sprintf("%0" . $this->imgs['length'] . "d", $id[0]) . '_' . sprintf("%02d", $id[1]) . $this->imgs['ext']; // addition images, eg 00000010_02.jpg
+				#$fn = sprintf("%0" . $this->imgs['length'] . "d", $id[0]) . '_' . sprintf("%02d", $id[1]); // addition images, eg 00000010_02.jpg
+				$fn = Site::zerofill($id[0], $this->imgs) . '_' . sprintf("%02d", $id[1]); // addition images, eg 00000010_02.jpg
 			} else {
-				$fn = sprintf("%0" . $this->imgs['length'] . "d", $id) . $this->imgs['ext'];
+				#$fn = sprintf("%0" . $this->imgs['length'] . "d", $id);
+				$fn = Site::zerofill($id, $this->imgs);
 			}
 		}
-		
+
+		// suffix (eg '.s' for small images etc)
+		if (!empty($conf['suffix']))
+		{
+            $fn .= $conf['suffix'];#$fn .= '.' . $conf['suffix'];
+        }
+
+      	$fn .= $this->imgs['ext'];
+
 		$name = $this->_name;
 
-/*
-		if (!empty($this->imgs['folder']))
+		$fo = $this->imgs['folder'] . '/';
+
+      	if ( $this->imgs['folderFiles'] > 0 )
 		{
-			$fo = $this->imgs['folder'];
-		} else {
-			$fo = $this->_name;
+			$n = round($id / $this->imgs['folderFiles']);
+			if ( $this->imgs['folderFill'] > 0) {
+                $n = sprintf("%0" . $this->imgs['folderFill'] . "d", $n);
+            }
+           	$fo .= $n;
 		}
- */
-		$fo = $this->imgs['folder'] . $path;
+
+		#'folderSubfolders' => null, // max subfolder per folder
+		#'folderFill' => 4, // zero fill symbols
+
+
+		 $fo .= $path;
 
 		// fullsize picture
 		if ($full) {

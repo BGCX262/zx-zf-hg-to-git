@@ -21,4 +21,26 @@ class Zx_Site
 		return nl2br($s);
 	}
 
+	/**
+	 * Zero fill
+	 * @param integer $i
+	 * @param array $conf
+	 * @return string
+	 */
+	static function zerofill($i, $conf)
+	{
+		if (empty($conf['length'])) {$conf['length'] = 8;}
+
+		if ( !empty($conf['hash']) )
+		{
+			switch ($conf['hash'])
+			{
+				case 'sha1': return sha1($i);
+				default: return md5($i);
+			}
+		} else {
+			return sprintf("%0" . $conf['length'] . "d", $i);
+       	}
+	}
+
 }
