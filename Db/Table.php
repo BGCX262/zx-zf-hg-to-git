@@ -377,8 +377,9 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			if (!empty($conf['select'])) {return $select;} // compatibility patch
 		}
 
+		#d($select);
 		$row = $this->fetchRow($select);// Zend_Db_Table_Row
-		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($row, 1) . "</textarea><br>";die;
+		#d($row);
 
 		if (empty($row)) {return false;}
 
