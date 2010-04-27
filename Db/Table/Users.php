@@ -7,6 +7,15 @@ class Zx_Db_Table_Row_Users extends Zx_Db_Table_Row
 		return $router->assemble(array('id' => $this->id), 'user');
 		#return $view->url(array('id' => $this->id), 'user'); // WRONG!
 	}
+
+	/**
+	 * Surname + name
+	 */
+	function sname($br = false)
+	{
+		return $this->name . ($br ? '<br/>' : '&nbsp;') . $this->surname;
+    }
+
 }
 
 class Zx_Db_Table_Rowset_Users extends Zx_Db_Table_Rowset
