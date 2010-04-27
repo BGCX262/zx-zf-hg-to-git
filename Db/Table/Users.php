@@ -4,8 +4,7 @@ class Zx_Db_Table_Row_Users extends Zx_Db_Table_Row
 	function url()
 	{
 		$router = Zend_Controller_Front::getInstance()->getRouter();
-		return $router->assemble(array('id' => $this->id), 'user');
-		#return $view->url(array('id' => $this->id), 'user'); // WRONG!
+		return $router->assemble(array('id' => $this->id), 'user') . '/';
 	}
 
 	/**
@@ -24,13 +23,13 @@ class Zx_Db_Table_Rowset_Users extends Zx_Db_Table_Rowset
 
 class Zx_Db_Table_Users extends Zx_Db_Table
 {
-    protected $_name = 'users';
+	protected $_name = 'users';
+
+	protected $_rowClass = 'Zx_Db_Table_Row_Users';
+	protected $_rowsetClass = 'Zx_Db_Table_Rowset_Users';
 
 	protected $_identityColumn = 'username';
 	protected $_credentialColumn = 'password';
-	
-	protected $_rowClass = 'Zx_Db_Table_Row_Users';
-	protected $_rowsetClass = 'Zx_Db_Table_Rowset_Users';
 
 	function init()
 	{
