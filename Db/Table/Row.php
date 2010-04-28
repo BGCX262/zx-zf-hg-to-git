@@ -132,5 +132,13 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 		return $comment->countComments($this->id, $name, $where);
 	}
 
+	/**
+	 * $this->txt wrapper
+	 */
+	function text()
+	{
+		return $this->txt;
+    }
+
 }
 
