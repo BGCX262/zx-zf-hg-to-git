@@ -1,6 +1,7 @@
 <?php
 /**
-* @todo decorators
+* Auth Login Form
+* @todo decorators?
 */
 class Zx_Form_AuthLogin extends Zx_Form
 {
@@ -23,6 +24,7 @@ class Zx_Form_AuthLogin extends Zx_Form
 		);
 
 		$this->_msg = $this->conf->msg->auth->toArray();
+		#d($this->_msg);
 
         $this->setName('login');
 		$this->setMethod('POST');
@@ -65,5 +67,7 @@ class Zx_Form_AuthLogin extends Zx_Form
 		#$submit->loadDefaultDecorators();
 
         $this->addElements(array($username, $password, $referer, $submit));
+
+		#$this->setAction('/auth/login/');
     }
 }

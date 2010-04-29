@@ -2,7 +2,6 @@
 /**
 * Главный контроллер (одинаковый для всех сайтов)
 * @author Дерягин Алексей (aleksey@deryagin.ru)
-* @version 6/16/2009
 */
 class Zx_Controller_Action extends Zend_Controller_Action
 {
@@ -75,8 +74,9 @@ class Zx_Controller_Action extends Zend_Controller_Action
 
 	function init()
 	{
-		$this->reg = Zend_Registry::getInstance();
-		$this->conf = $this->reg->conf;
+		#$this->reg = Zend_Registry::getInstance();
+		#$this->conf = $this->reg->conf;
+		$this->conf = Zend_Registry::get('conf');
 
 		$this->initView();
 
@@ -168,6 +168,11 @@ Array
 		//<--
 
 		$this->initStrings();
+
+		if (is_object($this->conf->auth))
+		{
+			$this->initAuth($this->conf->auth);
+		}
 	}
 
 /**
@@ -214,12 +219,30 @@ Array
 	* @todo plugin OR model
 	* @return boolean
 	*/
-	protected function initAuth()
+	protected function initAuth($auth = null)
 	{
 		$this->authAllowed = true;
+		if (isset($auth->authHTTPS)) {
+	       	$this->authHTTPS = (bool) $auth->authHTTPS;
+        } else {
+			$this->authHTTPS = true;
+		}
+		if (isset($auth->loginRedirect)) {
+	       	$this->loginRedirect = $auth->loginRedirect;
+        } else {
+			$this->loginRedirect = '/';
+		}
+
+		if (isset($auth->loginActionDisplayForm)) {
+	       	$this->loginActionDisplayForm = (bool) $auth->loginActionDisplayForm;
+        } else {
+			$this->loginActionDisplayForm = true;
+		}
+		#d($this->loginActionDisplayForm);
 		
 		$auth = Zend_Auth::getInstance();
-        if ($auth->hasIdentity()) {
+        if ($auth->hasIdentity())
+		{
 			$this->user = $auth->getIdentity();
 			return true;
 		}

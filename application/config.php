@@ -31,6 +31,7 @@ if ( ZX_LOG )
 	$config_project['logger']['writer'] = $root . 'logs/' . $config_project['site']['url'] . '-zf.log';
 	#$config_project['logger']['firebug'] = true; // use l() function for it!
 
+	#echo ini_get('include_path') . '<br/>';die; // /srv/sites/php/__PROJECT__/library
 	$res = _initLogger($config_project);
 	#echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r($res, 1) . '</textarea><br>'; die;
 }
@@ -296,7 +297,11 @@ if (!empty($config['site']['url']) && (!strpos(ini_get('error_log'), '-php.log')
 
 #$paths = implode(PATH_SEPARATOR, array('.', PATH_FW, PATH_MY, $config['path']['controllers'], $config['path']['models'], $config['path']['system']));
 #if (defined('PATH_MY')) {$paths .= PATH_SEPARATOR . PATH_MY;}
-set_include_path(implode(PATH_SEPARATOR, array('.', PATH_FW, PATH_MY, $config['path']['controllers'], $config['path']['models'], $config['path']['system'])));
+if (PATH_FW == PATH_MY) {
+	set_include_path(implode(PATH_SEPARATOR, array('.', PATH_FW, $config['path']['controllers'], $config['path']['models'], $config['path']['system'])));
+} else {
+	set_include_path(implode(PATH_SEPARATOR, array('.', PATH_FW, PATH_MY, $config['path']['controllers'], $config['path']['models'], $config['path']['system'])));
+}
 #echo ini_get('include_path') . '<br/>';die;
 #echo ini_get('error_log') . '<br/>';die;
 

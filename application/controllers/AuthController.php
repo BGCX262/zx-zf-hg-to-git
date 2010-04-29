@@ -12,15 +12,17 @@ class AuthController extends MainController
 			$this->_redirect('/');die;
 		}
 
-		if ($this->authHTTPS) {
-			FrontEnd::checkHTTPS();
+		if ($this->authHTTPS)
+		{
+           	FrontEnd::checkHTTPS();
 		}
 
+		/*
 		if (!empty($this->loginActionDisplayForm))
 		{
 			$this->loginActionDisplayForm = true;
 		}
-
+ */
 /* 		if (!isset($this->loginRedirect))
 		{
 			$this->loginRedirect = '/';
