@@ -17,10 +17,10 @@ class Zx_Controller_Action extends Zend_Controller_Action
 	protected $_charset = 'UTF-8';
 
 	/**
-	* Auth user
+	* Auth user (moved to registry!)
 	* @var
 	*/
-	protected $user = false;
+	#protected $user = false;
 
 	/**
 	* Parameters
@@ -70,7 +70,7 @@ class Zx_Controller_Action extends Zend_Controller_Action
 	protected $authRegistrationAllowed = false; // no FE-users registration (use BE!)
 	protected $authHTTPS = true; // via protected protocol
 	
-	protected $reg; // Zend_Registry
+	#protected $reg; // Zend_Registry
 
 	function init()
 	{
@@ -245,8 +245,9 @@ Array
 		$auth = Zend_Auth::getInstance();
         if ($auth->hasIdentity())
 		{
-			$this->user = $auth->getIdentity();
+			$user = $auth->getIdentity();
 			#d($this->user);
+			Zend_Registry::set('user', $user);
 			return true;
 		}
 		return false;
