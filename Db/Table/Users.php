@@ -52,4 +52,30 @@ class Zx_Db_Table_Users extends Zx_Db_Table
 	{
 		return $this->_credentialColumn;
 	}
+
+	/**
+	 * Генерация служебной информации (IP, UA, TS)
+	 */
+	/*protected!*/ function _addLast(&$data)
+	{
+		$r = Zend_Controller_Front::getInstance()->getRequest();
+
+		$data['last_ip'] = new Zend_Db_Expr("INET_ATON('" . $r->getServer('REMOTE_ADDR') . "')");
+
+		$ip2 = $r->getServer('HTTP_X_FORWARDED_FOR');
+		if (!empty($ip2)) {
+			if (substr_count($ip2, '.') >= 4) { //check for double IP
+				$a = explode(',', $ip2);
+				$data['last_ip2'] = new Zend_Db_Expr("INET_ATON('" . $a[0] . "')");
+			} else {
+				$data['last_ip2'] = new Zend_Db_Expr("INET_ATON('" . $ip2 . "')");
+			}
+		}
+
+		$data['last_ua'] = $r->getServer('HTTP_USER_AGENT');
+		$data['last_ts'] = new Zend_Db_Expr('NOW()');
+
+		return true;
+	}
+
 }

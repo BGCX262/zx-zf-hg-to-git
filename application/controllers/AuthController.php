@@ -4,7 +4,10 @@
 */
 class AuthController extends MainController
 {
-    function init()
+	protected $_noRender = false;
+
+
+   function init()
     {
 		parent::init();
 		
@@ -16,6 +19,8 @@ class AuthController extends MainController
 		{
            	FrontEnd::checkHTTPS();
 		}
+
+		$this->_formRender = isset($this->conf->auth->formRender) ? false : true;
 
 		/*
 		if (!empty($this->loginActionDisplayForm))
@@ -164,8 +169,21 @@ class AuthController extends MainController
 
                 if ($result->isValid())
 				{
-                    $data = $authAdapter->getResultRowObject(null, 'password');// success : store database row to auth's storage system (not the password though!)
-                    $auth->getStorage()->write($data);
+                    $row = $authAdapter->getResultRowObject(null, 'password');// success : store database row to auth's storage system (not the password though!)
+                    $auth->getStorage()->write($row);
+
+					// add some security trace
+					if (isset($this->conf->auth->lastData) && isset($row->id))
+					{
+						$data = array();
+						$this->users->_addLast($data);#d($data);
+						$where = $this->users->getAdapter()->quoteInto('id = ?', $row->id);
+						$res = $this->users->update($data, $where);
+						if ($res) {
+							l($data, __METHOD__ . ' addLast update fail, data=', Zend_Log::ALERT);
+						}
+
+					}
 
 					if (!empty($this->loginRedirect))
 					{
@@ -181,9 +199,14 @@ class AuthController extends MainController
 					}
 
                 } else {
-					$this->setVar('errors', $form->msg('loginFailed'));// failure: clear database row from session
+					$error = true;
+					#$this->setVar('errors', $form->msg('loginFailed'));
                 }
             }
+
+			if ($error) {
+				$this->setVar('errors', $form->msg('loginFailed'));
+			}
 
 		} else {
 			if (!$this->loginActionDisplayForm) {
@@ -191,11 +214,10 @@ class AuthController extends MainController
 			}
 		}
 
-		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($this->view->errors, 1) . "</textarea><br>";die;
-
+		#d($this->view->errors);
 		// dont show 2 forms (eg RPN.2)
-		if ($this->loginActionDisplayForm) {
-			$this->setVar('form', $form);
+       	if ( $this->loginActionDisplayForm ) {
+           	$this->setVar('form', $form);
 		}
     }
 

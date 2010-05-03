@@ -135,10 +135,10 @@ class Zx_Kernel
 			#$frontController->registerPlugin(new Zx_Controller_Plugin_HttpConditional(), 101); //@todo TEST!!!
 			//-->
 
-			// Запуск приложения, в качестве параметра передаем путь к папке с контроллерами
-			l($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'] . ' (' . (microtime(1) - T0) . ' s.)', 'RUN');
+           	// Запуск приложения, в качестве параметра передаем путь к папке с контроллерами
+			l('RUN');
 			Zend_Controller_Front::run($frontController->getControllerDirectory());
-			l($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'] . ' (' . (microtime(1) - T0) . ' s.)', 'FINISH');
+			l('FINISH');
 		}
 
 		// local or global handler
@@ -156,7 +156,7 @@ class Zx_Kernel
 	*/
 	 public static function setDbAdapter()
 	 {
-		 l($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'] . ' (' . (microtime(1) - T0) . ' s.)', 'DBCONN START');
+		 #l('DBCONN START');
 
 		// Получение объекта конфигурации из реестра
 		$conf = Zend_Registry::get('conf');
@@ -188,7 +188,7 @@ class Zx_Kernel
 		// Занесение объекта соединения c БД в реестр
 		Zend_Registry::set('db', $db);
 
-		l($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'] . ' (' . (microtime(1) - T0) . ' s.)', 'DBCONN END');
+		#l('DBCONN END');
 	 }
 
 

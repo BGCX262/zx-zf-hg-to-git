@@ -94,7 +94,7 @@ $cachePage->start();
 //-->
 
 require 'functions.php';
-l($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'] . ' (' . (microtime(1) - T0) . ' s.)', 'START');
+l($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'], 'START');
 
 if (LOCATION == 'stable') {
 	ini_set('display_errors', 0);

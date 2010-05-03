@@ -1,6 +1,7 @@
 <?php
 if (!empty($_GET['pi5x'])) {phpinfo();die;}
 define('T0', microtime(1));
+define('UID', uniqid(getmypid()));
 
 #echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r(get_include_path(), 1) . '</textarea><br>'; die;
 #echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r(getcwd(), 1) . '</textarea><br>'; die;
@@ -27,28 +28,3 @@ if (!defined('LOCATION'))
 //-->
 
 function __autoload($path) {include str_replace('_','/',$path) . '.php'; return $path;} // $autoloader->setDefaultAutoloader(create_function('$class', "include str_replace('_', '/', \$class) . '.php';"));
-
-/**
-* Firebug (or any other writer) debug
-* @param string $message
-* @param string $label
-* @return void
-*/
-function l($message, $label = null, $level = Zend_Log::INFO)
-{
-	if (!ZX_LOG) {return false;}
-	$log = '';
-
-	if (!is_null($label)) {
-        $log = '[' . $label . '] ';
-    }
-
-	if (is_array($message)) {
-        $log .= print_r($message, 1);
-	} else {
-        $log .= $message;
-    }
-
-	$logger = Zend_Registry::get('logger');
-	$logger->log($log, $level);
-}

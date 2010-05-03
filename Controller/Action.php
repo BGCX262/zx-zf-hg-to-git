@@ -217,16 +217,19 @@ Array
 	/**
 	* Авторизация пользователей
 	* @todo plugin OR model
+	* @todo не дублировать значения из конфига без надобности!
 	* @return boolean
 	*/
 	protected function initAuth($auth = null)
 	{
 		$this->authAllowed = true;
+
 		if (isset($auth->authHTTPS)) {
 	       	$this->authHTTPS = (bool) $auth->authHTTPS;
         } else {
 			$this->authHTTPS = true;
 		}
+
 		if (isset($auth->loginRedirect)) {
 	       	$this->loginRedirect = $auth->loginRedirect;
         } else {
@@ -238,12 +241,12 @@ Array
         } else {
 			$this->loginActionDisplayForm = true;
 		}
-		#d($this->loginActionDisplayForm);
 		
 		$auth = Zend_Auth::getInstance();
         if ($auth->hasIdentity())
 		{
 			$this->user = $auth->getIdentity();
+			#d($this->user);
 			return true;
 		}
 		return false;
