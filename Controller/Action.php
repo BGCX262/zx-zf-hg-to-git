@@ -247,7 +247,7 @@ Array
 		{
 			$user = $auth->getIdentity();
 			#d($this->user);
-			Zend_Registry::set('user', $user);
+			#Zend_Registry::set('user', $user); // DRY! use $auth!
 			return true;
 		}
 		return false;

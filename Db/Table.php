@@ -818,7 +818,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	*/
 	function getImage($id, $conf = null)
 	{
-		$full = isset($conf['full']) ? $conf['full'] : true;
+		$full = isset($conf['full']) ? $conf['full'] : true;#d($full);
 		$fs = isset($conf['fs']) ? $conf['fs'] : false;
 		$path = isset($conf['path']) ? $conf['path'] : '';
 
@@ -853,7 +853,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 
 		$name = $this->_name;
 
-		$fo = $this->imgs['folder'] . '/';
+		$fo = $this->imgs['folder'];
 
       	if ( $this->imgs['folderFiles'] > 0 )
 		{
@@ -861,7 +861,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			if ( $this->imgs['folderFill'] > 0) {
                 $n = sprintf("%0" . $this->imgs['folderFill'] . "d", $n);
             }
-           	$fo .= $n;
+           	$fo .=  '/' . $n;
 		}
 
 		#'folderSubfolders' => null, // max subfolder per folder

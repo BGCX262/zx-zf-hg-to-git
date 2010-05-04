@@ -125,8 +125,8 @@ class AuthController extends MainController
 			{
 				$username = $form->getValue('username');
 				$password = $form->getValue('password');
-				#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($username, 1) . "</textarea><br>";
-				#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($password, 1) . "</textarea><br>";
+				#d($username);
+				#d($password);
 			} else {
 				$form->populate($formData);
 				$error = true;
