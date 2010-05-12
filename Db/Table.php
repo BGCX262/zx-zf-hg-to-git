@@ -417,6 +417,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		if ( (!empty($conf['paginator'])) ) { $this->setPaginator($conf['paginator']); }
 		if ( $this->isPaginator && (!empty($conf['returnPaginator'])) ) { $this->isReturnPaginator = true; }# else { $this->isReturnPaginator = false; }
 		$rows = $this->paginator($select);
+		#d(count($rows), 0);
 		#d($rows);
 		#d($this->getPaginator());
 		if ( $this->isStoredRows || !empty($conf['store']) ) {$this->_storeRows($rows);}
