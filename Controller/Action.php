@@ -81,14 +81,15 @@ class Zx_Controller_Action extends Zend_Controller_Action
 		$this->initView();
 
 		#$this->fe = new Zx_FrontEnd();
-		#$this->view->pathParts = $this->fe->getPathParts($this->_request);
+		#$this->view->pathParts = $this->fe->getPathParts($this->getRequest());
 		#$this->view->host = $this->fe->getHttpPrefix(); // используется в хелперах меню
 
 		$this->viewScript = 'main.phtml';
 
 		$this->view->host = Zx_FrontEnd::getHttpPrefix(); // используется в хелперах меню
-		$this->view->pathParts = Zx_FrontEnd::getPathParts($this->_request);//@TODO? use $this->p instead
+		$this->view->pathParts = Zx_FrontEnd::getPathParts($this->getRequest());//@TODO? use $this->p instead
 		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($this->view->pathParts, 1) . "</textarea><br>";die;
+		$this->view->divider = ' - '; // title / headers divider
 		$this->view->content = '';
 
 		//--> get parameters from request
@@ -97,19 +98,19 @@ class Zx_Controller_Action extends Zend_Controller_Action
 			$this->view->id = $this->id;
 		}
 
-		#$code = $this->_request->getParam('code');
+		#$code = $this->getRequest()->getParam('code');
 		#if ($code) {$this->code = $code;}
 
 		$this->view->topicId = $this->topicId = (int) $this->_getParam('topicId');
 		$this->view->subtopicId = $this->subtopicId = (int) $this->_getParam('subtopicId');
 
-		$sectionId = $this->_request->getParam('sectionId');
+		$sectionId = $this->getRequest()->getParam('sectionId');
 		if ($sectionId) {
 			Zend_Registry::set('sectionId', $sectionId);
 			$this->view->sectionId = $this->sectionId = $sectionId;
 		}
 
-		$subsectionId = $this->_request->getParam('subsectionId');
+		$subsectionId = $this->getRequest()->getParam('subsectionId');
 		if ($subsectionId) {
 			Zend_Registry::set('subsectionId', $subsectionId);
 			$this->subsectionId = $subsectionId;
@@ -118,13 +119,15 @@ class Zx_Controller_Action extends Zend_Controller_Action
 		$this->page = $this->_getParam('page', 1);
 		Zend_Registry::set('page', $this->page);
 
-		$this->view->p = $this->p = $this->_request->getParams();
-		$this->view->baseUrl = $this->_request->getBaseUrl();
-/*
+		$this->view->p = $this->p = $this->getRequest()->getParams();#d($this->view->p);
+        /*
 [controller] => stores
 [action] => index
 [module] => default
 */
+		$this->view->baseUrl = $this->getRequest()->getBaseUrl();
+		$this->view->requestUri = $this->getRequest()->getRequestUri();
+
 		// base current controller URI
 		$this->cURI = '/' . $this->p['controller'] . '/';
 
@@ -169,10 +172,12 @@ Array
 
 		$this->initStrings();
 
-		if (is_object($this->conf->auth))
+		//TODO: move to projects?
+		if (is_object($this->conf->auth) && empty($this->conf->auth->strict) )
 		{
 			$this->initAuth($this->conf->auth);
 		}
+
 	}
 
 /**
@@ -192,7 +197,7 @@ Array
 	protected function setHeader($s = '', $fast = true)
 	{
 		if ($fast) { // no complex calculations, just set it!
-			$this->setViewVar('mainHeader', $s);
+			$this->view->mainHeader = $s;
 		} else {
 			$this->setVar('mainHeader', $s);	
 		}
@@ -208,9 +213,14 @@ Array
 	protected function setTitle($s = '', $fast = true)
 	{
 		if ($fast) { // no complex calculations, just set it!
-			$this->setViewVar('pageTitle', $s);
+			$this->view->pageTitle = $s;
 		} else {
-			$this->setVar('pageTitle', $s);	
+
+			if (!empty($this->view->pageTitle)) {
+                $this->view->pageTitle .= $this->view->divider;
+            }
+
+          	$this->setVar('pageTitle', $s);
 		}
 	}
 
@@ -245,12 +255,14 @@ Array
 		$auth = Zend_Auth::getInstance();
         if ($auth->hasIdentity())
 		{
-			$user = $auth->getIdentity();
-			#d($this->user);
-			#Zend_Registry::set('user', $user); // DRY! use $auth!
+			$this->view->identity = $auth->getIdentity();
+			#Zend_Registry::set('identity', $identity); // DRY! use $auth!
+			#d($this->view->identity);
 			return true;
+		} else {
+			$this->view->identity = null;
+			return false;
 		}
-		return false;
 	}
 
 
@@ -286,6 +298,7 @@ Array
 		} else {
 			$this->setVar('pageTitle', $this->fe->getPageTitle());
 		}
+		#d($this->view->pageTitle);
     }
 
 	/**
@@ -414,22 +427,6 @@ Array
 		return true;
 	}
 
-	/**
-	* Instant and refactored variant of setVar :)
-	* @param
-	* @return void
-	*/
-	function setViewVar($name, $value)#, $conf = null
-	{
-		$this->view->$name = $value;
-/* 		switch ($name){
-			case '':
-				break;
-			default:
-				$this->view->$name = $value;
-		}
-*/
-	}
 
 	/**
 	* iconv
@@ -581,4 +578,23 @@ Array
 	protected function setSQL($model, $where = '', $conf = array()) {
 		return $this->$model->setSQL($where, $conf);
 	}
+
+	/**
+	* Instant and refactored variant of setVar :)
+	* @deprecated
+	* @param
+	* @return void
+	*/
+	function setViewVar($name, $value)#, $conf = null
+	{
+		$this->view->$name = $value;
+/* 		switch ($name){
+			case '':
+				break;
+			default:
+				$this->view->$name = $value;
+		}
+*/
+	}
+
 }

@@ -7,16 +7,16 @@
 */
 class Zx_View_Helper_Truncate extends Zend_View_Helper_Abstract
 {
-    public function truncate($string, $length = 50, $postfix = ‘…’)
+    public function truncate($string, $length = 50, $postfix = '')
     {
         $truncated = trim($string);
         $length = (int)$length;
         if (!$string) {
             return $truncated;
         }
-        $fullLength = iconv_strlen($truncated, ‘UTF-8′);
+        $fullLength = iconv_strlen($truncated, 'UTF-8');
         if ($fullLength > $length) {
-            $truncated = trim(iconv_substr($truncated, 0, $length, ‘UTF-8′)) . $postfix;
+            $truncated = trim(iconv_substr($truncated, 0, $length, 'UTF-8')) . $postfix;
         }
         return $truncated;
     }
