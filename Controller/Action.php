@@ -72,6 +72,8 @@ class Zx_Controller_Action extends Zend_Controller_Action
 	
 	#protected $reg; // Zend_Registry
 
+	protected $_flashMessenger = null;
+
 	function init()
 	{
 		#$this->reg = Zend_Registry::getInstance();
@@ -136,16 +138,11 @@ class Zx_Controller_Action extends Zend_Controller_Action
 			$this->fe = new Zx_FrontEnd();
 		}
 
-		$this->model('Articles', 'db');
-		$this->model('Content', 'db');
-		$this->model('Feedback', 'db');
-		#$this->model('Topics', 'db');
+		$this->model('Articles', 'db');#$this->Articles = new Zx_Db_Table_Articles();
+		$this->model('Content', 'db');#$this->Content = new Zx_Db_Table_Content();
+		#$this->model('Feedback', 'db');#$this->Feedback = new Zx_Db_Table_Feedback();
+		#$this->model('Topics', 'db');#$this->Topics = new Zx_Db_Table_Topics();
 		$this->Topics = new Zx_Db_Table_TopicsTree(); // since 5/21/2009
-/* 		$this->Articles = new Zx_Db_Table_Articles();
-		$this->Content = new Zx_Db_Table_Content();
-		$this->Feedback = new Zx_Db_Table_Feedback();
-		$this->Topics = new Zx_Db_Table_Topics();
- */
 
  		// Создание экземпляров классов
  		if (!empty($this->conf->libload))
@@ -178,9 +175,25 @@ Array
 			$this->initAuth($this->conf->auth);
 		}
 
+        $this->_flashMessenger = $this->_helper->getHelper('FlashMessenger');
+		$this->view->messages = $this->_flashMessenger->getMessages();#d($this->view->messages);
+
 	}
 
-/**
+	function postDispatch()
+	{
+		parent::postDispatch();
+   		$js = $this->view->render('partials/notifications.phtml');#d($js);
+		if ($js)
+		{
+			$this->view->pageHeadScript = array('jquery.notifications', 'inline' => $js); // for HeadScript view helper
+			$this->view->pageHeadLink = array('jquery.notifications'); // for HeadLink view helper
+		}
+
+    }
+
+
+   /**
 * GENERAL METHODS
 */
 
@@ -596,5 +609,17 @@ Array
 		}
 */
 	}
+
+	/**
+	 * Set notification via Flash Messanger
+	 * @deprecated
+	 * @uses Table::setN
+	 * @param string $s
+	 */
+	function setN($s, $ns = 'default')
+	{
+        $this->_flashMessenger->setNamespace($ns)->addMessage($s);
+    }
+
 
 }

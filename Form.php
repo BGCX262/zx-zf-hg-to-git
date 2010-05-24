@@ -1,10 +1,11 @@
 <?php
 /*
 * Author: Aleksey Deryagin, Aleksey@Deryagin.ru
-* @version 5/26/2009
+* @todo decorators?
 */
 class Zx_Form extends Zend_Form
 {
+/*
     protected $elementDecorators = array(
 		'table' => array(
 			'ViewHelper',
@@ -35,9 +36,10 @@ class Zx_Form extends Zend_Form
 			'Form',
 		)
 	);
-
+*/
 	protected $conf;
 	protected $_msg = array();
+	protected $_isDecorators = null;
 
     public function __construct($options = null)
     {
@@ -49,10 +51,10 @@ class Zx_Form extends Zend_Form
 		if ( !empty($this->conf->skip_translate) || !empty($options['skipTranslator']) ) {
 			$this->setTranslator(NULL);//we don't need translator for English!
 		} else {
-			$this->loadTranslator();
+			$this->_loadTranslator();
 		}
 
-		$this->setDecorators($this->formDecorators['table']);
+		if ($this->_isDecorators) {$this->setDecorators($this->formDecorators['table']);}
     }
 	
 	
@@ -61,11 +63,12 @@ class Zx_Form extends Zend_Form
 	* @param
 	* @return
 	*/
+/*
 	public function loadDefaultDecorators()
 	{
 		$this->setDecorators($this->formDecorators['table']);
 	}
-	
+*/
 
 	protected function elementPassword($title, $label)
 	{
@@ -104,10 +107,20 @@ class Zx_Form extends Zend_Form
 	* @param string $label
 	* @return Zend_Form_Element_Textarea
 	*/
-	protected function elementTextarea($title, $label)
+	protected function elementTextarea($title, $options = null)
 	{
         $el = new Zend_Form_Element_Textarea($title);
-        $el->setLabel($label)->setRequired(true)->addFilter('StringTrim')->addValidator('NotEmpty');
+
+		if (is_array($options)) {
+			$element->setOptions($options);
+		} else {
+			if (!empty($options))
+			{
+				$el->setLabel($options);
+			}
+		}
+
+        $el->setRequired(true)->addFilter('StringTrim')->addValidator('NotEmpty');
 		return $el;
 	}
 
@@ -116,7 +129,7 @@ class Zx_Form extends Zend_Form
     /**
      * setTranslator() wrapper
      */
-    protected function loadTranslator()
+    protected function _loadTranslator()
 	{
 		// load global conf
 		$translate = require PATH_MY . 'Zx/application/translate/main.php';
@@ -172,7 +185,9 @@ class Zx_Form extends Zend_Form
 		{
 			// Добавление звездочки для обязательных полей
 			if ($element->isRequired()) {
-				$element->addDecorators($this->starDecorators);
+				if ($this->_isDecorators) {
+					$element->addDecorators($this->starDecorators);
+				}
 			}
 		}
 		$this->addElements($aElements);

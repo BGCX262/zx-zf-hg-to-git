@@ -821,7 +821,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	{
 		$full = isset($conf['full']) ? $conf['full'] : true;#d($full);
 		$fs = isset($conf['fs']) ? $conf['fs'] : false;
-		$path = isset($conf['path']) ? $conf['path'] : '';
+		$path = isset($conf['path']) ? '/' . $conf['path'] : '';
 
 		// named image! since 04/18/10
 		if (is_string($full))
@@ -854,7 +854,8 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 
 		$name = $this->_name;
 
-		$fo = $this->imgs['folder'];
+		$fo = $this->imgs['folder'];#d($fo);
+
 
       	if ( $this->imgs['folderFiles'] > 0 )
 		{
@@ -1003,5 +1004,15 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		$where = $this->getAdapter()->quoteInto('id = ?', $id);
 		return $this->update($data, $where);
 	}
+
+	/**
+	 * Set notification via Flash Messanger
+	 * @param string $s
+	 */
+	static public function setN($s, $ns = 'default')
+	{
+        $flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
+		$flashMessenger->setNamespace($ns)->addMessage($s);
+    }
 
 }

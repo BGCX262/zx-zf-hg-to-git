@@ -9,6 +9,6 @@ class Zx_View_Helper_PageHeadLink extends Zend_View_Helper_Abstract
 				$this->view->headLink()->appendStylesheet("/styles/" . $v . ".css");
 			}
 		}
-		echo $this->view->headLink();
+		echo $this->view->headLink() . "\n";
     }
 }

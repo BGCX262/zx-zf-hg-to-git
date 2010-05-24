@@ -8,7 +8,7 @@ class Zx_Form_AuthLogin extends Zx_Form
     public function __construct($options = null)
     {
         parent::__construct($options);
-
+/*
         $formDecorators = array('HtmlTag', array('tag'=>'table'));
 		#$this->addDecorators($formDecorators);
 
@@ -22,7 +22,7 @@ class Zx_Form_AuthLogin extends Zx_Form
 			array('decorator' => array('mainCell' => 'HtmlTag'), 'options' => array('tag' => 'td', 'class' => 'tregleft', 'valign' => 'top')),
 			array('decorator' => array('mainRowClose' => 'HtmlTag'), 'options' => array('tag' => 'tr'))
 		);
-
+*/
 		$this->_msg = $this->conf->msg->auth->toArray();
 		#d($this->_msg);
 

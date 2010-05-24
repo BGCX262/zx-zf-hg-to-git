@@ -65,6 +65,6 @@ class Zx_View_Helper_PageHeadScript extends Zend_View_Helper_Abstract
 			}
 		}
 
-		echo $this->view->headScript();
+		echo $this->view->headScript() . "\n";
     }
 }
