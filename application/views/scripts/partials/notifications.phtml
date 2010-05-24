@@ -1,0 +1,35 @@
+<?php
+$messages['default'] = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger')->setNamespace()->getMessages();
+$messages['success'] = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger')->setNamespace('success')->getMessages();
+$messages['warnings'] = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger')->setNamespace('warnings')->getMessages();
+$messages['errors'] = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger')->setNamespace('errors')->getMessages();
+
+$js = '';
+
+if (!empty($messages['default']))
+{
+	foreach ($messages['default'] as $v) {$js .= "$.n('" . $v . "');\n";}
+}
+if (!empty($messages['success']))
+{
+	foreach ($messages['success'] as $v) {$js .= "$.n.success('" . $v . "');\n";}
+}
+if (!empty($messages['warnings']))
+{
+	foreach ($messages['warnings'] as $v) {$js .= "$.n.warning('" . $v . "');\n";}
+}
+if (!empty($messages['errors']))
+{
+	foreach ($messages['errors'] as $v) {$js .= "$.n.error('" . $v . "');\n";}
+}
+#$js = "$.n('test!');"; // test!
+$js = "$(document).ready(function () {\n" . $js . "\n});\n"; // TODO: jquery helper!
+echo $js;
+#d($js);
+?>
+<?php /*if ($js) { ?>
+<?php #$this->headScript()->captureStart() ?>
+<?php #echo $js;?>
+<?php #$this->headScript()->captureEnd() ?>
+<?php $this->headScript()->offsetSetScript(100, $js);?>
+<?php }*/ ?>
