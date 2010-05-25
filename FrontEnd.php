@@ -262,7 +262,7 @@ class Zx_FrontEnd extends Zx_Site
 	* @return string
 	* @static
 	*/
-	function getMsg($id)
+	static function getMsg($id)
 	{
 		$conf = Zend_Registry::get('conf');
 		if (!empty($conf->msg->$id)) {

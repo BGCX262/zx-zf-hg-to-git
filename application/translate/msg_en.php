@@ -1,6 +1,8 @@
 <?php
 return array(
 	'nf' => 'Not found.',
+	'update_ok' => 'Информация успешно обновлена.',
+	'update_fail' => 'Информация не обновлена, требуется уточнение данных!',
 	'todo' => 'Coming soon.',
 	'error' => 'Error',
 	'paginator' => array(
