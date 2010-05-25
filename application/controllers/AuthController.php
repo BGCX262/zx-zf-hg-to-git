@@ -56,6 +56,8 @@ class AuthController extends MainController
 	*/
     function registerAction()
     {
+		if ($this->view->identity) {$this->_redirect('/');}
+
 		if (!$this->userRegistrationAllowed) {
 			return $this->forward('login');
 		}
@@ -113,6 +115,8 @@ class AuthController extends MainController
 	*/
     function loginAction()
     {
+		if ($this->view->identity) {$this->_redirect('/');}
+
 		$error = false;
 		$this->textRow('login');
 
