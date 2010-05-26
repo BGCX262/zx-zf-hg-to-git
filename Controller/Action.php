@@ -186,8 +186,10 @@ Array
    		$js = $this->view->render('partials/notifications.phtml');#d($js);
 		if ($js)
 		{
-			$this->view->pageHeadScript = array('jquery.notifications', 'inline' => $js); // for HeadScript view helper
-			$this->view->pageHeadLink = array('jquery.notifications'); // for HeadLink view helper
+			$this->addPageResource(array('jquery.notifications', 'inline' => $js), 'HeadScript');
+			$this->addPageResource(array('jquery.notifications'), 'HeadLink');
+			#$this->view->pageHeadScript[] = array('jquery.notifications', 'inline' => $js); // for HeadScript view helper
+			#$this->view->pageHeadLink[] = array('jquery.notifications'); // for HeadLink view helper
 		}
 
     }
@@ -300,7 +302,9 @@ Array
 			$this->setHeader();
 		}
 
-		$this->setVar('msg', $this->conf->msg->toArray()); // all messages! fx see in contact view script: echo '<br/><b>', $this->msg['feedback']['sent'], '</b>';
+		$this->setVar('msg', $this->conf->msg->toArray()); // @deprecated!!! all messages! fx see in contact view script: echo '<br/><b>', $this->msg['feedback']['sent'], '</b>';
+		Zend_Registry::set('msg', $this->conf->msg->toArray());
+
 		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($this->view->msg, 1) . "</textarea><br>";die;
 
 		$this->setVar('title', $this->fe->getTitle());
@@ -621,5 +625,26 @@ Array
         $this->_flashMessenger->setNamespace($ns)->addMessage($s);
     }
 
+
+	/**
+	 *
+	 * @param array $a
+	 */
+	function addPageResource($a, $type)
+	{
+		switch ($type) {
+			case 'HeadScript':
+				$this->view->pageHeadScript = empty($this->view->pageHeadScript) ? $a : array_merge($this->view->pageHeadScript, $a);
+				d($this->view->pageHeadScript, 0);
+				break;
+			case 'HeadLink':
+				$this->view->pageHeadLink = empty($this->view->pageHeadLink) ? $a : array_merge($this->view->pageHeadLink, $a);
+				break;
+			case 'InlineScript':
+				$this->view->pageInlineScript = empty($this->view->pageInlineScript) ? $a : array_merge($this->view->pageInlineScript, $a);
+				break;
+		}
+
+	}
 
 }

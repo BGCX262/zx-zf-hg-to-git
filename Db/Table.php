@@ -47,6 +47,18 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		'hash' => '',
 	);
 
+	// video files
+	protected $video = array(
+		'folder' => 'files/video',
+		'folderFiles' => 0, // max files (files IDs exactly) per folder
+		'folderSubfolders' => 0, // max subfolder per folder
+		'folderFill' => 4, // zero fill symbols
+		'length' => 8,
+		'ext' => '.flv',
+		'prefixes' => false,
+		'hash' => '',
+	);
+
 	protected $files = array(
 		'folder' => 'files/',
 		'length' => 8,
@@ -803,7 +815,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	 * @todo validator/filter method? see http://www.zfforums.com/zend-framework-components-13/core-infrastructure-19/add-filter-zend-form-file-element-3713.html
 	 * @param string $s
 	 */
-	static function filterImageName($s)
+	static function filterFilename($s)
 	{
 		#$lowerCaseFilter = new Zend_Filter_File_LowerCase();
 		$s = strip_tags($s);
@@ -825,9 +837,9 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		$path = isset($conf['path']) ? '/' . $conf['path'] : '';
 
 		// named image! since 04/18/10
-		if (is_string($full))
+		if ( isset($conf['named']) || is_string($full))
 		{
-			$s = self::filterImageName($full);
+			$s = self::filterFilename($full);
 			if (is_array($id)) {
 				$fn = $s . '_' . $id[0] . '_' . $id[1]; // addition images, eg lalalala_1_1.jpg
 			} else {

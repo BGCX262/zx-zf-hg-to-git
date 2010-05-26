@@ -264,12 +264,29 @@ class Zx_FrontEnd extends Zx_Site
 	*/
 	static function getMsg($id)
 	{
+		$msg = Zend_Registry::get('msg');
+
+		if (is_array($id))
+		{
+			if (!empty($msg[$id[0]][$id[1]])) {
+				return $msg[$id[0]][$id[1]];
+			}
+		} else {
+			if (!empty($msg[$id])) {
+				return $msg[$id];
+			}
+		}
+
+		return false;
+
+/*
 		$conf = Zend_Registry::get('conf');
 		if (!empty($conf->msg->$id)) {
 			return $conf->msg->$id;
 		} else {
 			return false;
 		}
+ */
 	}
 
 
