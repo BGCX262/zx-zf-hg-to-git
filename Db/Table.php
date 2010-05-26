@@ -785,8 +785,9 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	 */
 	function getById($id, $field = '')
 	{
-		$select = $this->select()
-			->where('flag_status=1');
+		if (!is_numeric($id)) {return false;}
+
+		$select = $this->select()->where('flag_status=1');
 		if (!empty($field)) {
 			$select = $select->where($field . '_id=?', $id);
 		} else {
