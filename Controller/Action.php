@@ -635,7 +635,7 @@ Array
 		switch ($type) {
 			case 'HeadScript':
 				$this->view->pageHeadScript = empty($this->view->pageHeadScript) ? $a : array_merge($this->view->pageHeadScript, $a);
-				d($this->view->pageHeadScript, 0);
+				#d($this->view->pageHeadScript, 0);
 				break;
 			case 'HeadLink':
 				$this->view->pageHeadLink = empty($this->view->pageHeadLink) ? $a : array_merge($this->view->pageHeadLink, $a);
