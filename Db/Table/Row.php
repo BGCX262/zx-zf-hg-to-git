@@ -151,14 +151,13 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 	function upload()
 	{
 		#d($this);
-		$res = $this->_upload();
+		$res = $this->_upload();#d($res);
 
 		if ($res) {
 			$this->getTable()->setN(FrontEnd::getMsg(array('upload', 'ok')), 'success');
 		} else {
 			$this->getTable()->setN(FrontEnd::getMsg(array('upload', 'fail')), 'errors');
 		}
-
 		return $res;
 	}
 

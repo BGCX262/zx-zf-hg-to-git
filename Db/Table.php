@@ -1057,7 +1057,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		if (FrontEnd::isUpload())
 		{
 			#d($row);
-			$res = $row->upload();
+			$res = $row->upload();#d($res);
 		}
 
 		return $res;

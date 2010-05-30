@@ -420,4 +420,37 @@ class Zx_FrontEnd extends Zx_Site
 		}
 		return false;
 	}
+
+
+	/**
+	 * AI-pumped move_uploaded_file
+	 * @param string $tgt
+	 * @param string $dst
+	 * @return boolean
+	 */
+	function moveUploaded($tgt, $dst)
+	{
+		$fo = dirname($dst);
+		
+		$pos = strpos($fo, PATH_PUB);
+		
+		if ($pos === false) {
+			$fo = PATH_PUB . $fo;
+		}
+
+		$fo = str_replace('//', '/', $fo);#d($fo);
+
+		if (!is_dir($fo))
+		{
+			$res = mkdir($fo);
+			if (!$res) {
+				return false;
+			}
+		}
+
+		#d(basename($dst));
+		$res = move_uploaded_file($tgt, $fo . '/' . basename($dst));#d($res);
+		return $res;
+	}
+
 }
