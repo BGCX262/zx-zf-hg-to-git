@@ -50,13 +50,13 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	// video files
 	protected $video = array(
 		'folder' => 'files/video',
-		'folderFiles' => 0, // max files (files IDs exactly) per folder
+		'folderFiles' => 1000, // max files (files IDs exactly) per folder
 		'folderSubfolders' => 0, // max subfolder per folder
 		'folderFill' => 4, // zero fill symbols
 		'length' => 8,
 		'ext' => '.flv',
 		'prefixes' => false,
-		'hash' => '',
+		'hash' => 'md5',
 	);
 
 	protected $files = array(
@@ -1016,6 +1016,52 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		);
 		$where = $this->getAdapter()->quoteInto('id = ?', $id);
 		return $this->update($data, $where);
+	}
+
+
+	/**
+	 * insert/update & upload
+	 */
+	protected function _updateData($a = array(), $conf = null)
+	{
+		$res = false;
+
+		if (!empty($a['id']))
+		{
+			$row = $this->getById($a['id']);
+			if ($row)
+			{
+				$where = $this->getAdapter()->quoteInto('id = ?', $row->id);
+				$res = $this->update($data, $where);
+			}
+		} else {
+			if (!empty($conf['test'])) {
+				$res = 1;//TEST!
+		  	} else {
+				$res = $this->insert($data);
+			}
+			if ($res)
+			{
+				$row = $this->getById($res);
+			}
+		}
+		#d($row);
+
+		if ($res) {
+			$this->setN(FrontEnd::getMsg(array('update', 'ok')), 'success');
+		} else {
+			$this->setN(FrontEnd::getMsg(array('update', 'fail')), 'errors');
+			return $res;
+		}
+
+		if (!empty($conf['upload']))
+		{
+			#d($row);
+			$res = $row->upload();
+			return $res;
+		} else {
+			return $row;
+		}
 	}
 
 	/**
