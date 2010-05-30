@@ -1051,17 +1051,16 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			$this->setN(FrontEnd::getMsg(array('update', 'ok')), 'success');
 		} else {
 			$this->setN(FrontEnd::getMsg(array('update', 'fail')), 'errors');
-			return $res;
+			#return $res; // wrong, if we upload files only!
 		}
 
-		if (!empty($_FILES))
+		if (FrontEnd::isUpload())
 		{
 			#d($row);
 			$res = $row->upload();
-			return $res;
-		} else {
-			return $row;
 		}
+
+		return $res;
 	}
 
 	/**

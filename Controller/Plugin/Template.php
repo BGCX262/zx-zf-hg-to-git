@@ -25,6 +25,9 @@ class Zx_Controller_Plugin_Template extends Zend_Controller_Plugin_Abstract
 		// beware, ogre!
 		if ( !empty($_GET['zd']) && ($_GET['zd'] == '1') ) {
 			echo "Zend_Controller_Request_Http:<br><textarea rows=10 cols=100>" . print_r($request, 1) . "</textarea><br>";
+			if ( !empty($_GET['exit']) ) {
+				exit;
+			}
 		}
 		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($this->view, 1) . "</textarea><br>";die;
 	}

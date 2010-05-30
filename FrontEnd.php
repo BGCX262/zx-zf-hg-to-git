@@ -399,4 +399,25 @@ class Zx_FrontEnd extends Zx_Site
 		}
 		return array('ip' => $ip, 'ip2' => $ip2);
 	}
+
+	/**
+	 * Check if upload with post
+	 * @todo compact!
+	 * @return boolean
+	 */
+	function isUpload()
+	{
+		$upload = new Zend_File_Transfer_Adapter_Http();
+		$files = $upload->getFileInfo();
+		#d($files);
+
+		foreach ($files as $file => $info)
+		{
+			if ($upload->isValid($file))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }
