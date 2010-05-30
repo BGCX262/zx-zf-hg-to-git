@@ -424,21 +424,21 @@ class Zx_FrontEnd extends Zx_Site
 
 	/**
 	 * AI-pumped move_uploaded_file
+	 * @param string $src
 	 * @param string $tgt
-	 * @param string $dst
 	 * @return boolean
 	 */
-	function moveUploaded($tgt, $dst)
+	function moveUploaded($src, $tgt)
 	{
-		$fo = dirname($dst);
+		#d($tgt);
+		$fo = dirname($tgt);
 		
-		$pos = strpos($fo, PATH_PUB);
+		$pos = strpos($fo, PATH_PUB);#d($pos);
 		
 		if ($pos === false) {
 			$fo = PATH_PUB . $fo;
+			$fo = str_replace('//', '/', $fo);#d($fo);
 		}
-
-		$fo = str_replace('//', '/', $fo);#d($fo);
 
 		if (!is_dir($fo))
 		{
@@ -448,8 +448,8 @@ class Zx_FrontEnd extends Zx_Site
 			}
 		}
 
-		#d(basename($dst));
-		$res = move_uploaded_file($tgt, $fo . '/' . basename($dst));#d($res);
+		#d(basename($tgt));
+		$res = move_uploaded_file($src, $fo . '/' . basename($tgt));#d($res);
 		return $res;
 	}
 
