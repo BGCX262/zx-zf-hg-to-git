@@ -1022,13 +1022,13 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	/**
 	 * insert/update & upload
 	 */
-	protected function _updateData($a = array(), $conf = null)
+	protected function _updateData($data = array(), $conf = null)
 	{
 		$res = false;
 
-		if (!empty($a['id']))
+		if (!empty($data['id']))
 		{
-			$row = $this->getById($a['id']);
+			$row = $this->getById($data['id']);
 			if ($row)
 			{
 				$where = $this->getAdapter()->quoteInto('id = ?', $row->id);
@@ -1054,7 +1054,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			return $res;
 		}
 
-		if (!empty($conf['upload']))
+		if (!empty($_FILES))
 		{
 			#d($row);
 			$res = $row->upload();

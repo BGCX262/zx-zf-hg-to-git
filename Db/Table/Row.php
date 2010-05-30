@@ -142,6 +142,9 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 
 	protected function _upload()
 	{
+		#$upload = new Zend_File_Transfer_Adapter_Http();
+		#$files = $upload->getFileInfo();
+		#d($files);
 		return false;
 	}
 
