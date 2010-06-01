@@ -5,7 +5,6 @@
 */
 class Zx_Form extends Zend_Form
 {
-/*
     protected $elementDecorators = array(
 		'table' => array(
 			'ViewHelper',
@@ -36,10 +35,16 @@ class Zx_Form extends Zend_Form
 			'Form',
 		)
 	);
-*/
+
 	protected $conf;
 	protected $_msg = array();
 	protected $_isDecorators = null;
+
+	protected $_confElement = array(
+		'default' => array('filters' => array('StripTags'), 'validators' => array('NotEmpty')),
+		'digital' => array('filters' => array('StripTags', 'Digits'), 'validators' => array('Digits'))
+	);
+
 
     public function __construct($options = null)
     {
@@ -87,7 +92,7 @@ class Zx_Form extends Zend_Form
 
 
 
-	protected function elementText($title, $options)
+	protected function elementText($title, $options, $conf = null)
 	{
         $element = new Zend_Form_Element_Text($title);
 		if (is_array($options)) {
@@ -95,7 +100,25 @@ class Zx_Form extends Zend_Form
 		} else {
 			$element->setLabel($options);
 		}
-        $element->addFilter('StripTags')->addFilter('StringTrim')->addValidator('NotEmpty');
+
+        $element->addFilter('StringTrim');
+
+		if (!empty($conf['filters']))
+		{
+			foreach ($conf['filters'] as $filter)
+			{
+				$element->addFilter($filter);
+			}
+		}
+
+		if (!empty($conf['validators']))
+		{
+			foreach ($conf['validators'] as $validator)
+			{
+				$element->addValidator($filter);
+			}
+		}
+
 		#setRequired(true)
 		return $element;
 	}

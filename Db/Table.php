@@ -1069,8 +1069,8 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	 */
 	static public function setN($s, $ns = 'default')
 	{
-        $flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
+		$flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
 		$flashMessenger->setNamespace($ns)->addMessage($s);
-    }
+	}
 
 }
