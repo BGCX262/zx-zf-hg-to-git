@@ -425,13 +425,15 @@ class Zx_FrontEnd extends Zx_Site
 	/**
 	 * AI-pumped move_uploaded_file
 	 * @param string $src
-	 * @param string $tgt
+	 * @param string $dst
 	 * @return boolean
 	 */
-	function moveUploaded($src, $tgt)
+	function moveUploaded($src, $dst, $conf = null)
 	{
-		#d($tgt);
-		$fo = dirname($tgt);
+		if (empty($conf['maxFilesize'])) {$conf['maxFilesize'] = 10000;}
+
+		#d($dst);
+		$fo = dirname($dst);
 		
 		$pos = strpos($fo, PATH_PUB);#d($pos);
 		
@@ -447,10 +449,52 @@ class Zx_FrontEnd extends Zx_Site
 				return false;
 			}
 		}
+		#d(basename($dst));
 
-		#d(basename($tgt));
-		$res = move_uploaded_file($src, $fo . '/' . basename($tgt));#d($res);
-		return $res;
+		$upload = new Zend_File_Transfer_Adapter_Http();
+		$upload->addValidator('Size', false, $conf['maxFilesize']);
+		#$upload->addValidator('MimeType', false, 'image/png');
+		#$upload->addFilter('Rename', array('target' => $fo . '/' . basename($dst), 'overwrite' => true));
+		$upload->setDestination($fo . '/');
+
+		#d($upload->getMimeType()); // WHY application/octet-stream?
+/*
+		if($upload->isValid($file) && $upload->receive())
+		#if ($upload->receive())
+		{
+			$res = true;
+		} else {
+			$res = false;
+			$messages = $upload->getMessages();
+			d($messages);
+		}
+*/
+
+		$messages = null;
+
+		$files = $upload->getFileInfo();
+		foreach ($files as $file => $info)
+		{
+			#d($info);
+			if($upload->isValid($file))
+			{
+				$upload->addFilter('Rename', array('target' => $fo . '/' . basename($dst), 'overwrite' => true));
+				$upload->receive($file);
+			} else {
+				$res = false;
+				$messages = $upload->getMessages();
+				#d($messages);
+			}
+		}
+/*
+		if (!$upload->receive()) {
+			$messages = $upload->getMessages();
+			echo implode("\n", $messages);
+		}
+ */
+
+		#$res = move_uploaded_file($src, $fo . '/' . basename($dst));#d($res);
+		return array('res' => $res, 'messages' => $messages);
 	}
 
 }

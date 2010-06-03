@@ -8,19 +8,19 @@ $js = '';
 
 if (!empty($messages['default']))
 {
-	foreach ($messages['default'] as $v) {$js .= "$.n('" . $v . "');\n";}
+	foreach ($messages['default'] as $v) {$js .= "$.n('" . str_replace("'", '"', $v) . "');\n";}
 }
 if (!empty($messages['success']))
 {
-	foreach ($messages['success'] as $v) {$js .= "$.n.success('" . $v . "');\n";}
+	foreach ($messages['success'] as $v) {$js .= "$.n.success('" . str_replace("'", '"', $v) . "');\n";}
 }
 if (!empty($messages['warnings']))
 {
-	foreach ($messages['warnings'] as $v) {$js .= "$.n.warning('" . $v . "');\n";}
+	foreach ($messages['warnings'] as $v) {$js .= "$.n.warning('" . str_replace("'", '"', $v) . "');\n";}
 }
 if (!empty($messages['errors']))
 {
-	foreach ($messages['errors'] as $v) {$js .= "$.n.error('" . $v . "');\n";}
+	foreach ($messages['errors'] as $v) {$js .= "$.n.error('" . str_replace("'", '"', $v) . "');\n";}
 }
 #$js = "$.n('test!');"; // test!
 $js = "$(document).ready(function () {\n" . $js . "\n});\n"; // TODO: jquery helper!
