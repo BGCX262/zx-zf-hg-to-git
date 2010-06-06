@@ -143,6 +143,7 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 	 */
 	function countComments($pid, $sid, $where = null)
 	{
+		#d($sid);
 		if (is_string($sid)) {
 			$sid = $this->getServiceIdByName($sid);
 		}
@@ -153,6 +154,7 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 			->where('pid=?', $pid)
 			->where('sid=?', $sid)
 			->where('flag_status=1');
+		#d($select);
 
 		// additional where
 		if (is_array($where))
@@ -167,30 +169,35 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 		return $row->cnt;
 	}
 
-	function getComments($prefix, $item_id, $full = true)
+	/**
+	 * Get paginated comments for row
+	 * @param <type> $sid
+	 * @param <type> $item_id
+	 * @param <type> $full
+	 * @return Zend_Paginator
+	 */
+	function getComments($sid, $item_id, $full = true)
 	{
-		$service_id = $this->getServiceIdByName($prefix);
-
-		if ($full) {
-			$select = $this->select()
-				->where('item_id=?', $item_id)
-				->where('service_id=?', $service_id)
-				->where('comment_visible=1')
-				->order('comment_date DESC');
-			$comments = new Zend_Paginator(new Zend_Paginator_Adapter_DbTableSelect($select));
-			$comments->setItemCountPerPage(20);
-			$comments->setCurrentPageNumber(Zend_Registry::get('page'));
-			#$comments->setCurrentPageNumber($this->page);
-		} else {
-			$comments = $this->fetchAll(
-				$this->select()
-				->where('item_id=?', $item_id)
-				->where('service_id=?', $service_id)
-				->where('comment_visible=1')
-				->order('comment_date DESC')
-				->limit(3)
-			);
+		if (is_string($sid)) {
+			$sid = $this->getServiceIdByName($sid);
 		}
+
+		$select = $this->select()
+			->where('pid=?', $item_id)
+			->where('sid=?', $sid)
+			->where('flag_status=1')
+			->order(array('dt DESC', 'tm DESC'));
+
+		if (!$full) {
+			$select = $select->limit(3);
+		}
+		#d($select);
+
+		$comments = new Zend_Paginator(new Zend_Paginator_Adapter_DbTableSelect($select));
+		$comments->setItemCountPerPage(10);
+		$comments->setCurrentPageNumber(Zend_Registry::get('page'));
+		#$comments->setCurrentPageNumber($this->page);
+
 		return $comments;
 	}
 

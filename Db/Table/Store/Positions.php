@@ -9,6 +9,7 @@
 class Zx_Db_Table_Store_Positions extends Zx_Db_Table
 {
 	protected $_name = 'c_positions';
+	protected $_sid = 3;
 
 	#protected $_rowClass = 'Zx_Db_Table_Row_Store_Positions';
 	#protected $_rowsetClass = 'Zx_Db_Table_Rowset_Store_Positions';

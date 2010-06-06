@@ -119,19 +119,6 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 		return $this->getTable()->updateHits($this->id);
 	}
 
-
-	/**
-	 * Count comments for row
-	 * @param array $where
-	 * @return integer
-	 */
-	function countComments($where = null)
-	{
-		$comment = new Zx_Db_Table_Comment();
-		$name = $this->getTable()->info(Zend_Db_Table::NAME);
-		return $comment->countComments($this->id, $name, $where);
-	}
-
 	/**
 	 * $this->txt wrapper
 	 */
@@ -161,6 +148,64 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 		return $res;
 	}
 
+	function getSID()
+	{
+		$table = $this->getTable();#d($table);
+		#d($table->_sid);
+
+		if ($table->_sid > 0)
+		{
+			return $table->_sid;
+		} else {
+			return $table->info(Zend_Db_Table::NAME);
+		}
+	}
+
+
+	/**
+	 * Count comments for row
+	 * @param array $where
+	 * @return integer
+	 */
+	function countComments($where = null)
+	{
+		$comment = new Zx_Db_Table_Comment();
+		return $comment->countComments($this->id, $this->getSID(), $where);
+	}
+
+
+	/**
+	 * Get comments for row
+	 * @param boolean $full
+	 * @return
+	 */
+	function getComments($full = true)
+	{
+		$comment = new Zx_Db_Table_Comment();
+		$comments = $comment->getComments($this->getSID(), $this->id, $full);
+		#$comments->setItemCountPerPage(20);
+		#$comments->setCurrentPageNumber(Zend_Registry::get('page'));
+		return $comments;
+	}
+
+	function createComment($data)
+	{
+		// проверить общие установки
+		$comment = new Zx_Db_Table_Comment();
+		$data['service_id'] = $comment->getServiceIdByPrefix($this->getPrefix());
+		$data['item_id'] = $this->getField('id');
+		$data['info'] = My_Spambroker::userInfo();
+
+		if (empty($data['comment_visible']))
+		{
+			$data['comment_visible'] = !$comment->isPremoderation();
+		}
+
+		$this->_rowdata = $data;
+
+		$res = $comment->createComment($data);
+		return $res;
+	}
 
 }
 

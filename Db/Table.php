@@ -72,6 +72,13 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 
 	protected $_stored = null; // registry-stored rows! (since 10/4/22)
 
+	/**
+	* service_id for comments, votes etc
+	* @var integer
+	*/
+	protected $_sid = 0;
+
+
 	function init()
 	{
 		parent::init();
