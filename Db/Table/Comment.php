@@ -69,7 +69,7 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 	        'refTableClass'	=> 'c_positions',
 	        'refColumns'	=> array('id')
     	),
-		'blacklist' => array(
+		'comments_blacklist' => array(
 	        'columns'		=> array('comment_id'),
 	        'refTableClass'	=> 'Zx_Db_Table_Comment',
 	        'refColumns'	=> array('comment_id')
