@@ -134,8 +134,9 @@ class Zx_Form extends Zend_Form
 	{
         $el = new Zend_Form_Element_Textarea($title);
 
-		if (is_array($options)) {
-			$element->setOptions($options);
+		if (is_array($options))
+		{
+			$el->setOptions($options);
 		} else {
 			if (!empty($options))
 			{

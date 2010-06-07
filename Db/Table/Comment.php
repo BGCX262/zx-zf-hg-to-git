@@ -119,7 +119,7 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 			->where('pid=?', $data['pid'])
 			->where('sid=?', $data['sid'])
 			#->where('user_id=?', $data['user_id'])
-			->where('dt > DATE_SUB('.PHPNOW.', INTERVAL 1 DAY)')
+			#->where('dt > DATE_SUB('.PHPNOW.', INTERVAL 1 DAY)')
 			->where('txt=?', $data['txt']);
 
 		$row = $this->fetchRow($select);
@@ -250,15 +250,29 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 		}
 	}
 
-	function addComment()
+	function addComment($identityId)
 	{
-		$r = Zend_Controller_Front::getInstance()->getRequest();
+		$res = false;
 
-		$data = array(
-			#'pid' = '',
-		);
+		$form = new Form_Comment();
+		$formData = Zend_Controller_Front::getInstance()->getRequest()->getPost();
 
-		$res = $this->createComment($data);
+		if ($form->isValid($formData))
+		{
+			$uid = $form->getValue('user_id', 0);
+			if ($identityId != $uid) {
+				l($uid, __METHOD__ . ': $uid invalid!', Zend_Log::DEBUG);
+				return false;
+			}
+
+			$data = $form->getValues();
+			$data['dt'] = $data['tm'] = dateMySQL();
+			l($data, __METHOD__ . ': $data', Zend_Log::DEBUG);
+
+			$res = $this->createComment($data);
+		} else {
+			l($formData, __METHOD__ . ': $formData invalid!', Zend_Log::DEBUG);
+		}
 
 		return $res;
 	}
