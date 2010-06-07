@@ -115,19 +115,18 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 	function isFlood($data)
 	{
 		$select = $this->select()
-			->from('comments', 'COUNT(*) AS cnt')
-			->where('item_id=?', $data['item_id'])
-			->where('service_id=?', $data['service_id'])
-			#->where('user_name=?', $data['user_name'])
-			#->where('comment_visible=1')
-			->where('comment_date > DATE_SUB('.PHPNOW.', INTERVAL 1 DAY)')
-			->where('comment_text=?', $data['comment_text']);
+			->from($this->_name, 'COUNT(*) AS cnt')
+			->where('pid=?', $data['pid'])
+			->where('sid=?', $data['sid'])
+			#->where('user_id=?', $data['user_id'])
+			->where('dt > DATE_SUB('.PHPNOW.', INTERVAL 1 DAY)')
+			->where('txt=?', $data['txt']);
 
 		$row = $this->fetchRow($select);
 
 		if ($row->cnt)
 		{
-			l('user: ' . $data['user_name'] . ', text: len=' . strlen($data['comment_text']) . ', md5=' . md5($data['comment_text']) , 'USER_COMMENT_FLOOD');
+			l('user: ' . $data['user_id'] . ', text: len=' . strlen($data['txt']) . ', md5=' . md5($data['txt']) , 'USER_COMMENT_FLOOD');
 		}
 
 		return $row->cnt;
@@ -249,6 +248,19 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 				$res = $users->ban($user_cookie);
 			}
 		}
+	}
+
+	function addComment()
+	{
+		$r = Zend_Controller_Front::getInstance()->getRequest();
+
+		$data = array(
+			#'pid' = '',
+		);
+
+		$res = $this->createComment($data);
+
+		return $res;
 	}
 
 	function createComment($data)

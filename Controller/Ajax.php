@@ -5,7 +5,6 @@
 */
 class Zx_Controller_Ajax extends Zx_Controller_Action
 {
-
 	protected $_errorMessage = '';
 	protected $_isJSON = true; // возврат результата AJAX запросов в виде JSON (since 15.02.2010)
 	protected $_resJSON = true;
@@ -22,9 +21,11 @@ class Zx_Controller_Ajax extends Zx_Controller_Action
 */
 	function init()
     {
-		$this->_helper->viewRenderer->setNoRender();
+		#$this->_helper->viewRenderer->setNoRender();
+		#$this->_helper->layout->disableLayout(); // ajaxContext сам должен отключать макет. Возможно вы забыли передать параметр format=html и создать шаблон .html.phtml
 		if (!$this->_isAJAX()) {return $this->_throwError();}
 		parent::init();
+
     }
 
 	/**
@@ -49,25 +50,26 @@ class Zx_Controller_Ajax extends Zx_Controller_Action
 	{
 		if (is_null($aa)) {
 			if (is_array($a)) {
-				$res = u($a[0]);
-				$aaa = array( 'result' => $res, 'content' => u($a[1]) );
+				$res = $a[0];
+				$aaa = array( 'result' => $res, 'content' => $a[1] );
 			} else {
-				$res = u($a);
+				$res = $a;
 				$aaa = array( 'result' =>  $res);
 			}
 		} else {
-			$res = u($a);
+			$res = $a;
 			if (is_array($aa)) {
 				$aaa = array_merge( array( 'result' => $res ), $aa );
 			} else {
-				$aaa = array( 'result' => $res, 'content' => u($aa) );
+				$aaa = array( 'result' => $res, 'content' => $aa );
 			}
 		}
 		#l($aaa, __METHOD__ . ': aaa', Zend_Log::DEBUG);
 
 		$json = json_encode($aaa);
+		#l($json, __METHOD__ . ': $json', Zend_Log::DEBUG);
 		$this->getResponse()->appendBody($json);
-		#$this->_helper->viewRenderer->setNoRender();
+		$this->_helper->viewRenderer->setNoRender();
 
 		if ($res == 'ok') {
 			$this->_resJSON = true;
