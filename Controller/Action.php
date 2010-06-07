@@ -38,7 +38,7 @@ class Zx_Controller_Action extends Zend_Controller_Action
 	* Parameter: section
 	* @var
 	*/
-	protected $sectionId;
+	protected $sectionId = null;
 
 	/**
 	* Parameter: subsection
