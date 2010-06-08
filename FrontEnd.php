@@ -415,6 +415,7 @@ class Zx_FrontEnd extends Zx_Site
 		{
 			if ($upload->isValid($file))
 			{
+				#echo 'CHECKPOINT!';die;
 				return true;
 			}
 		}

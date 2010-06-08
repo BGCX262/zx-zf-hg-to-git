@@ -207,5 +207,13 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 		return $res;
 	}
 
+	/**
+	 * Some post-update manipulations
+	 */
+	protected function _postUpdate()
+	{
+		return true;
+	}
+
 }
 

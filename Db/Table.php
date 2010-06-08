@@ -1035,36 +1035,36 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 
 		if (!empty($data['id']))
 		{
-			$row = $this->getById($data['id']);
-			if ($row)
-			{
-				$where = $this->getAdapter()->quoteInto('id = ?', $row->id);
-				$res = $this->update($data, $where);
-			}
+			$where = $this->getAdapter()->quoteInto('id = ?', $data['id']);
+			$res = $this->update($data, $where);
+			$row = $this->getById($data['id']); // NB! get updated row always!
 		} else {
 			if (!empty($conf['test'])) {
 				$res = 1;//TEST!
 		  	} else {
 				$res = $this->insert($data);
 			}
-			if ($res)
-			{
+			if ($res) {
 				$row = $this->getById($res);
 			}
 		}
-		#d($row);
 
 		if ($res) {
 			$this->setN(FrontEnd::getMsg(array('update', 'ok')), 'success');
 		} else {
 			$this->setN(FrontEnd::getMsg(array('update', 'fail')), 'errors');
-			#return $res; // wrong, if we upload files only!
 		}
 
-		if (FrontEnd::isUpload())
+		#d($row);
+		if (FrontEnd::isUpload() && $row)
 		{
-			#d($row);
-			$res = $row->upload();#d($res);
+			$resu = $row->upload();#d($res);
+		}
+
+		// particular post-update manipulations
+		#d($row);
+		if ($row) {
+			$res = $row->_postUpdate();
 		}
 
 		return $res;

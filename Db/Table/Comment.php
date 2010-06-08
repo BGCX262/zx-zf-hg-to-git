@@ -182,11 +182,21 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 		}
 
 		$select = $this->select()
+			->setIntegrityCheck(false)
+			->from(array('p' => $this->_name))
+			->join(array('u' => 'users'), 'u.id = p.user_id', array('name', 'surname', 'avatar'))
+			->where('p.pid=?', $item_id)
+			->where('p.sid=?', $sid)
+			->where('p.flag_status=1')
+			->where('u.flag_status=1')
+			->order(array('p.dt DESC', 'p.tm DESC'));
+/*
+		$select = $this->select()
 			->where('pid=?', $item_id)
 			->where('sid=?', $sid)
 			->where('flag_status=1')
 			->order(array('dt DESC', 'tm DESC'));
-
+*/
 		if (!$full) {
 			$select = $select->limit(3);
 		}
