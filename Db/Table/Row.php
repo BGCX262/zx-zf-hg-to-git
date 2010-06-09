@@ -210,7 +210,7 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 	/**
 	 * Some post-update manipulations
 	 */
-	protected function _postUpdate()
+	function _postUpdate()
 	{
 		return true;
 	}

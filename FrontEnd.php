@@ -431,7 +431,9 @@ class Zx_FrontEnd extends Zx_Site
 	 */
 	function moveUploaded($src, $dst, $conf = null)
 	{
-		if (empty($conf['maxFilesize'])) {$conf['maxFilesize'] = 10000;}
+		#d($conf);
+		if (empty($conf['maxFilesize'])) {$conf['maxFilesize'] = 20000;}
+		#d($conf['maxFilesize']);
 
 		#d($dst);
 		$fo = dirname($dst);

@@ -91,6 +91,18 @@ class Zx_Form extends Zend_Form
 	}
 
 
+	protected function elementSelect($title, $options, $conf = null)
+	{
+		$element = new Zend_Form_Element_Select($title);
+		if (is_array($options)) {
+			$element->setOptions($options);
+		} else {
+			$element->setLabel($options);
+		}
+		return $element;
+	}
+
+
 
 	protected function elementText($title, $options, $conf = null)
 	{
