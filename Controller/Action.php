@@ -288,6 +288,7 @@ Array
 	*/
 	function initStrings()
 	{
+		l(__METHOD__. ' checkpoint');
 		$this->view->pages = $this->conf->pages;// Главное навигационное меню
 		
 		if (!empty($this->conf->pages)) {
@@ -311,9 +312,11 @@ Array
 
 		// <title>
 		if (!empty($this->cTitle)) {
-			$this->setVar('pageTitle', $this->fe->setPageTitle($this->cTitle));
+			#$this->setVar('pageTitle', $this->fe->setPageTitle($this->cTitle));
+			$this->setTitle($this->fe->setPageTitle($this->cTitle));
 		} else {
-			$this->setVar('pageTitle', $this->fe->getPageTitle());
+			$this->setTitle($this->fe->getPageTitle());
+			#$this->setVar('pageTitle', $this->fe->getPageTitle());
 		}
 		#d($this->view->pageTitle);
     }
