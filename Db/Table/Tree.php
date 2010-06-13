@@ -85,16 +85,27 @@ class Zx_Db_Table_Tree extends Zx_Db_Table
 		$select = $this->select()
 		->setIntegrityCheck(false)
 		->from(array('p' => $this->_name), array('id', 'parent_id'))
-		->join(array('c' => $this->_dependentTables[0]), 'c.node_id = p.id', array('title', 'code', 'announce', 'txt'))
-		->where('c.flag_status = 1 AND p.parent_id = ' . $id);
+		->join(array('c' => $this->_dependentTables[0]), 'c.node_id = p.id', array('title', 'code', 'announce', 'txt'));
 
-		if ($parent) {
-			$select = $select->orWhere('p.id = ' . $id);
+		if (is_numeric($id)) {
+			$select = $select->where('c.flag_status = 1 AND p.parent_id = ' . $id);
+		} else {
+			$select = $select->where('c.flag_status = 1 AND p.parent_id IN (' . $id . ')');
+		}
+
+		if ($parent)
+		{
+			if (is_numeric($id)) {
+				$select = $select->orWhere('p.id = ' . $id);
+			} else {
+				$select = $select->orWhere('p.id IN (' . $id . ')');
+			}
 		}
 
 		$select = $select->order('p.lft')
 		#->limit(2)
 		;
+		#d($select);
 
 		#if ($children) {}
  		$res = $this->fetchAll($select); // Zend_Db_Table_Rowset

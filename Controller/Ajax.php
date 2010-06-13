@@ -96,17 +96,4 @@ class Zx_Controller_Ajax extends Zx_Controller_Action
 			$this->_helper->viewRenderer->setNoRender();
 		}
 	}
-
-	/**
-	 * @deprecated
-	 * @see _resultJSON
-	 */
-	protected function _resultAJAX($res) {
-		if ($res == 'ok') {
-			return $this->_resultJSON($res);
-		} else {
-			return $this->_renderError($res);
-		}
-	}
-
 }

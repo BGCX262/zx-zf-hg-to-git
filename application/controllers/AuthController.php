@@ -22,18 +22,6 @@ class AuthController extends MainController
 
 		$this->_formRender = isset($this->conf->auth->formRender) ? false : true;
 
-		/*
-		if (!empty($this->loginActionDisplayForm))
-		{
-			$this->loginActionDisplayForm = true;
-		}
- */
-/* 		if (!isset($this->loginRedirect))
-		{
-			$this->loginRedirect = '/';
-		}
- */
-
  		if (!isset($this->logoutRedirect))
 		{
 			$this->logoutRedirect = '/';
