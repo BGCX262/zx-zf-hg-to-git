@@ -154,7 +154,7 @@ class Zx_Db_Table_Content extends Zx_Db_Table
 		$where = $this->getTopicWhere($topicId);
 		
 		$select = $this->getSelect($this->getTopicWhere($topicId), $conf);
-		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($select->__toString(), 1) . "</textarea><br>";die;
+#		d($select);
 		$rows = $this->paginator($select);
 		return $rows;
 	}
