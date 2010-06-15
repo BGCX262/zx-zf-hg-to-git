@@ -882,8 +882,8 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			$n = round($id / $this->imgs['folderFiles']);
 			if ( $this->imgs['folderFill'] > 0) {
                 $n = sprintf("%0" . $this->imgs['folderFill'] . "d", $n);
+				$fo .=  '/' . $n;
             }
-           	$fo .=  '/' . $n;
 		}
 
 		#'folderSubfolders' => null, // max subfolder per folder
@@ -1078,6 +1078,12 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	{
 		$flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
 		$flashMessenger->setNamespace($ns)->addMessage($s);
+	}
+
+
+	function getSID()
+	{
+		return $this->_sid;
 	}
 
 }

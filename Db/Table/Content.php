@@ -51,6 +51,7 @@ class Zx_Db_Table_Content extends Zx_Db_Table
     	),
  */    );
 
+	protected $_sid = 1;
 
 /**
 * NLS parameters for SQL selects
