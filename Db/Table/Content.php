@@ -146,7 +146,12 @@ class Zx_Db_Table_Content extends Zx_Db_Table
 	*/
 	function getTopicContent($topicId = null, $conf = array())
 	{
-		$_conf = $this->confSQL('dtf', array('fields' => array('id', 'title', 'announce')));
+		$fields = array('id', 'title', 'announce');
+		if (!empty($this->_auxFields)) {
+			$fields = array_merge($fields, $this->_auxFields);
+ 		}
+
+		$_conf = $this->confSQL('dtf', array('fields' => $fields));
 		if (!empty($conf)) {
 			$conf = array_merge($conf, $_conf);
 		} else {

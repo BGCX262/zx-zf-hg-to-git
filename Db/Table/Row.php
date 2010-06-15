@@ -215,5 +215,25 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 		return true;
 	}
 
+
+	/**
+	 * Get user for row
+	 * @return Zx_Db_Table_Row_Users
+	 */
+	function getUser()
+	{
+		if (empty($this->user_id)) {
+			return false;
+	  	}
+
+		$users = new Zx_Db_Table_Users();
+		$select = $users->select()
+			->where('flag_status > 0')
+			->where('id=?', $this->user_id);
+
+		$row = $users->fetchRow($select);
+		return $row;
+	}
+
 }
 
