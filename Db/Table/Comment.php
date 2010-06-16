@@ -189,7 +189,7 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 			->where('p.sid=?', $sid)
 			->where('p.flag_status=1')
 			->where('u.flag_status=1')
-			->order(array('p.dt DESC', 'p.tm DESC'));
+			->order(array('p.dt', 'p.tm'));
 /*
 		$select = $this->select()
 			->where('pid=?', $item_id)
