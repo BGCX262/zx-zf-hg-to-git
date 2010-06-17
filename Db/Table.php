@@ -431,6 +431,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			$select = $this->getSelect($where, $conf);
 			if (!empty($conf['select'])) {return $select;} // compatibility patch
 		}
+		#echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r($select, 1) . '</textarea><br>';
 		#d($select, 0);
 
 		if ( (!empty($conf['paginator'])) ) { $this->setPaginator($conf['paginator']); }
@@ -992,13 +993,20 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	*/
 	function paginator($select)
 	{
+		#d($select->getPart(Zend_Db_Select::LIMIT_COUNT), 1);
+
 		if (!$this->isPaginator)
 		{
 			$rows = $this->fetchAll($select);
 			return $rows;
 		}
 		$this->_paginator = new Zend_Paginator(new Zend_Paginator_Adapter_DbTableSelect($select));
-		$this->_paginator->setItemCountPerPage($this->ItemCountPerPage);#$this->get('ItemCountPerPage')
+		$limit = $select->getPart(Zend_Db_Select::LIMIT_COUNT);
+		if ($limit) {
+			$this->_paginator->setItemCountPerPage($limit);
+		} else {
+			$this->_paginator->setItemCountPerPage($this->ItemCountPerPage);
+		}
 		$this->_paginator->setCurrentPageNumber(Zend_Registry::get('page'));
 		#d($this->_paginator);
 
