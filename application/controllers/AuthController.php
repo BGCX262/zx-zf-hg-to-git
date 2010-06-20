@@ -47,7 +47,7 @@ class AuthController extends MainController
 		if ($this->view->identity) {$this->_redirect('/');}
 
 		if (!$this->userRegistrationAllowed) {
-			return $this->forward('login');
+			return $this->_forward('login');
 		}
 
 		$error = false;

@@ -18,15 +18,15 @@ class Zx_Form_AuthRegister extends Zx_Form
 
 		$a = array();
 		
-		$a['surname'] = $this->getElement_Text('surname', 'Фамилия');
+		$a['surname'] = $this->elementText('surname', 'Фамилия');
 		#$a['surname']->setTranslator($translate);
 		
-		$a['name'] = $this->getElement_Text('name', 'Имя');
-		$a['middlename'] = $this->getElement_Text('middlename', 'Отчество');
+		$a['name'] = $this->elementText('name', 'Имя');
+		$a['middlename'] = $this->elementText('middlename', 'Отчество');
 		
-		$a['password'] = $this->getElement_Password('password', 'Пароль');
-		$password2 = $this->getElement_Password('password2', 'Подтверждение пароля');
-		$password2->addValidator(new My_Validate_PasswordConfirmation('password'));
+		$a['password'] = $this->elementPassword('password', 'Пароль');
+		$password2 = $this->elementPassword('password2', 'Подтверждение пароля');
+		$password2->addValidator(new Zx_Validate_PasswordConfirmation('password'));
 		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($password2, 1) . "</textarea><br>";die;
 		$a['password2'] = $password2;
 
@@ -44,7 +44,7 @@ class Zx_Form_AuthRegister extends Zx_Form
 		));
 		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($a['captcha'], 1) . "</textarea><br>";die;
 				
-        $id = new Zend_Form_Element_Hidden('id');
+        $id = $this->elementHidden('id');
         
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setAttrib('id', 'submitbutton');

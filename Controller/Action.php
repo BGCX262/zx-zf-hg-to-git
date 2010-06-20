@@ -255,6 +255,10 @@ Array
 			$this->authHTTPS = true;
 		}
 
+		if (!empty($auth->userRegistrationAllowed)) {
+	       	$this->userRegistrationAllowed = true;
+		}
+
 		if (isset($auth->loginRedirect)) {
 	       	$this->loginRedirect = $auth->loginRedirect;
         } else {
