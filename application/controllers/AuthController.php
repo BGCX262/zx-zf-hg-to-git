@@ -55,16 +55,16 @@ class AuthController extends MainController
 
 		$form = $this->getFormRegister();
 
-        if ($this->_request->isPost()) {
-
+        if ($this->getRequest()->isPost())
+		{
 			if ($form->isValid($_POST)) {
 
 				$values = $form->getValues();
 
 				$filter = new Zend_Filter_StripTags();
-				$username = $filter->filter($this->_request->getPost('username'));
-				$password = $filter->filter($this->_request->getPost('password'));
-				$pw = $filter->filter($this->_request->getPost('pw'));
+				$username = $filter->filter($this->getRequest()->getPost('username'));
+				$password = $filter->filter($this->getRequest()->getPost('password'));
+				$pw = $filter->filter($this->getRequest()->getPost('pw'));
 
 /* 				if (empty($username)) {
 					$this->setVar('errors', 'Не указано имя пользователя.');
@@ -112,7 +112,7 @@ class AuthController extends MainController
 
         if ($this->getRequest()->isPost())
 		{
-			$formData = $this->_request->getPost();
+			$formData = $this->getRequest()->getPost();
             if ($form->isValid($formData))
 			{
 				$username = $form->getValue('username');
@@ -153,7 +153,7 @@ class AuthController extends MainController
 				#$authAdapter = new Zend_Auth_Adapter_DbTable(Zend_Registry::get('db'), 'users', 'username', 'password', 'MD5(?)');
 				#authAdapter->setIdentity($username)->setCredential($password);
 
-				#$authAdapter->setIdentity($this->_request->getPost('username'))->setCredential($this->_request->getPost('password'))->setCredentialTreatment('md5(?) AND active = 1');
+				#$authAdapter->setIdentity($this->getRequest()->getPost('username'))->setCredential($this->getRequest()->getPost('password'))->setCredentialTreatment('md5(?) AND active = 1');
 
                 // do the authentication
                 $auth = Zend_Auth::getInstance();
