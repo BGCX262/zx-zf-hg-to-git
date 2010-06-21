@@ -46,53 +46,43 @@ class AuthController extends MainController
     {
 		if ($this->view->identity) {$this->_redirect('/');}
 
-		if (!$this->userRegistrationAllowed) {
-			return $this->_forward('login');
-		}
+		if (!$this->userRegistrationAllowed) {return $this->_forward('login');}
 
-		$error = false;
 		$this->textRow('register');
 
 		$form = $this->getFormRegister();
 
         if ($this->getRequest()->isPost())
 		{
-			if ($form->isValid($_POST)) {
+			$rawData = $this->getRequest()->getPost();
+			#d($rawData);
+			if ($form->isValid($rawData))
+			{
+				$v = $form->getValues();
 
-				$values = $form->getValues();
-
-				$filter = new Zend_Filter_StripTags();
-				$username = $filter->filter($this->getRequest()->getPost('username'));
-				$password = $filter->filter($this->getRequest()->getPost('password'));
-				$pw = $filter->filter($this->getRequest()->getPost('pw'));
-
-/* 				if (empty($username)) {
-					$this->setVar('errors', 'Не указано имя пользователя.');
-					$error = true;
-				}
- */
-				$row = $this->getRow('users', "username = '" . $username . "'");
-				if ($row) {
-					$this->setVar('errors', 'Такой пользователь уже зарегистрирован на сайте.');
-					$error = true;
-				}
-
-				if (!$error) {
-					$row = $this->users->createRow();
-					$row->username = $username;
-					$row->password = md5($password);
+				$row = $this->getRow('users', "email = '" . $v['email'] . "'");
+				if ($row)
+				{
+					#$this->setN(FrontEnd::getMsg(array('auth', 'loginExists')), 'errors');
+					$this->view->errors[] = FrontEnd::getMsg(array('auth', 'loginExists'));
+				} else {
+					$data = $v;
+					$data['password'] = md5($v['password']);
+					$row = $this->users->createRow($data);
 					$res = $row->save();
-					#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($res, 1) . "</textarea><br>";die;
 					if ($res) {
-						$this->setContent('Новый пользователь успешно зарегистрирован.');
-						$this->setVar('done', true);
+						#$this->setN(FrontEnd::getMsg(array('auth', 'regSuccess')));#$this->setContent('');
+						$this->view->message = FrontEnd::getMsg(array('auth', 'regSuccess'));
+						$this->view->done = true;
 					}
 				}
+	        } else {
+				#$this->setN(FrontEnd::getMsg(array('form', 'errors')), 'errors');
+				$this->view->errors[] = FrontEnd::getMsg(array('form', 'errors'));
 			}
-        }
-
+			#$this->_redirect($this->view->requestUri);
+		}
 		$this->view->form = $form;
-
     }
 
 	/**

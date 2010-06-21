@@ -1,7 +1,4 @@
 <?php
-/**
-* @todo decorators
-*/
 class Zx_Form_AuthRegister extends Zx_Form
 {
     public function __construct($options = null)
@@ -17,6 +14,8 @@ class Zx_Form_AuthRegister extends Zx_Form
 		#$translator = new Zend_Translate_Adapter_Array($translate);				
 
 		$a = array();
+
+		#$a['username'] = $this->elementText('username', 'Логин');
 		
 		$a['surname'] = $this->elementText('surname', 'Фамилия');
 		#$a['surname']->setTranslator($translate);
@@ -31,6 +30,7 @@ class Zx_Form_AuthRegister extends Zx_Form
 		$a['password2'] = $password2;
 
 		#$captcha	 = new Zend_Form_Element_Captcha();
+/*
 		$a['captcha'] = new Zend_Form_Element_Captcha('captcha', array(
 				'label' => 'Пожалуйста, введите символы на иллюстрации:',
 				'captcha' => array(
@@ -42,7 +42,7 @@ class Zx_Form_AuthRegister extends Zx_Form
 					'imgurl' => '/images/captcha',
 				),
 		));
-		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($a['captcha'], 1) . "</textarea><br>";die;
+ */
 				
         $id = $this->elementHidden('id');
         

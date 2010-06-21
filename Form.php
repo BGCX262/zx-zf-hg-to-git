@@ -78,7 +78,7 @@ class Zx_Form extends Zend_Form
 	protected function elementPassword($title, $label)
 	{
 		$el = new Zend_Form_Element_Password($title);
-		$el->setLabel($label)->setRequired(true)->addFilter('StripTags')->addFilter('StringTrim')->addValidator('NotEmpty')->addValidator('StringLength', false, array(6))->setRequired(true);
+		$el->setLabel($label)->setRequired(true)->addFilter('StripTags')->addFilter('StringTrim')->addValidator('NotEmpty')->addValidator('StringLength', false, array(6));
 		return $el;
 	}
 	
@@ -117,23 +117,29 @@ class Zx_Form extends Zend_Form
 
 		if (!empty($conf['filters']))
 		{
-			foreach ($conf['filters'] as $filter)
-			{
-				$element->addFilter($filter);
-			}
+			$element->addFilters($conf['filters']);
 		}
 
 		if (!empty($conf['validators']))
 		{
-			foreach ($conf['validators'] as $validator)
-			{
-				$element->addValidator($filter);
-			}
+			$element->addValidators($conf['validators']);
 		}
 
-		#setRequired(true)
 		return $element;
 	}
+
+
+	protected function elementEmail($name = 'email', $label = 'E-mail')
+	{
+		$el = $this->elementText($name, array(
+				'label' => $label,
+				'filters'  => array('StringToLower'),
+				'validators'  => array('EmailAddress')
+			))
+			->setRequired(true);
+		return $el;
+	}
+
 
 
 	/**
@@ -206,6 +212,8 @@ class Zx_Form extends Zend_Form
 	{
 		if (!empty($this->_msg[$key])) {
 			return $this->_msg[$key];
+		} else {
+			return FrontEnd::getMsg($key);
 		}
 		return null;
 	}
@@ -216,7 +224,8 @@ class Zx_Form extends Zend_Form
 	* @param
 	* @return
 	*/	
-	protected function _addElements($aElements) {
+	protected function _addElements($aElements)
+	{
 		foreach ($aElements as $element)
 		{
 			// Добавление звездочки для обязательных полей
