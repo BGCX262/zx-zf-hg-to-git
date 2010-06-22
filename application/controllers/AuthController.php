@@ -27,7 +27,7 @@ class AuthController extends MainController
 			$this->logoutRedirect = '/';
 		}
 		$this->users = new Users();
-		$this->view->errors = array();
+		#$this->view->notifyerr = array();
 		$this->view->mode = 'insert';
     }
 
@@ -35,6 +35,50 @@ class AuthController extends MainController
     {
         #$this->_redirect('/');
 		$this->loginAction();
+    }
+
+
+	/**
+	* Напоминание пароля
+	*/
+    function remindAction()
+    {
+		if ($this->view->identity) {$this->_exit();}
+		if (!$this->userRegistrationAllowed) {$this->_exit();}
+
+		$this->textRow('remind');
+
+		$form = new Form_AuthRemind();
+
+        if ($this->getRequest()->isPost())
+		{
+			$rawData = $this->getRequest()->getPost();
+			if ($form->isValid($rawData))
+			{
+				$v = $form->getValues();
+
+				$row = $this->getRow('users', 'email = "' . $v['email'] . '" OR LCASE(username) = "' . strtolower($v['username']) . '"');
+				if ($row)
+				{
+					$this->view->notifyerr[] = FrontEnd::getMsg(array('auth', 'loginExists'));
+				} else {
+					$data = $v;
+					$data['password'] = md5($v['password']);
+					$row = $this->users->createRow($data);
+					#$res = $row->save();
+					if ($res) {
+						#$this->setN(FrontEnd::getMsg(array('auth', 'regSuccess')));#$this->setContent('');
+						$this->view->notifymsg = FrontEnd::getMsg(array('auth', 'regSuccess'));
+						$this->view->done = true;
+					}
+				}
+	        } else {
+				#$this->setN(FrontEnd::getMsg(array('form', 'errors')), 'errors');
+				$this->view->notifyerr[] = FrontEnd::getMsg(array('form', 'errors'));
+			}
+			#$this->_redirect($this->view->requestUri);
+		}
+		$this->view->form = $form;
     }
 
 
@@ -64,7 +108,7 @@ class AuthController extends MainController
 				if ($row)
 				{
 					#$this->setN(FrontEnd::getMsg(array('auth', 'loginExists')), 'errors');
-					$this->view->errors[] = FrontEnd::getMsg(array('auth', 'loginExists'));
+					$this->view->notifyerr[] = FrontEnd::getMsg(array('auth', 'loginExists'));
 				} else {
 					$data = $v;
 					$data['password'] = md5($v['password']);
@@ -72,13 +116,13 @@ class AuthController extends MainController
 					$res = $row->save();
 					if ($res) {
 						#$this->setN(FrontEnd::getMsg(array('auth', 'regSuccess')));#$this->setContent('');
-						$this->view->message = FrontEnd::getMsg(array('auth', 'regSuccess'));
+						$this->view->notifymsg = FrontEnd::getMsg(array('auth', 'regSuccess'));
 						$this->view->done = true;
 					}
 				}
 	        } else {
 				#$this->setN(FrontEnd::getMsg(array('form', 'errors')), 'errors');
-				$this->view->errors[] = FrontEnd::getMsg(array('form', 'errors'));
+				$this->view->notifyerr[] = FrontEnd::getMsg(array('form', 'errors'));
 			}
 			#$this->_redirect($this->view->requestUri);
 		}
@@ -239,4 +283,13 @@ class AuthController extends MainController
         $form = new Form_AuthLogin();
         return $form;
     }
+
+	/**
+	 * _redirect() wrapper
+	 */
+	private function _exit()
+	{
+        $this->_redirect('/');
+    }
+
 }
