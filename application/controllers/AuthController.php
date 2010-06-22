@@ -60,7 +60,7 @@ class AuthController extends MainController
 			{
 				$v = $form->getValues();
 
-				$row = $this->getRow('users', "email = '" . $v['email'] . "'");
+				$row = $this->getRow('users', 'email = "' . $v['email'] . '" OR LCASE(username) = "' . strtolower($v['username']) . '"');
 				if ($row)
 				{
 					#$this->setN(FrontEnd::getMsg(array('auth', 'loginExists')), 'errors');
