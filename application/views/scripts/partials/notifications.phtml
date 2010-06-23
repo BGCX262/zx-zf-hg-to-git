@@ -25,11 +25,4 @@ if (!empty($messages['errors']))
 #$js = "$.n('test!');"; // test!
 $js = "$(document).ready(function () {\n" . $js . "\n});\n"; // TODO: jquery helper!
 echo $js;
-#d($js);
 ?>
-<?php /*if ($js) { ?>
-<?php #$this->headScript()->captureStart() ?>
-<?php #echo $js;?>
-<?php #$this->headScript()->captureEnd() ?>
-<?php $this->headScript()->offsetSetScript(100, $js);?>
-<?php }*/ ?>

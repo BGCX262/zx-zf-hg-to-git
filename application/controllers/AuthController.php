@@ -27,7 +27,6 @@ class AuthController extends MainController
 			$this->logoutRedirect = '/';
 		}
 		$this->users = new Users();
-		#$this->view->notifyerr = array();
 		$this->view->mode = 'insert';
     }
 
@@ -58,17 +57,19 @@ class AuthController extends MainController
 				$v = $form->getValues();
 
 				$row = $this->getRow('users', 'email = "' . $v['email'] . '"');
-				if ($row)
+				if (!$row)
 				{
-					$this->view->notifyerr[] = FrontEnd::getMsg(array('auth', 'loginExists'));
+					$this->view->notifyerr[] = FrontEnd::getMsg(array('auth', 'userFailed'));
 				} else {
-					$data['password'] = md5($v['email']); //@todo!
-					$row = $row->update($data);
-					#$res = $row->save();
+					$row->password = md5($v['email']); //@todo!
+					#$row = $row->save($data);
+					$res = $row->save();
+					#d($res);
 					if ($res) {
+						// todo: email
 						#$this->setN(FrontEnd::getMsg(array('auth', 'regSuccess')));#$this->setContent('');
-						$this->view->notifymsg = FrontEnd::getMsg(array('auth', 'regSuccess'));
-						$this->view->done = true;
+						#$this->view->notifymsg[] = FrontEnd::getMsg(array('auth', 'regSuccess'));
+						#$this->view->done = true;
 					}
 				}
 	        } else {
@@ -125,6 +126,7 @@ class AuthController extends MainController
 			}
 			#$this->_redirect($this->view->requestUri);
 		}
+		d($this->view->notifyerr);
 		$this->view->form = $form;
     }
 

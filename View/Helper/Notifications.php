@@ -2,7 +2,7 @@
 /**
  * Non-flash notifications
  */
-class Zx_View_Helper_Notifications# extends Zend_View_Helper_Abstract
+class Zx_View_Helper_Notifications extends Zend_View_Helper_Abstract
 {	
 	public function notifications($flash = false)
 	{
