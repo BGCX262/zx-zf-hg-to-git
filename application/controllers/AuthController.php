@@ -56,7 +56,7 @@ class AuthController extends MainController
 			{
 				$v = $form->getValues();
 
-				$row = $this->getRow('users', 'email = "' . $v['email'] . '"');
+				$row = $this->getRow('users', 'username = "' . $v['username'] . '" AND email = "' . $v['email'] . '"');
 				if (!$row)
 				{
 					$this->view->notifyerr[] = FrontEnd::getMsg(array('auth', 'userFailed'));
@@ -65,11 +65,21 @@ class AuthController extends MainController
 					#$row = $row->save($data);
 					$res = $row->save();
 					#d($res);
-					if ($res) {
-						// todo: email
-						#$this->setN(FrontEnd::getMsg(array('auth', 'regSuccess')));#$this->setContent('');
-						#$this->view->notifymsg[] = FrontEnd::getMsg(array('auth', 'regSuccess'));
-						#$this->view->done = true;
+					if ($res)
+					{
+						$pw = Aux::generatePassword();
+
+						$options = array(
+							'to' => $v['email'],
+							'subject' => 'данные доступа на сайт',
+							'body' => 'Это автоматический ответ на запрос напоминания пароля для логина ' . $v['username'] . '.
+Так как все пароли хранятся на сайте в зашифрованном виде, восстановить их невозможно.
+Для Вас сгенерирован новый пароль ' . $pw . ', вы можете установить его, перейдя по ссылке: (здесь будет ссылка)
+Если Вы не хотите менять текущий пароль на новый, ничего не делайте, просто удалите это письмо.'
+						);
+						$res = FrontEnd::mail($options);
+						$this->view->notifymsg[] = FrontEnd::getMsg(array('auth', 'remindSuccess'));
+						$this->view->done = true;
 					}
 				}
 	        } else {
@@ -126,7 +136,6 @@ class AuthController extends MainController
 			}
 			#$this->_redirect($this->view->requestUri);
 		}
-		d($this->view->notifyerr);
 		$this->view->form = $form;
     }
 

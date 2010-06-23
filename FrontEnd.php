@@ -547,5 +547,4 @@ class Zx_FrontEnd extends Zx_Site
 		#$res = move_uploaded_file($src, $fo . '/' . basename($dst));#d($res);
 		return array('res' => $res, 'messages' => $messages);
 	}
-
 }
