@@ -291,6 +291,54 @@ class Zx_FrontEnd extends Zx_Site
 
 
 	/**
+	 * Универсальный почтальон
+	 * @static
+	 * @param array $conf
+	 * @return boolean
+	 */
+	static function mail($options)
+	{
+		$conf = Zend_Registry::get('conf');
+
+		l($conf, __METHOD__ . " conf: ");
+
+		$body = "Здравствуйте! Это автоматически сгенерированное письмо с сайта " . $conf->site->title . ".\n\n" . $options['body'] . "\n\n--\n";
+		if (!empty($options['signature'])) {
+			$body .= $options['signature'];
+		} else {
+			$body .= "С уважением,\nадминистрация " . $conf->site->title;
+		}
+
+		$mail = new Zend_Mail('utf-8');
+		if (!empty($options['html'])) {
+			$mail->setBodyHtml($msg);
+		} else {
+			$mail->setBodyText($body);
+		}
+		$mail->setFrom($conf->site->admin->email, $conf->site->admin->title);
+
+		if ( (LOCATION != 'local') && !empty($options['to']) )
+		{
+			$mail->addTo($options['to'], $options['to']);
+		} else {
+			$mail->addTo($conf->site->admin->email, $conf->site->admin->title);
+		}
+		$mail->addCc($conf->support->email, $conf->support->title);
+
+		$mail->setSubject($conf->site->url . ': ' . $options['subject']);
+
+		if (LOCATION == 'stable')
+		{
+			$config = array('post' => 25);
+			$transport = new Zend_Mail_Transport_Smtp('127.0.0.1', $config);
+			return $mail->send($transport);
+		} else {
+			return true;
+		}
+	}
+
+
+	/**
 	* Send feedback
 	* @deprecated
 	* @param

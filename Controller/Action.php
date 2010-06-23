@@ -323,6 +323,9 @@ Array
 			#$this->setVar('pageTitle', $this->fe->getPageTitle());
 		}
 		#d($this->view->pageTitle);
+
+		$this->view->notifyerr = array();
+		$this->view->notifymsg = array();
     }
 
 	/**

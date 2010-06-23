@@ -43,7 +43,7 @@ class AuthController extends MainController
 	*/
     function remindAction()
     {
-		if ($this->view->identity) {$this->_exit();}
+		#if (!$this->view->identity) {$this->_redirect('auth/login');}
 		if (!$this->userRegistrationAllowed) {$this->_exit();}
 
 		$this->textRow('remind');
@@ -57,14 +57,13 @@ class AuthController extends MainController
 			{
 				$v = $form->getValues();
 
-				$row = $this->getRow('users', 'email = "' . $v['email'] . '" OR LCASE(username) = "' . strtolower($v['username']) . '"');
+				$row = $this->getRow('users', 'email = "' . $v['email'] . '"');
 				if ($row)
 				{
 					$this->view->notifyerr[] = FrontEnd::getMsg(array('auth', 'loginExists'));
 				} else {
-					$data = $v;
-					$data['password'] = md5($v['password']);
-					$row = $this->users->createRow($data);
+					$data['password'] = md5($v['email']); //@todo!
+					$row = $row->update($data);
 					#$res = $row->save();
 					if ($res) {
 						#$this->setN(FrontEnd::getMsg(array('auth', 'regSuccess')));#$this->setContent('');
