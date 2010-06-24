@@ -1,6 +1,6 @@
 <?php
 /**
- * Non-flash notifications
+ * Flash and non-flash notifications
  */
 class Zx_View_Helper_Notifications extends Zend_View_Helper_Abstract
 {	

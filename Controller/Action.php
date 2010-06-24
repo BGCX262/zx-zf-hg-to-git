@@ -76,21 +76,14 @@ class Zx_Controller_Action extends Zend_Controller_Action
 
 	function init()
 	{
-		#$this->reg = Zend_Registry::getInstance();
-		#$this->conf = $this->reg->conf;
 		$this->conf = Zend_Registry::get('conf');
 
 		$this->initView();
-
-		#$this->fe = new Zx_FrontEnd();
-		#$this->view->pathParts = $this->fe->getPathParts($this->getRequest());
-		#$this->view->host = $this->fe->getHttpPrefix(); // используется в хелперах меню
 
 		$this->viewScript = 'main.phtml';
 
 		$this->view->host = Zx_FrontEnd::getHttpPrefix(); // используется в хелперах меню
 		$this->view->pathParts = Zx_FrontEnd::getPathParts($this->getRequest());//@TODO? use $this->p instead
-		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($this->view->pathParts, 1) . "</textarea><br>";die;
 		$this->view->divider = ' - '; // title / headers divider
 		$this->view->content = '';
 
@@ -99,9 +92,6 @@ class Zx_Controller_Action extends Zend_Controller_Action
 		if ($this->id) {
 			$this->view->id = $this->id;
 		}
-
-		#$code = $this->getRequest()->getParam('code');
-		#if ($code) {$this->code = $code;}
 
 		$this->view->topicId = $this->topicId = (int) $this->_getParam('topicId');
 		$this->view->subtopicId = $this->subtopicId = (int) $this->_getParam('subtopicId');
@@ -121,8 +111,8 @@ class Zx_Controller_Action extends Zend_Controller_Action
 		$this->page = $this->_getParam('page', 1);
 		Zend_Registry::set('page', $this->page);
 
-		$this->view->p = $this->p = $this->getRequest()->getParams();#d($this->view->p);
-        /*
+		$this->view->p = $this->p = $this->getRequest()->getParams();
+/*
 [controller] => stores
 [action] => index
 [module] => default

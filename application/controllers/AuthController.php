@@ -45,6 +45,32 @@ class AuthController extends MainController
 		#if (!$this->view->identity) {$this->_redirect('auth/login');}
 		if (!$this->userRegistrationAllowed) {$this->_exit();}
 
+		#http://ac.lh//auth/remind/hash/72c12639535879b758428c2b24b8cc6b
+		//--< hash processing
+		$hash = $this->_getParam('hash', '');
+		if ($hash)
+		{
+			if ($this->view->identity)
+			{
+				$this->_redirect('auth/logout');
+			}
+
+			$row = $this->getRow('users', '"' . $hash . '"  = MD5(CONCAT(id, password2))');
+			if ($row)
+			{
+				$row->password = $row->password2;
+				$row->password2 = '';
+				$res = $row->save();
+				if ($res) {
+					$this->setN(FrontEnd::getMsg(array('auth', 'remindComplete')));
+				}
+			} else {
+				$this->setN(FrontEnd::getMsg('dnf'), 'errors');
+			}
+			$this->_redirect('auth/login');
+		}
+		//-->
+
 		$this->textRow('remind');
 
 		$form = new Form_AuthRemind();
@@ -61,22 +87,21 @@ class AuthController extends MainController
 				{
 					$this->view->notifyerr[] = FrontEnd::getMsg(array('auth', 'userFailed'));
 				} else {
-					$row->password = md5($v['email']); //@todo!
-					#$row = $row->save($data);
+					$password2 = Aux::generatePassword();
+					$row->password2 = md5($password2);
 					$res = $row->save();
 					#d($res);
 					if ($res)
 					{
-						$pw = Aux::generatePassword();
-
 						$options = array(
 							'to' => $v['email'],
 							'subject' => 'данные доступа на сайт',
 							'body' => 'Это автоматический ответ на запрос напоминания пароля для логина ' . $v['username'] . '.
 Так как все пароли хранятся на сайте в зашифрованном виде, восстановить их невозможно.
-Для Вас сгенерирован новый пароль ' . $pw . ', вы можете установить его, перейдя по ссылке: (здесь будет ссылка)
+Для Вас сгенерирован новый пароль ' . $password2 . ', вы можете установить его, перейдя по ссылке: ' . $this->view->host . $this->view->urlt('remind') . 'hash/' . md5($row->id . $row->password2) . '
 Если Вы не хотите менять текущий пароль на новый, ничего не делайте, просто удалите это письмо.'
 						);
+						#d($options);
 						$res = FrontEnd::mail($options);
 						$this->view->notifymsg[] = FrontEnd::getMsg(array('auth', 'remindSuccess'));
 						$this->view->done = true;
