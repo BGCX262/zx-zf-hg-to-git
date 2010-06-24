@@ -21,8 +21,8 @@ class Zx_Controller_Action_Helper_Contact
 		$conf = $controller->conf;
 
 		// post message
-		if ($request->isPost()) {
-
+		if ($request->isPost())
+		{
 			$formData = $request->getPost();
 
 			if ($form->isValid($formData))
@@ -80,7 +80,8 @@ class Zx_Controller_Action_Helper_Contact
 					}
 
 					// save to DB
-					$row = $controller->getModel('Feedback')->createRow();
+					$feedback = new Zx_Db_Table_Feedback();
+					$row = $feedback->createRow();
 					$row->person = $v['person'];
 					$row->phone = $v['phone'];
 					$row->email = $v['email'];

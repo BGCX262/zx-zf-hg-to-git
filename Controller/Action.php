@@ -484,6 +484,7 @@ Array
 		if (!empty($code)) {
 			switch ($code) {
 			case 'db':
+			case 'zx':
 				$modelClass = "Zx_Db_Table_" . $model;
 				break;
 			default:
@@ -494,7 +495,8 @@ Array
 			$modelClass = $model;
 		}
 
-		if (empty($this->$model)) {
+		if (empty($this->$model))
+		{
 			$this->$model = new $modelClass();
 			if ($this->NLS) {
 				$this->$model->setNLS($this->NLS, $this->NLSId);
