@@ -1050,7 +1050,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			if (!empty($conf['test'])) {
 				$res = 1;//TEST!
 		  	} else {
-				$res = $this->insert($data);
+				$res = $this->_insertData($data);
 			}
 			if ($res) {
 				$row = $this->getById($res);
@@ -1075,6 +1075,31 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			$res = $row->_postUpdate();
 		}
 
+		return $res;
+	}
+
+
+	/**
+	 * Wrapped insert()
+	 * @param array $data
+	 */
+	function _insertData($data)
+	{
+		//--< remember flag_order!
+		$fields = $this->info(Zend_Db_Table::COLS);
+		#$fields = $this->info(Zend_Db_Table::METADATA);
+		if (in_array('flag_order', $fields))
+		{
+			$row = $this->fetchRow(null, 'flag_order DESC');
+			if ($row) {
+				$data['flag_order'] = $row->flag_order + 1;
+			} else {
+				$data['flag_order'] = 1;
+			}
+		}
+		//-->
+
+		$res = $this->insert($data);
 		return $res;
 	}
 

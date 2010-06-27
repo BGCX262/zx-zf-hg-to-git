@@ -457,7 +457,6 @@ class Zx_FrontEnd extends Zx_Site
 	{
 		$upload = new Zend_File_Transfer_Adapter_Http();
 		$files = $upload->getFileInfo();
-		#d($files);
 
 		foreach ($files as $file => $info)
 		{
@@ -530,7 +529,7 @@ class Zx_FrontEnd extends Zx_Site
 			if($upload->isValid($file))
 			{
 				$upload->addFilter('Rename', array('target' => $fo . '/' . basename($dst), 'overwrite' => true));
-				$upload->receive($file);
+				$res = $upload->receive($file);
 			} else {
 				$res = false;
 				$messages = $upload->getMessages();
