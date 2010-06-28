@@ -7,7 +7,7 @@
 */
 class Zx_View_Helper_Truncate extends Zend_View_Helper_Abstract
 {
-    public function truncate($string, $length = 50, $postfix = '')
+    public function truncate($string, $length = 50, $postfix = '...')
     {
         $truncated = trim($string);
         $length = (int)$length;
