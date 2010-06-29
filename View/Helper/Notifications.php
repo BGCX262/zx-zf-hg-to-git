@@ -14,11 +14,15 @@ class Zx_View_Helper_Notifications extends Zend_View_Helper_Abstract
 
 		if (!empty($this->view->notifyerr))
 		{
-			l($this->view->notifyerr, __METHOD__ . " errors", Zend_Log::DEBUG);
-
-			foreach ($this->view->notifyerr as $v)
+			if (is_array($this->view->notifyerr))
 			{
-				$res .= '<div class="notifyerr">' . $v . '</div>';
+				l($this->view->notifyerr, __METHOD__ . " notifyerr", Zend_Log::DEBUG);
+				foreach ($this->view->notifyerr as $v)
+				{
+					$res .= '<div class="notifyerr">' . $v . '</div>';
+				}
+			} else {
+				l($this->view->notifyerr, __METHOD__ . " notifyerr (NOT_ARRAY!)");
 			}
 		} else {
 			if ($flash) {
@@ -27,11 +31,15 @@ class Zx_View_Helper_Notifications extends Zend_View_Helper_Abstract
 
 			if (!empty($this->view->notifymsg))
 			{
-				l($this->view->notifymsg, __METHOD__ . " messages", Zend_Log::DEBUG);
-
-				foreach ($this->view->notifymsg as $v)
+				if (is_array($this->view->notifymsg))
 				{
-					$res .= '<div class="notifymsg">' . $v . '</div>';
+					l($this->view->notifymsg, __METHOD__ . " notifymsg", Zend_Log::DEBUG);
+					foreach ($this->view->notifymsg as $v)
+					{
+						$res .= '<div class="notifymsg">' . $v . '</div>';
+					}
+				} else {
+					l($this->view->notifymsg, __METHOD__ . " notifymsg (NOT_ARRAY!)");
 				}
 			}
 		}
