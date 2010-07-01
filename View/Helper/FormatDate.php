@@ -3,7 +3,7 @@ class Zx_View_Helper_FormatDate// extends Zend_View_Helper_Abstract
 {
     private $_formats = array(
 		'short' => 'H:m (dd MMMM)',
-		'standard' => 'dd MMMM yy',
+		'standard' => 'dd MMMM YYYY',
 		'long' => 'dd MMMM yy (H:m)',
 		'full' => 'dd.MM.YYYY (H:m:s)',
 		'today' => 'H:m',
