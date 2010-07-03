@@ -157,11 +157,14 @@ class Zx_Db_Table_Content extends Zx_Db_Table
 		} else {
 			$conf = $_conf;
 		}
+		#d($conf);
 		$where = $this->getTopicWhere($topicId);
+		#d($where);
 		
-		$select = $this->getSelect($this->getTopicWhere($topicId), $conf);
-#		d($select);
+		$select = $this->getSelect($where, $conf);
+		#d($select);
 		$rows = $this->paginator($select);
+		#d($rows);
 		return $rows;
 	}
 

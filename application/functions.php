@@ -98,12 +98,17 @@ function getFirstDayOfWeek($week = null)
  * @param int $ts
  * @return string
  */
-function dateMySQL($ts = null)
+function dateMySQL($ts = null, $tm = true)
 {
 	if (is_null($ts)) {
 		$ts = time();
 	}
-	return date('Y-m-d H:i:s', $ts);
+
+	if ($tm) {
+		return date('Y-m-d H:i:s', $ts);
+	} else {
+		return date('Y-m-d', $ts);
+	}
 }
 
 /**

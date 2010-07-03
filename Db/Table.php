@@ -344,7 +344,8 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	function getSelect($where = '', $conf = array())
 	{
 		// replace where with conf ;)
-		if (empty($conf) && is_array($where)) {
+		if (empty($conf) && is_array($where))
+		{
 			$conf = $where;
 			$where = '';
 		} else {
@@ -371,7 +372,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 
 		$select = $this->setSQL($where, $conf);
 		l($select, __METHOD__. ' select', Zend_Log::DEBUG);
-		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($select->__toString(), 1) . "</textarea><br>";die;
+		#d($select);
 
 		return $select;
 	}
@@ -509,7 +510,18 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		}
 
 		//--< WHERE
-		if (empty($where) && !empty($conf['where'])) {$where = $conf['where'];}
+
+		// deprecated, use conditionWhere instead!
+		if (!empty($conf['where'])) {
+			if (!empty($where)) {
+				// todo: handle arrays, not string only!
+				// $where .= ' AND ' . $conf['where'];
+			} else {
+				$where = $conf['where'];
+			}
+			unset($conf['where']);
+		}
+
 		l($where, __METHOD__ . ' where (initial)', Zend_Log::DEBUG);
 /*
 		// convert non-NLS where to NLS
@@ -522,7 +534,6 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		// WHERE: ID IN () - выборка зависимых записей (см. zf_ac - выборка авторов для роликов)
 		if ( !empty($conf['in']))
 		{
-			#echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r($conf['in'], 1) . '</textarea><br>'; die;
 			if(!empty($conf['in']['rows']))
 			{
 				if ($conf['in']['rows'] instanceof Zend_Paginator)
@@ -536,6 +547,8 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 				{
 					$id[$row[$conf['in']['field']]] = 1;
 				}
+
+				if (!empty($where) && !is_array($where)) {$where[] = $where;}
 				$where[] = 'id IN (' . implode(',', (array_keys($id))) . ')';
 			}
 		}
@@ -587,9 +600,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			$select = $select->limit($conf['limit']);
 		}
 
-		if ( $this->debug || !empty($conf['debug']) ) {
-			echo "DEBUG:<br><textarea rows=5 cols=100>" . print_r($select->__toString(), 1) . "</textarea><br>";
-		}
+		if ( $this->debug || !empty($conf['debug']) ) {d($select, 0);}
 
 		return $select;
 	}
@@ -1001,14 +1012,16 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			return $rows;
 		}
 		$this->_paginator = new Zend_Paginator(new Zend_Paginator_Adapter_DbTableSelect($select));
+		#d($this->_paginator, 0);
 		$limit = $select->getPart(Zend_Db_Select::LIMIT_COUNT);
+		#d($limit, 0);
 		if ($limit) {
 			$this->_paginator->setItemCountPerPage($limit);
 		} else {
 			$this->_paginator->setItemCountPerPage($this->ItemCountPerPage);
 		}
 		$this->_paginator->setCurrentPageNumber(Zend_Registry::get('page'));
-		#d($this->_paginator);
+		#d($this->_paginator, 0);
 
 		#$this->pagescount = $this->_paginator->count();
 		#Zend_Registry::set('pages_count', $this->pagescount); // YAGNI! see partials/paginator.phtml
@@ -1019,6 +1032,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			return $this->_paginator;
 		} else {
 			$rows = $this->_paginator->getCurrentItems();
+			#d($rows, 0);
 			#Zend_Registry::set('rows_count', $rows->count()); // why for?
 			return $rows;
 		}
