@@ -843,6 +843,33 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		return $res;
 	}
 
+
+	/**
+	 * get image preview shortcut for getImage
+	 * @return string
+	 */
+	function getImagePV($id, $conf = null)
+	{
+		$fn = $this->getImage($id);#d($fn);
+
+		$info = isset($conf['info']) ? $conf['info'] : false;
+		$default = isset($conf['default']) ? $conf['default'] : false;
+
+		$rfn = substr(PATH_PUB, 0, -1) . $fn; // real file name
+
+		if (file_exists($rfn))
+		{
+			if ($info) {
+				return array_merge(array('fn' => $fn), getimagesize($rfn));
+			} else {
+				return $fn;
+			}
+		} else {
+			return $default;
+		}
+	}
+
+
 	/**
 	* Get full/preview image
 	* @param mixed $id
@@ -926,7 +953,9 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		if ($fs) {
 			$s = PATH_PUB . $s;
 		} else {
-			$s = '/' . $s;
+			if (empty($conf['stripslash'])) {
+				$s = '/' . $s;
+			}
 		}
 
 		return $s;

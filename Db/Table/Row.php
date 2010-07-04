@@ -48,9 +48,18 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 	* @param array $conf
 	* @return string
 	*/
-	function getTN($tn_id, $conf = null)
+	function getImageTN($tn_id, $conf = null)
 	{
 		return $this->getTable()->getImage(array($this->id, $tn_id), $conf);
+	}
+
+	/**
+	 * Get preview image
+	 * @param boolean $info
+	 */
+	function getImagePV($conf)
+	{
+		return $this->getTable()->getImagePV($this->id, $conf);
 	}
 
 	/**

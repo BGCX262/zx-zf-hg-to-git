@@ -154,6 +154,8 @@ defined('APPLICATION_PATH') || define('APPLICATION_PATH', PATH_ROOT . 'applicati
 defined('APPLICATION_ENV') || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
 define('PATH_PUB', $root . 'public/');
+//define('PATH_PU', $root . 'public'); // no final slash! see Zx_Db_Table::getImagePV() for example
+
 if (!defined('PATH_FW'))
 {
 	if (class_exists('Zend_Db')) {
