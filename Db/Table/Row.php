@@ -57,7 +57,7 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 	 * Get preview image
 	 * @param boolean $info
 	 */
-	function getImagePV($conf)
+	function getImagePV($conf = null)
 	{
 		return $this->getTable()->getImagePV($this->id, $conf);
 	}
