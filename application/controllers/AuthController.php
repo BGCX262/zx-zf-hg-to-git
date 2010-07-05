@@ -148,6 +148,7 @@ class AuthController extends MainController
 				} else {
 					$data = $v;
 					$data['password'] = md5($v['password']);
+					$data['created'] = new Zend_Db_Expr('NOW()');
 					$row = $this->users->createRow($data);
 					$res = $row->save();
 					if ($res) {
