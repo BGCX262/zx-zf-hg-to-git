@@ -1,5 +1,6 @@
 <?php
 return array(
+	Zend_Validate_Callback::INVALID_VALUE => "'%value%' - данное значение неверное, исправьте его, пожалуйста",
 	Zend_Validate_NotEmpty::IS_EMPTY => 'поле пустое, заполните его, пожалуйста',
 	Zend_Validate_StringLength::TOO_SHORT => 'минимальная длина поля равна %min% символам',
 	Zend_Validate_StringLength::TOO_LONG => 'максимальная длина поля равна %max% символам',

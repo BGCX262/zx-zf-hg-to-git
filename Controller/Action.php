@@ -624,7 +624,15 @@ Array
 	 */
 	function setN($s, $ns = 'default')
 	{
-        $this->_flashMessenger->setNamespace($ns)->addMessage($s);
+		$this->_flashMessenger->setNamespace('errors')->addMessage(FrontEnd::getMsg(array('update', 'fail')));
+		if (is_array($s)) {
+			foreach ($s as $k => $v)
+			{
+				$this->_flashMessenger->setNamespace($ns)->addMessage(current($v));
+			}
+		} else {
+	        $this->_flashMessenger->setNamespace($ns)->addMessage($s);
+		}
     }
 
 
