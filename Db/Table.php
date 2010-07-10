@@ -850,6 +850,11 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	 */
 	function getImagePV($id, $conf = null)
 	{
+		if (!empty($conf['tube_id']) && !empty($conf['tube_uid']))
+		{
+			return $this->getTubeFilename($conf['tube_id'], $conf['tube_uid'], 'image');
+	  	}
+
 		$fn = $this->getImage($id);#d($fn);
 
 		$info = isset($conf['info']) ? $conf['info'] : false;
@@ -878,6 +883,11 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	*/
 	function getImage($id, $conf = null)
 	{
+		if (!empty($conf['tube_id']) && !empty($conf['tube_uid']))
+		{
+			return $this->getTubeFilename($conf['tube_id'], $conf['tube_uid'], 'image');
+	  	}
+
 		$full = isset($conf['full']) ? $conf['full'] : true;#d($full);
 		$fs = isset($conf['fs']) ? $conf['fs'] : false;
 		$path = isset($conf['path']) ? '/' . $conf['path'] : '';
