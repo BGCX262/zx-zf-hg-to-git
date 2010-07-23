@@ -188,8 +188,6 @@ class AuthController extends MainController
 			{
 				$username = $form->getValue('username');
 				$password = $form->getValue('password');
-				#d($username);
-				#d($password);
 			} else {
 				$form->populate($formData);
 				$error = true;
