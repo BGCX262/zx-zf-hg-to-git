@@ -456,7 +456,7 @@ class Zx_FrontEnd extends Zx_Site
 	function isUpload()
 	{
 		$upload = new Zend_File_Transfer_Adapter_Http();
-		$files = $upload->getFileInfo();
+		$files = $upload->getFileInfo();#d($files);
 
 		foreach ($files as $file => $info)
 		{
@@ -480,6 +480,7 @@ class Zx_FrontEnd extends Zx_Site
 	{
 		#d($conf);
 		if (empty($conf['maxFilesize'])) {$conf['maxFilesize'] = 20000;}
+		if (empty($conf['name'])) {$conf['name'] = 'file1';}
 		#d($conf['maxFilesize']);
 
 		#d($dst);
@@ -525,7 +526,8 @@ class Zx_FrontEnd extends Zx_Site
 		$files = $upload->getFileInfo();
 		foreach ($files as $file => $info)
 		{
-			#d($info);
+			if ($file != $conf['name']) {continue;}
+			#d($file,0);
 			if($upload->isValid($file))
 			{
 				$upload->addFilter('Rename', array('target' => $fo . '/' . basename($dst), 'overwrite' => true));
