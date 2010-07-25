@@ -33,7 +33,7 @@ class Zx_Controller_Ajax extends Zx_Controller_Action
 	*/
 	protected function _isAJAX()
 	{
-		if ($this->getRequest()->isPost() && $this->getRequest()->isXmlHttpRequest())
+		if ($this->getRequest()->isXmlHttpRequest()) #$this->getRequest()->isPost() && 
 		{
 			return true;
 		} else {
