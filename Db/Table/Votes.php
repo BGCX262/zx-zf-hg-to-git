@@ -81,14 +81,15 @@ class Zx_Db_Table_Votes extends Zx_Db_Table
 		if ( empty($data['pid']) || empty($data['sid']) ) {return false;}
 
 		$select = $this->select()
-			->from($this->_name, 'AVG(value) AS sum, COUNT(*) AS cnt')
+			->from($this->_name, 'AVG(value) AS avg, COUNT(*) AS cnt')
 			->where('pid=?', $data['pid'])
 			->where('sid=?', $data['sid']);
 
-		$rows = $this->fetchRow($select);
+		l($select);
+		$row = $this->fetchRow($select);
 
 		if ($row) {
-			return array('sum' => $row->sum, 'cnt' => $row->cnt);
+			return array('avg' => $row->avg, 'cnt' => $row->cnt);
 		} else {
 			return false;
 		}
@@ -110,7 +111,24 @@ class Zx_Db_Table_Votes extends Zx_Db_Table
 		$res = $this->_updateData($data, array('notify' => false, 'upload' => false));#, array('test' => 1)
 
 		if ($res) {
-			// update stat
+			// update stat via TRIGGER!
+			// http://www.wddx.ru/2010/07/count-vs.html
+			$a = $this->countVotes($data);
+			if ($a) {
+				switch ($data['sid']) {
+				case 3:
+					$positions = new Positions();
+					$update = array(
+						'rating' => $a['avg'],
+						'votes' => $a['cnt']
+					);
+					#l($data);
+					// UPDATE c_positions SET rating = '3.5000', votes = 2 WHERE id = 3;
+					#$where = $this->getAdapter()->quoteInto('id = ?', $data['pid']);
+					$res = $positions->update($update, 'id=' . $data['pid']);
+					break;
+				}
+			}
 		}
 
 		return $res;
