@@ -647,7 +647,7 @@ Array
 				$this->view->pageHeadScript = empty($this->view->pageHeadScript) ? $a : array_merge($this->view->pageHeadScript, $a);
 				#d($this->view->pageHeadScript, 0);
 				break;
-			case 'HeadLink':
+			case 'HeadLink': // CSS
 				$this->view->pageHeadLink = empty($this->view->pageHeadLink) ? $a : array_merge($this->view->pageHeadLink, $a);
 				break;
 			case 'InlineScript':

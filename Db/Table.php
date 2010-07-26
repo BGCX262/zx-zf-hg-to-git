@@ -1110,16 +1110,22 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			}
 		}
 
-		if ($res) {
-			$this->setN(FrontEnd::getMsg(array('update', 'ok')), 'success');
-		} else {
-			$this->setN(FrontEnd::getMsg(array('update', 'fail')), 'errors');
+		$notify = isset($conf['notify']) ? $conf['notify'] : true;
+		if ($notify) {
+			if ($res) {
+				$this->setN(FrontEnd::getMsg(array('update', 'ok')), 'success');
+			} else {
+				$this->setN(FrontEnd::getMsg(array('update', 'fail')), 'errors');
+			}
 		}
 
 		#d($row);
-		if (FrontEnd::isUpload() && $row)
-		{
-			$resu = $row->upload();#d($res);
+		$upload = isset($conf['upload']) ? $conf['upload'] : true;
+		if ($upload) {
+			if (FrontEnd::isUpload() && $row)
+			{
+				$resu = $row->upload();#d($res);
+			}
 		}
 
 		// particular post-update manipulations
@@ -1171,5 +1177,34 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	{
 		return $this->_sid;
 	}
+
+
+	/**
+	 * Генерация служебной информации (IP, UA, TS)
+	 */
+	function addTechInfo(&$data, $conf = null)
+	{
+		$r = Zend_Controller_Front::getInstance()->getRequest();
+
+		$data['ip'] = new Zend_Db_Expr("INET_ATON('" . $r->getServer('REMOTE_ADDR') . "')");
+
+		$ip2 = $r->getServer('HTTP_X_FORWARDED_FOR');
+		if (!empty($ip2)) {
+			if (substr_count($ip2, '.') >= 4) { //check for double IP
+				$a = explode(',', $ip2);
+				$data['ip2'] = new Zend_Db_Expr("INET_ATON('" . $a[0] . "')");
+			} else {
+				$data['ip2'] = new Zend_Db_Expr("INET_ATON('" . $ip2 . "')");
+			}
+		}
+
+		if (!empty($conf['info']))
+		{
+			$data['info'] = $r->getServer('HTTP_USER_AGENT');
+		}
+
+		return true;
+	}
+
 
 }
