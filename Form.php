@@ -104,12 +104,12 @@ class Zx_Form extends Zend_Form
 
 
 
-	protected function elementText($title, $options, $conf = null)
+	protected function elementText($title, $options = null, $conf = null)
 	{
         $element = new Zend_Form_Element_Text($title);
 		if (is_array($options)) {
 			$element->setOptions($options);
-		} else {
+		} elseif (!is_null($options)) {
 			$element->setLabel($options);
 		}
 
