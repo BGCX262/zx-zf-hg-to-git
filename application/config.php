@@ -346,11 +346,11 @@ function _initLogger($config = '')
 			}
 
 			$writer = new Zend_Log_Writer_Stream($conf['writer'], $mode);
-			if (!ZX_DEBUG) {
+			#if (!ZX_DEBUG) {
 				$priority = !empty($conf['priority']) ? $conf['priority'] : Zend_Log::INFO;
 				$filter = new Zend_Log_Filter_Priority($priority);
 				$writer->addFilter($filter);
-			}
+			#}
 			$logger->addWriter($writer); // we care about log length :)
 		}
 

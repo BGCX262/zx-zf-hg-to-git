@@ -269,7 +269,11 @@ class Zx_FrontEnd extends Zx_Site
 		if (is_array($id))
 		{
 			if (!empty($msg[$id[0]][$id[1]])) {
-				return $msg[$id[0]][$id[1]];
+				if (count($id) == 2) {
+					return $msg[$id[0]][$id[1]];
+				} else {
+					return sprintf($msg[$id[0]][$id[1]], $id[2]);
+				}
 			}
 		} else {
 			if (!empty($msg[$id])) {

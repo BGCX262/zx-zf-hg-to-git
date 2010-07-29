@@ -371,7 +371,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		l($conf, __METHOD__ . ' conf (final)', Zend_Log::DEBUG);
 
 		$select = $this->setSQL($where, $conf);
-		l($select, __METHOD__. ' select', Zend_Log::DEBUG);
+		l($select, __METHOD__. ' select');
 		#d($select);
 
 		return $select;
@@ -1092,7 +1092,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	 */
 	protected function _updateData($data = array(), $conf = null)
 	{
-		$res = false;
+		$row = $res = false;
 
 		if (!empty($data['id']))
 		{
@@ -1121,10 +1121,20 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 
 		#d($row);
 		$upload = isset($conf['upload']) ? $conf['upload'] : true;
-		if ($upload) {
-			if (FrontEnd::isUpload() && $row)
+		if ($res && $row && $upload) {
+			if (FrontEnd::isUpload())
 			{
 				$resu = $row->upload();#d($res);
+
+				if (!$resu)
+				{
+					$upload_critical = isset($conf['upload_critical']) ? $conf['upload_critical'] : false;
+
+					// todo: hide broken record!
+					if ($upload_critical) {
+
+					}
+				}
 			}
 		}
 
