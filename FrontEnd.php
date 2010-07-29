@@ -469,6 +469,18 @@ class Zx_FrontEnd extends Zx_Site
 		return false;
 	}
 
+	/**
+	 * Set notofication
+	 * @param string $s
+	 * @param string $ns
+	 * @return void
+	 */
+	static public function setN($s, $ns = 'default')
+	{
+		$flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
+		$flashMessenger->setNamespace($ns)->addMessage($s);
+	}
+
 
 	/**
 	 * AI-pumped move_uploaded_file
