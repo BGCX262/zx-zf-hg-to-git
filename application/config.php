@@ -32,8 +32,8 @@ if ( ZX_LOG )
 	#$config_project['logger']['firebug'] = true; // use l() function for it!
 
 	// NB! force full debug for non-stable location!
-	if (LOCATION != 'stable') {
-		$config_project['logger']['priority'] = Zend_Log::DEBUG;
+	if (empty($config_project['logger']['priority'])) {
+		$config_project['logger']['priority'] = (LOCATION != 'stable') ? Zend_Log::DEBUG : Zend_Log::INFO;
 	}
 
 	#echo ini_get('include_path') . '<br/>';die; // /srv/sites/php/__PROJECT__/library

@@ -78,6 +78,8 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	*/
 	protected $_sid = 0;
 
+	// skip flag_status condition
+	protected $_ignoreStatus = false;
 
 	function init()
 	{
@@ -261,8 +263,11 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		}
 
 		$select = $this->select()
-			->from($this->_name, 'COUNT(id) AS cnt')
-			->where('flag_status=1');
+			->from($this->_name, 'COUNT(id) AS cnt');
+
+		if (!$this->_ignoreStatus) {
+			$select = $select->where('flag_status=1');
+		}
 			
 		if (is_array($what)) {
 			foreach ($what as $k => $v) {
@@ -432,6 +437,8 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			$select = $this->getSelect($where, $conf);
 			if (!empty($conf['select'])) {return $select;} // compatibility patch
 		}
+		l($select, __METHOD__ . ' select', Zend_Log::DEBUG);
+
 		#echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r($select, 1) . '</textarea><br>';
 		#d($select, 0);
 
@@ -568,7 +575,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		}
 
 		// additional: keep in mind flag_status
-		if (!isset($this->woFlagStatus)) {
+		if (!$this->_ignoreStatus) {
 			#if (!empty($where)) {$where .= ' AND ';}
 			if ($NLS) {
 				$w = "p.flag_status = 1 AND c.nls_id = '" . $this->NLSId . "'";# AND c.flag_status = 1
@@ -1121,18 +1128,22 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 
 		#d($row);
 		$upload = isset($conf['upload']) ? $conf['upload'] : true;
-		if ($res && $row && $upload) {
+		if ($res && $row && $upload)
+		{
 			if (FrontEnd::isUpload())
 			{
-				$resu = $row->upload();#d($res);
+				$resu = $row->upload();d($res);
 
 				if (!$resu)
 				{
 					$upload_critical = isset($conf['upload_critical']) ? $conf['upload_critical'] : false;
 
 					// todo: hide broken record!
-					if ($upload_critical) {
-
+					if ($upload_critical)
+					{
+						$row->flag_status = 0;
+						$row->save();
+						$res = false;
 					}
 				}
 			}
@@ -1215,6 +1226,11 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		}
 
 		return true;
+	}
+
+	function setIgnoreStatus($b)
+	{
+		$this->_ignoreStatus = (bool) $b;
 	}
 
 
