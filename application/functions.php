@@ -270,7 +270,7 @@ function shitSniffer($s)
 */
 function l($value, $label = null, $level = Zend_Log::INFO, $logger = null)
 {
-	if (!ZX_DEBUG) {return false;}
+	if (!ZX_LOG) {return false;}
 	if ($value === '') {return false;}
 	$log = '';
 	$suffix = '';

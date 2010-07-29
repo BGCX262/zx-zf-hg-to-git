@@ -31,6 +31,11 @@ if ( ZX_LOG )
 	$config_project['logger']['writer'] = $root . 'logs/' . $config_project['site']['url'] . '-zf.log';
 	#$config_project['logger']['firebug'] = true; // use l() function for it!
 
+	// NB! force full debug for non-stable location!
+	if (LOCATION != 'stable') {
+		$config_project['logger']['priority'] = Zend_Log::DEBUG;
+	}
+
 	#echo ini_get('include_path') . '<br/>';die; // /srv/sites/php/__PROJECT__/library
 	$res = _initLogger($config_project);
 	#echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r($res, 1) . '</textarea><br>'; die;

@@ -371,7 +371,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		l($conf, __METHOD__ . ' conf (final)', Zend_Log::DEBUG);
 
 		$select = $this->setSQL($where, $conf);
-		l($select, __METHOD__. ' select');
+		l($select, __METHOD__. ' select', Zend_Log::DEBUG);
 		#d($select);
 
 		return $select;
