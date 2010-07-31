@@ -282,7 +282,7 @@ Array
 	*/
 	function initStrings()
 	{
-		l(__METHOD__. ' checkpoint');
+		l(__METHOD__. ' checkpoint', Zend_Log::DEBUG);
 		$this->view->pages = $this->conf->pages;// Главное навигационное меню
 		
 		if (!empty($this->conf->pages)) {

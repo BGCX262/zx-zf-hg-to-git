@@ -29,6 +29,7 @@ class Zx_FrontEnd extends Zx_Site
 	public static function getPathParts($request)
 	{
 		$pathParts = $request->getParams();
+		l($pathParts, __METHOD__ . ' $request->getParams()');
 
 		$pathParts['host'] = (!empty($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']) . "/"; // SERVER_NAME?
 		$pathParts['module'] = $request->getModuleName();

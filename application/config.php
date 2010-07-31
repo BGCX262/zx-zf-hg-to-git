@@ -1,8 +1,15 @@
 <?php
 if (!defined('LOCATION')) {echo 'Framework not initialized, exit!'; die;};
 
-if (LOCATION == 'stable') {
+if (LOCATION == 'stable')
+{
+	ini_set('display_errors', 0);
+	ini_set('display_startup_errors', 0);
+
+	$config_project['debug']['on'] = false;
+
 	define('APPLICATION_ENV', 'production');
+
 	$debug = 0;
 	// forced debug only
 	if ( !empty($config_project['site']['stage']) && $config_project['site']['stage'] != 'production' ) { // production can't be debuggable :)
@@ -11,6 +18,11 @@ if (LOCATION == 'stable') {
 		}
 	}
 } else {
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+
+	$config_project['debug']['on'] = true;
+
 	define('APPLICATION_ENV', 'development');
 	if (isset($_GET['zd'])) {
 		$debug = $_GET['zd'];
@@ -100,16 +112,6 @@ $cachePage->start();
 
 require 'functions.php';
 l($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'], 'START');
-
-if (LOCATION == 'stable') {
-	ini_set('display_errors', 0);
-	ini_set('display_startup_errors', 0);
-	$config_project['debug']['on'] = false;
-} else {
-	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
-	$config_project['debug']['on'] = true;
-}
 
 if (LOCALHOST)
 {

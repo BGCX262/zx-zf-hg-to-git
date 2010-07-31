@@ -101,6 +101,9 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		} else {
 			$this->imgs['folder'] = $this->_alias;
 		}
+
+		#$conf = Zend_Registry::get('conf');
+		#d($conf->logger->sql);
 	}
 
 	/**
