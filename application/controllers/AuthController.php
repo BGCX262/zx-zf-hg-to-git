@@ -158,6 +158,8 @@ class AuthController extends MainController
 					}
 				}
 	        } else {
+				$this->view->errors = $form->getMessages();
+				#d($res);
 				#$this->setN(FrontEnd::getMsg(array('form', 'errors')), 'errors');
 				$this->view->notifyerr[] = FrontEnd::getMsg(array('form', 'errors'));
 			}

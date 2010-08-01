@@ -1147,11 +1147,11 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 
 		#d($row);
 		$upload = isset($conf['upload']) ? $conf['upload'] : true;
-		if ($res && $row && $upload)
+		if ($row && $upload)
 		{
 			if (FrontEnd::isUpload())
 			{
-				$resu = $row->upload();d($res);
+				$resu = $row->upload();#d($res);
 
 				if (!$resu)
 				{
