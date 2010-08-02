@@ -8,8 +8,8 @@ class Zx_Controller_Action_Helper_Contact
 {
 	function run(&$controller, Zend_Controller_Request_Abstract $request, $config = null)
 	{
-		if (!empty($controller->conf->forms->contact)) {
-			$form = new $controller->conf->forms->contact();
+		if (!empty($config['form'])) {
+			$form = new $config['form'];
 		} else {
 			if (!empty($config['options'])) {
 				$form = new Zx_Form_Contact($config['options']);
@@ -49,9 +49,11 @@ class Zx_Controller_Action_Helper_Contact
 					$mail->setBodyText($msg);
 					#$mail->setBodyHtml($msg);
 					$mail->setFrom($v['email'], $v['person']);
-					
+
+					if (!empty($config['to'])) {
+						$mail->addTo($config['to'], $config['to']);
 					// several recepients (fx "avd@informproject.info,c0d3r@inbox.ru")
-					if (strpos($conf->site->admin->email, ',') !== false) {
+					} elseif (strpos($conf->site->admin->email, ',') !== false) {
 						$a = explode(',',$conf->site->admin->email);
 						foreach ($a as $v) {
 							$mail->addTo(trim($v), $conf->site->admin->title);
