@@ -5,6 +5,8 @@
 */
 class Zx_Form extends Zend_Form
 {
+	const STAR = '<span class="star">*</star>';
+
     protected $elementDecorators = array(
 		'table' => array(
 			'ViewHelper',
