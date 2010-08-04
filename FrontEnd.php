@@ -495,6 +495,7 @@ class Zx_FrontEnd extends Zx_Site
 	 */
 	function moveUploaded($src, $dst, $conf = null)
 	{
+		l(__METHOD__);
 		#d($conf);
 		if (empty($conf['maxFilesize'])) {$conf['maxFilesize'] = 20000;}
 		if (empty($conf['name'])) {$conf['name'] = 'file1';}
@@ -541,6 +542,7 @@ class Zx_FrontEnd extends Zx_Site
 		$messages = null;
 
 		$files = $upload->getFileInfo();
+		l($files, __METHOD__ . ' files');
 		foreach ($files as $file => $info)
 		{
 			if ($file != $conf['name']) {continue;}
@@ -552,7 +554,7 @@ class Zx_FrontEnd extends Zx_Site
 			} else {
 				$res = false;
 				$messages = $upload->getMessages();
-				#d($messages);
+				l($messages, __METHOD__ . ' messages');
 			}
 		}
 /*
@@ -563,6 +565,8 @@ class Zx_FrontEnd extends Zx_Site
  */
 
 		#$res = move_uploaded_file($src, $fo . '/' . basename($dst));#d($res);
-		return array('res' => $res, 'messages' => $messages);
+		$res = array('res' => $res, 'messages' => $messages);
+		l($res, __METHOD__ . ' res');
+		return $res;
 	}
 }

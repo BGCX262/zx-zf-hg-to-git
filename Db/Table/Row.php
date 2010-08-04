@@ -149,10 +149,20 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 		#d($this);
 		$res = $this->_upload();#d($res);
 
+		if (is_array($res)) {
+			$messages = $res['messages'];
+			$res = $res['res'];
+		}
+
 		if ($res) {
 			$this->getTable()->setN(FrontEnd::getMsg(array('upload', 'ok')), 'success');
 		} else {
 			$this->getTable()->setN(FrontEnd::getMsg(array('upload', 'fail')), 'errors');
+			if (!empty($messages)) {
+				foreach ($messages as $value) {
+					$this->getTable()->setN($value, 'errors');
+				}
+			}
 		}
 		return $res;
 	}
