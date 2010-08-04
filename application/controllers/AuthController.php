@@ -109,7 +109,7 @@ class AuthController extends MainController
 					}
 				}
 	        } else {
-				#$this->setN(FrontEnd::getMsg(array('form', 'errors')), 'errors');
+				#$this->rsetN(FrontEnd::getMsg(array('form', 'errors')), 'errors');
 				$this->view->notifyerr[] = FrontEnd::getMsg(array('form', 'errors'));
 			}
 			#$this->_redirect($this->view->requestUri);
@@ -135,7 +135,8 @@ class AuthController extends MainController
         if ($this->getRequest()->isPost())
 		{
 			$rawData = $this->getRequest()->getPost();
-			#d($rawData);
+			l($rawData, __METHOD__ . ' rawData');
+
 			if ($form->isValid($rawData))
 			{
 				$v = $form->getValues();
@@ -149,9 +150,14 @@ class AuthController extends MainController
 					$data = $v;
 					$data['password'] = md5($v['password']);
 					$data['created'] = new Zend_Db_Expr('NOW()');
+					l($data, __METHOD__ . ' data');
+
 					$row = $this->users->createRow($data);
 					$res = $row->save();
+					l($res, __METHOD__ . ' save() res');
+
 					if ($res) {
+						if (isset($this->conf->auth->mailRegister)) {Users::mailRegister($data);}
 						#$this->setN(FrontEnd::getMsg(array('auth', 'regSuccess')));#$this->setContent('');
 						$this->view->notifymsg = FrontEnd::getMsg(array('auth', 'regSuccess'));
 						$this->view->done = true;

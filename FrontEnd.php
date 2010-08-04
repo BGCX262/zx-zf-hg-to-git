@@ -305,7 +305,7 @@ class Zx_FrontEnd extends Zx_Site
 	{
 		$conf = Zend_Registry::get('conf');
 
-		l($conf, __METHOD__ . " conf: ");
+		l($options, __METHOD__ . " options: ");
 
 		$body = "Здравствуйте! Это автоматически сгенерированное письмо с сайта " . $conf->site->title . ".\n\n" . $options['body'] . "\n\n--\n";
 		if (!empty($options['signature'])) {

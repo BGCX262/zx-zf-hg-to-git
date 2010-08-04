@@ -276,7 +276,7 @@ function l($value, $label = null, $level = Zend_Log::INFO, $logger = null)
 	$suffix = '';
 
 	if (!is_null($label)) {
-		if ($label[0] == 'U')// user data
+		if ($label[0] == 'U' && $label[1] == 'S')// user data
 		{
 			$suffix = 'HTTP_USER_AGENT=' . $_SERVER['HTTP_USER_AGENT'] . "\n" .
 				'REMOTE_ADDR=' . $_SERVER['REMOTE_ADDR'] . "\n" .
