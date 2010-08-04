@@ -636,7 +636,11 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 
 		//todo: fluid where!
 		#if (empty($this->search['where'])) {
+		if (!$this->_ignoreStatus) {
 			$this->search['where'] = "( flag_status = 1 AND (title LIKE '%" . $search . "%' OR txt LIKE '%" . $search . "%') )";
+		} else {
+			$this->search['where'] = "title LIKE '%" . $search . "%' OR txt LIKE '%" . $search . "%'";
+		}
 		#}
 
 		#if (empty($this->search['order'])) {
@@ -833,7 +837,11 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	{
 		if (!is_numeric($id)) {return false;}
 
-		$select = $this->select()->where('flag_status=1');
+		$select = $this->select();
+		if (!$this->_ignoreStatus) {
+			$select = $select->where('flag_status=1');
+		}
+
 		if (!empty($field)) {
 			$select = $select->where($field . '_id=?', $id);
 		} else {
@@ -1118,6 +1126,9 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	 */
 	protected function _updateData($data = array(), $conf = null)
 	{
+		l($data, __METHOD__ . ' data');
+		l($conf, __METHOD__ . ' conf');
+
 		$row = $res = false;
 
 		if (!empty($data['id']))
@@ -1135,6 +1146,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 				$row = $this->getById($res);
 			}
 		}
+		l($row->toArray(), __METHOD__ . ' row_as_array');
 
 		$notify = isset($conf['notify']) ? $conf['notify'] : true;
 		if ($notify) {
@@ -1173,6 +1185,8 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		if ($row) {
 			$res = $row->_postUpdate();
 		}
+
+		l($res, __METHOD__ . ' RES');
 
 		return $res;
 	}

@@ -12,4 +12,7 @@ return array(
 	Zend_Captcha_Word::MISSING_ID => 'Ошибка проверки символов на иллюстрации ',
 	Zend_Captcha_Word::BAD_CAPTCHA => 'Неверно указаны символы на иллюстрации',
 	Zx_Validate_PasswordConfirmation::NOT_MATCH => 'Поля "Пароль" и "Подтверждение пароля" различаются!',
+	Zend_Validate_File_Size::TOO_BIG   => "Максимально допустимый размер файла '%value%' равен '%max%', но Вы пытаетесь загрузить '%size%'",
+    Zend_Validate_File_Size::TOO_SMALL => "Минимально допустимый размер файла '%value%' равен '%min%', но Вы пытаетесь загрузить  '%size%'",
+    Zend_Validate_File_Size::NOT_FOUND => "Файл '%value%' не найден",
 );
