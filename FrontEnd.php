@@ -558,8 +558,17 @@ class Zx_FrontEnd extends Zx_Site
 			#d($file,0);
 			if($upload->isValid($file))
 			{
-				$upload->addFilter('Rename', array('target' => $fo . '/' . basename($dst), 'overwrite' => true));
+				$target = $fo . '/' . basename($dst);
+				l($target, __METHOD__ . ' target');
+				$upload->addFilter('Rename', array('target' => $target, 'overwrite' => true));
 				$res = $upload->receive($file);
+
+				// backup original file!
+				if ($res && !empty($conf['backup'])) {
+					$original = $fo . '/0riginals/' . $info['name'];
+					l($original, __METHOD__ . ' original (backup)');
+					$res = copy($target, $original);
+				}
 			} else {
 				$res = false;
 				$messages = $upload->getMessages();
