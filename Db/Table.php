@@ -282,10 +282,35 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		}				
 		$row = $this->fetchRow($select)->toArray();
 
-		if ($isreg) {$reg[$what . 'Count'][$id] =  $row['cnt'];}
+		if ($isreg) {
+			$reg[$what . 'Count'][$id] =  $row['cnt'];
+		}
 
 		return $row['cnt'];
 	}
+
+	/**
+	 * Count(*), just count(*)
+	 * @param string $what
+	 * @return integer
+	 */
+	function getCount($where = null)
+	{
+		$select = $this->select()
+			->from($this->_name, 'COUNT(*) AS cnt');
+
+		if (!$this->_ignoreStatus) {
+			$select = $select->where('flag_status=1');
+		}
+
+		if (!empty($where)) {
+			$select = $select->where($where);
+		}
+
+		$row = $this->fetchRow($select)->toArray();
+		return $row['cnt'];
+	}
+
 
 	/**
 	* WHERE with additional conditions (eg. RPN closed content)
