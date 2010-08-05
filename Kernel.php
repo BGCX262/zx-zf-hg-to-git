@@ -55,7 +55,7 @@ class Zx_Kernel
 
 			// @todo обоснование (пока нужно только для перевода форм, более нигде)
 			try {
-				$locale = new Zend_Locale($conf->locale);
+				$locale = new Zend_Locale($conf->locale); // ru_RU.UTF8 -> ru
 			} catch (Zend_Locale_Exception $e) {}
 			Zend_Locale::setDefault($locale->toString());
 			Zend_Registry::set('Zend_Locale', $locale);

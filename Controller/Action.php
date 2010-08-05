@@ -165,6 +165,7 @@ Array
 			$this->initAuth($this->conf->auth);
 		}
 
+		// todo!
         $this->_flashMessenger = $this->_helper->getHelper('FlashMessenger');
 		$this->view->messages = $this->_flashMessenger->getMessages();#d($this->view->messages);
 
@@ -624,6 +625,8 @@ Array
 	 */
 	function setN($s, $ns = 'default')
 	{
+		FrontEnd::setN($s, $ns);
+/*
 		$this->_flashMessenger->setNamespace('errors')->addMessage(FrontEnd::getMsg(array('update', 'fail')));
 		if (is_array($s)) {
 			foreach ($s as $k => $v)
@@ -633,6 +636,7 @@ Array
 		} else {
 	        $this->_flashMessenger->setNamespace($ns)->addMessage($s);
 		}
+ */
     }
 
 

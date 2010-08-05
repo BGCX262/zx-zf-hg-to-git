@@ -130,15 +130,16 @@ if (empty($config_project['locale'])) {
 	mb_internal_encoding('UTF-8'); // instead of ISO-8859-1!
 }
 $res = setlocale(LC_ALL, $config_project['locale']); // см. также инициализацию Zend_Locale в Zx_Bootstrap!!!
-
 #$res = setlocale(LC_CTYPE, $config_project['locale']); // см. также инициализацию Zend_Locale в Zx_Bootstrap
-#echo 'DEBUG:<br><textarea rows=10 cols=100>' . print_r($res, 1) . '</textarea><br>';die;
 
 // Russian tests!
-#echo strftime('%A %d %B %Y', time()) . '<br/>'; // works
-#echo strUp('это тест!'); #echo mb_strtoupper('это тест!', 'UTF-8') . '<br/>'; // works!
-#echo strLo('ЭТО ТЕСТ!'); #echo mb_strtolower('ЭТО ТЕСТ!', 'UTF-8') . '<br/>'; // works!
-#echo strUpFirst('это тест!');
+/*
+echo strftime('%A %d %B %Y', time()) . '<br/>'; // works?
+echo strUp('это тест!'); #echo mb_strtoupper('это тест!', 'UTF-8') . '<br/>'; // works!
+echo strLo('ЭТО ТЕСТ!'); #echo mb_strtolower('ЭТО ТЕСТ!', 'UTF-8') . '<br/>'; // works!
+echo strUpFirst('это тест!');
+die;
+*/
 
 // set LC_TIME etc
 if (!empty($config_project['locales'])) {

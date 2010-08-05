@@ -193,13 +193,8 @@ class Zx_Form extends Zend_Form
 			//-->
 
 			// Zend_Locale
- 			$locale = Zend_Registry::get('Zend_Locale');
-			#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($locale, 1) . "</textarea><br>";die;
-			$translator = new Zend_Translate_Adapter_Array($translate, $locale);
-
- 			#$translator = new Zend_Translate_Adapter_Array($translate);
-			#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($locale, 1) . "</textarea><br>";die;
-			#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($translator, 1) . "</textarea><br>";die;
+ 			$locale = Zend_Registry::get('Zend_Locale');#d($locale);
+			$translator = new Zend_Translate_Adapter_Array($translate, $locale);#d($translator);
 			$this->setTranslator($translator);
 		}
     }

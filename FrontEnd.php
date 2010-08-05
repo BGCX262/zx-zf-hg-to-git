@@ -475,7 +475,7 @@ class Zx_FrontEnd extends Zx_Site
 	}
 
 	/**
-	 * Set notofication
+	 * Set flash notifications
 	 * @param string $s
 	 * @param string $ns
 	 * @return void
@@ -483,7 +483,16 @@ class Zx_FrontEnd extends Zx_Site
 	static public function setN($s, $ns = 'default')
 	{
 		$flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
-		$flashMessenger->setNamespace($ns)->addMessage($s);
+
+		if (is_array($s)) {
+			foreach ($s as $k => $v)
+			{
+				$flashMessenger->setNamespace($ns)->addMessage(current($v));
+			}
+		} else {
+	        $flashMessenger->setNamespace($ns)->addMessage($s);
+		}
+
 	}
 
 
