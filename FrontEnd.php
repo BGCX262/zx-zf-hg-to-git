@@ -311,7 +311,7 @@ class Zx_FrontEnd extends Zx_Site
 		if (!empty($options['signature'])) {
 			$body .= $options['signature'];
 		} else {
-			$body .= "С уважением,\nадминистрация " . $conf->site->title;
+			$body .= "С уважением,\nадминистрация сайта " . $conf->site->url;
 		}
 
 		$mail = new Zend_Mail('utf-8');

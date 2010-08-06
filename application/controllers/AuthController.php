@@ -157,7 +157,10 @@ class AuthController extends MainController
 					l($res, __METHOD__ . ' save() res');
 
 					if ($res) {
-						if (isset($this->conf->auth->mailRegister)) {Users::mailRegister($data);}
+						if (isset($this->conf->auth->mailRegister)) {
+							$data['password'] = $v['password'];
+							Users::mailRegister($data);
+						}
 						#$this->setN(FrontEnd::getMsg(array('auth', 'regSuccess')));#$this->setContent('');
 						$this->view->notifymsg[] = FrontEnd::getMsg(array('auth', 'regSuccess'));
 						#d($this->view->notifymsg);
