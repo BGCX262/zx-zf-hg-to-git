@@ -560,15 +560,40 @@ class Zx_FrontEnd extends Zx_Site
 			{
 				$target = $fo . '/' . basename($dst);
 				l($target, __METHOD__ . ' target');
-				$upload->addFilter('Rename', array('target' => $target, 'overwrite' => true));
-				$res = $upload->receive($file);
 
 				// backup original file!
-				if ($res && !empty($conf['backup'])) {
-					$original = $fo . '/0riginals/' . $info['name'];
-					l($original, __METHOD__ . ' original (backup)');
-					$res = copy($target, $original);
+				if (!empty($conf['backup'])) {
+					$backup = $fo . '/0riginals/';
+					if (!empty($conf['id'])) {
+						$backup .= $conf['id'] . '-' . $info['name'];
+					} else {
+						$backup .= $info['name'];
+					}
 				}
+
+				// no real upload!
+				if (!empty($conf['backup_only'])) {
+					l(__METHOD__ . ' backup_only!');
+
+					// make backup
+					if (!empty($conf['backup'])) {
+						$upload->addFilter('Rename', array('target' => $backup, 'overwrite' => true));
+						$res = $upload->receive($file);
+						l($res, __METHOD__ . ' backup upload res');
+					}
+
+				} else {
+					$upload->addFilter('Rename', array('target' => $target, 'overwrite' => true));
+					$res = $upload->receive($file);
+					l($res, __METHOD__ . ' upload res');
+
+					// backup original file!
+					if ($res && !empty($conf['backup'])) {
+						$res = copy($target, $backup);
+						l($res, __METHOD__ . ' original (backup) res');
+					}
+				}
+
 			} else {
 				$res = false;
 				$messages = $upload->getMessages();
@@ -583,7 +608,7 @@ class Zx_FrontEnd extends Zx_Site
  */
 
 		#$res = move_uploaded_file($src, $fo . '/' . basename($dst));#d($res);
-		$res = array('res' => $res, 'messages' => $messages);
+		$res = array('res' => $res, 'messages' => $messages, 'target' => $target, 'backup' => $backup);
 		l($res, __METHOD__ . ' res');
 		return $res;
 	}
