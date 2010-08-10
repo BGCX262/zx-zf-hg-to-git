@@ -19,6 +19,8 @@ return array(
     Zend_Validate_EmailAddress::QUOTED_STRING      => "Имя получателя электронной почты '%localPart%' некорректное",
     Zend_Validate_EmailAddress::INVALID_LOCAL_PART => "Имя '%localPart%' некорректное для адреса электронной почты '%value%'",
     Zend_Validate_EmailAddress::LENGTH_EXCEEDED    => "'%value%' - слишком длинное название адреса электронной почты",
+	Zend_Validate_File_Extension::FALSE_EXTENSION => "Файл '%value%' содержит неверное расширение",
+    Zend_Validate_File_Extension::NOT_FOUND => "Файл '%value%' не найден",
 	Zend_Validate_File_Size::TOO_BIG   => "Максимально допустимый размер файла '%value%' равен '%max%', но Вы пытаетесь загрузить '%size%'",
     Zend_Validate_File_Size::TOO_SMALL => "Минимально допустимый размер файла '%value%' равен '%min%', но Вы пытаетесь загрузить  '%size%'",
     Zend_Validate_File_Size::NOT_FOUND => "Файл '%value%' не найден",
@@ -26,6 +28,7 @@ return array(
 	Zend_Validate_StringLength::TOO_SHORT => 'минимальная длина поля равна %min% символам',
 	Zend_Validate_StringLength::TOO_LONG => 'максимальная длина поля равна %max% символам',
 	Zend_Validate_Regex::NOT_MATCH => ",'%value%' - значение поля не соответствует его шаблону",# 'a-zA-Z-_/'
+
 
 	Zx_Validate_PasswordConfirmation::NOT_MATCH => 'Поля "Пароль" и "Подтверждение пароля" различаются!',
 );

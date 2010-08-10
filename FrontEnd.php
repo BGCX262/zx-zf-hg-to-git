@@ -530,6 +530,11 @@ class Zx_FrontEnd extends Zx_Site
 		#d(basename($dst));
 
 		$upload = new Zend_File_Transfer_Adapter_Http();
+
+		if (!empty($conf['extensions'])) {
+			$upload->addValidator('Extension', false, $conf['extensions']);
+		}
+
 		$upload->addValidator('Size', false, $conf['maxFilesize']);
 		#$upload->addValidator('MimeType', false, 'image/png');
 		#$upload->addFilter('Rename', array('target' => $fo . '/' . basename($dst), 'overwrite' => true));
