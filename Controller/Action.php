@@ -218,6 +218,9 @@ Array
 	*/
 	protected function setTitle($s = '', $fast = true)
 	{
+		$s = str_replace('&nbsp;', ' ', $s);
+		$s = strip_tags($s);
+
 		if ($fast) { // no complex calculations, just set it!
 			$this->view->pageTitle = $s;
 		} else {
