@@ -211,4 +211,34 @@ class Zx_Db_Table_Content extends Zx_Db_Table
 
 		return $res;
 	}
+
+	/**
+	* @param int $tag
+	* @return Zend_Db_Table_Rowset
+	*/
+	function getTaggedContent($tag, $conf = array())
+	{
+		$fields = array('id', 'title', 'announce');
+		if (!empty($this->_auxFields)) {
+			$fields = array_merge($fields, $this->_auxFields);
+ 		}
+
+		$_conf = $this->confSQL('dtf', array('fields' => $fields));
+		if (!empty($conf)) {
+			$conf = array_merge($conf, $_conf);
+		} else {
+			$conf = $_conf;
+		}
+		#d($conf);
+		$tags_values = new Zx_Db_Table_Tags_Values();
+		$where = $tags_values->getIdsWhere();
+		#d($where);
+
+		$select = $this->getSelect($where, $conf);
+		#d($select);
+		$rows = $this->paginator($select);
+		#d($rows);
+		return $rows;
+	}
+
 }
