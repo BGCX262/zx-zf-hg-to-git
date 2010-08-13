@@ -172,10 +172,10 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 	 * Get paginated comments for row
 	 * @param <type> $sid
 	 * @param <type> $item_id
-	 * @param <type> $full
+	 * @param array $conf
 	 * @return Zend_Paginator
 	 */
-	function getComments($sid, $item_id, $full = true)
+	function getComments($sid, $item_id, $conf = array())
 	{
 		if (is_string($sid)) {
 			$sid = $this->getServiceIdByName($sid);
@@ -188,8 +188,14 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 			->where('p.pid=?', $item_id)
 			->where('p.sid=?', $sid)
 			->where('p.flag_status=1')
-			->where('u.flag_status=1')
-			->order(array('p.dt', 'p.tm'));
+			->where('u.flag_status=1');
+
+		if (!isset($conf['asc']) || $conf['asc']) {
+			$select = $select->order(array('p.dt', 'p.tm'));
+		} else {
+			$select = $select->order(array('p.dt DESC', 'p.tm DESC'));
+		}
+
 /*
 		$select = $this->select()
 			->where('pid=?', $item_id)
@@ -197,8 +203,8 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 			->where('flag_status=1')
 			->order(array('dt DESC', 'tm DESC'));
 */
-		if (!$full) {
-			$select = $select->limit(3);
+		if (!empty($conf['limit'])) {
+			$select = $select->limit($conf['limit']);
 		}
 		#d($select);
 

@@ -198,10 +198,10 @@ class Zx_Db_Table_Row extends Zend_Db_Table_Row_Abstract
 	 * @param boolean $full
 	 * @return
 	 */
-	function getComments($full = true)
+	function getComments($conf = array())
 	{
 		$comment = new Zx_Db_Table_Comment();
-		$comments = $comment->getComments($this->getSID(), $this->id, $full);
+		$comments = $comment->getComments($this->getSID(), $this->id, $conf);
 		#$comments->setItemCountPerPage(20);
 		#$comments->setCurrentPageNumber(Zend_Registry::get('page'));
 		return $comments;
