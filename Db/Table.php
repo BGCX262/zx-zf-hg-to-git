@@ -1242,6 +1242,36 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	}
 
 	/**
+	 * Генерация служебной информации (URI, IPs, UA, TS)
+	 */
+	protected function _addTechInfo()
+	{
+		$data = array();
+
+		$r = Zend_Controller_Front::getInstance()->getRequest();
+
+		$data['uri'] = $r->getServer('REQUEST_URI');
+
+		$data['ip'] = new Zend_Db_Expr("INET_ATON('" . $r->getServer('REMOTE_ADDR') . "')");
+
+		$ip2 = $r->getServer('HTTP_X_FORWARDED_FOR');
+		if (!empty($ip2)) {
+			if (substr_count($ip2, '.') >= 4) { //check for double IP
+				$a = explode(',', $ip2);
+				$data['ip2'] = new Zend_Db_Expr("INET_ATON('" . $a[0] . "')");
+			} else {
+				$data['ip2'] = new Zend_Db_Expr("INET_ATON('" . $ip2 . "')");
+			}
+		}
+
+		$data['ua'] = $r->getServer('HTTP_USER_AGENT');
+		$data['ts'] = new Zend_Db_Expr('NOW()');
+
+		return $data;
+	}
+
+
+	/**
 	 * Set notification via Flash Messanger
 	 * @deprecated
 	 * @see FrontEnd::setN
