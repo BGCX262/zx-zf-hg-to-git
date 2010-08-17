@@ -52,6 +52,8 @@ class Zx_Db_Table_Rowset_Comment extends Zx_Db_Table_Rowset
 
 class Zx_Db_Table_Comment extends Zx_Db_Table
 {
+	const EDIT_TIMELIMIT = 600; // in seconds
+
 	protected $_prefix = 'comment';
 
     protected $_name = 'comments';
