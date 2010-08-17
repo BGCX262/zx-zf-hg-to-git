@@ -186,10 +186,16 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 		$select = $this->select()
 			->setIntegrityCheck(false)
 			->from(array('p' => $this->_name))
-			->join(array('u' => 'users'), 'u.id = p.user_id', array('name', 'surname', 'avatar'))
-			->where('p.pid=?', $item_id)
-			->where('p.sid=?', $sid)
-			->where('p.flag_status=1')
+			->join(array('u' => 'users'), 'u.id = p.user_id', array('name', 'surname', 'avatar'));
+
+		if (!empty($conf['where'])) {
+			$select = $select->where($conf['where']);
+		} else {
+			$select = $select->where('p.pid=?', $item_id)
+				->where('p.sid=?', $sid);
+		}
+		
+		$select = $select->where('p.flag_status=1')
 			->where('u.flag_status=1');
 
 		if (!isset($conf['asc']) || $conf['asc']) {
@@ -198,13 +204,6 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 			$select = $select->order(array('p.dt DESC', 'p.tm DESC'));
 		}
 
-/*
-		$select = $this->select()
-			->where('pid=?', $item_id)
-			->where('sid=?', $sid)
-			->where('flag_status=1')
-			->order(array('dt DESC', 'tm DESC'));
-*/
 		if (!empty($conf['limit'])) {
 			$select = $select->limit($conf['limit']);
 		}
