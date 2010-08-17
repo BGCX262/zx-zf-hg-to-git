@@ -29,7 +29,10 @@ class Zx_View_Helper_Truncate extends Zend_View_Helper_Abstract
 			for ($i = 0; $i < $count; $i++)
 			{
 				$truncated .= $words[$i] . ' ';
-				if ($length == $i) {break;}
+				if ($length == $i) {
+					$truncated .= $postfix;
+					break;
+				}
 			}
 		}
         return $truncated;
