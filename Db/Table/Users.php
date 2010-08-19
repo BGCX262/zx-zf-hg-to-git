@@ -10,9 +10,10 @@ class Zx_Db_Table_Row_Users extends Zx_Db_Table_Row
 	/**
 	 * Surname + name
 	 */
-	function sname($br = false)
+	function sname($br = false, $nbsp = false)
 	{
-		return $this->name . ($br ? '<br/>' : '&nbsp;') . $this->surname;
+		$s = $nbsp ? '&nbsp;' : ' ';
+		return $this->name . ($br ? '<br/>' : $s) . $this->surname;
     }
 
 }
