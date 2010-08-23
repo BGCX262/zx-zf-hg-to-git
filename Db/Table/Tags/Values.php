@@ -17,7 +17,7 @@ class Zx_Db_Table_Tags_Values extends Zx_Db_Table#Zend_Db_Table_Abstract
 			->from($this->_name, array('pid'));
 
 		if (!empty($conf['where'])) {
-			$select = $select->where($where);
+			$select = $select->where($conf['where']);
 		} else {
 			$select = $select->where('flag_type=1');
 		}

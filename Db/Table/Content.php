@@ -231,15 +231,13 @@ class Zx_Db_Table_Content extends Zx_Db_Table
 		} else {
 			$conf = $_conf;
 		}
-		#d($conf);
 		$tags_values = new Zx_Db_Table_Tags_Values();
-		$where = $tags_values->getIdsWhere();
-		#d($where);
+		$where = $tags_values->getIdsWhere(array('where' => 'tid= ' . $tag . ' AND flag_type=1'));
+
+		$conf['order'] = array('flag_hot DESC', 'dt DESC', 'dt DESC', 'tm DESC');
 
 		$select = $this->getSelect($where, $conf);
-		#d($select);
 		$rows = $this->paginator($select);
-		#d($rows);
 		return $rows;
 	}
 
