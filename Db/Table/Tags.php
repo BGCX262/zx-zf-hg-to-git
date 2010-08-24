@@ -33,7 +33,7 @@ class Zx_Db_Table_Tags extends Zx_Db_Table#Zend_Db_Table_Abstract
 	*/
 	function getTags($row, $conf)
 	{
-		$type = !empty($conf['type']) ? $conf['type'] : 1;
+		$type = !empty($conf['type']) ? $conf['type'] : 0;
 
 		$select = $this->select()
 			->setIntegrityCheck(false)

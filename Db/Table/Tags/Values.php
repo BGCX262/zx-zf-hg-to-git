@@ -11,7 +11,10 @@ class Zx_Db_Table_Tags_Values extends Zx_Db_Table#Zend_Db_Table_Abstract
 	/**
 	 *
 	 */
-	function getIdsWhere($conf = array()) {
+	function getIdsWhere($conf = array())
+	{
+
+		$type = !empty($conf['type']) ? $conf['type'] : 0;
 
 		$select = $this->select()
 			->from($this->_name, array('pid'));
@@ -19,7 +22,7 @@ class Zx_Db_Table_Tags_Values extends Zx_Db_Table#Zend_Db_Table_Abstract
 		if (!empty($conf['where'])) {
 			$select = $select->where($conf['where']);
 		} else {
-			$select = $select->where('flag_type=1');
+			$select = $select->where('flag_type=' . $type);
 		}
 
 		$select = $select->group('pid');
