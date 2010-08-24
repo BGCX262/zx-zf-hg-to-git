@@ -1213,7 +1213,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 
 		l($res, __METHOD__ . ' RES');
 
-		return $res;
+		return $row;
 	}
 
 
