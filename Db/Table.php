@@ -1190,8 +1190,10 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			{
 				$resu = $row->upload();#d($res);
 
-				if (!$resu)
+				if ($resu)
 				{
+					Zend_Registry::set('uploaded', $resu);
+				} else {
 					$upload_critical = isset($conf['upload_critical']) ? $conf['upload_critical'] : false;
 
 					// todo: hide broken record!
