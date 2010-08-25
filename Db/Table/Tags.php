@@ -39,15 +39,19 @@ class Zx_Db_Table_Tags extends Zx_Db_Table#Zend_Db_Table_Abstract
 			->setIntegrityCheck(false)
 			->from(array('p' => 'tags_values'), array('tid'))
 			->join(array('c' => $this->_name), 'c.id = p.tid', array('title'))
-			->where('p.pid = ?', $row->id)
-			->where('p.flag_type = ?', $type);
+			->where('p.pid = ?', $row->id);
+
+		if (is_array($type)) {
+			$select = $select->where('p.flag_type IN (' . implode(', ', $type) . ')');
+		} else {
+			$select = $select->where('p.flag_type = ?', $type);
+		}
 
 		if (!empty($conf['where'])) {
 			$select = $select->where($where);
 		}
 
 		#$select = $select->order('c.flag_order');
-
 		$res = $this->fetchAll($select); //Zend_Db_Table_Rowset
 
 		if (!empty($conf['array'])) {

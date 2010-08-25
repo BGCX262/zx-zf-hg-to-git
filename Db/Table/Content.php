@@ -234,7 +234,7 @@ class Zx_Db_Table_Content extends Zx_Db_Table
 		$tags_values = new Zx_Db_Table_Tags_Values();
 		$where = $tags_values->getIdsWhere(array('where' => 'tid= ' . $tag . ' AND flag_type=1'));
 
-		$conf['order'] = array('flag_hot DESC', 'dt DESC', 'dt DESC', 'tm DESC');
+		$conf['order'] = array('flag_hot DESC', 'dt DESC', 'tm DESC');
 
 		$select = $this->getSelect($where, $conf);
 		$rows = $this->paginator($select);
