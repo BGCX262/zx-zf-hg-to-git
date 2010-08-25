@@ -33,7 +33,7 @@ class Zx_Db_Table_Tags extends Zx_Db_Table#Zend_Db_Table_Abstract
 	*/
 	function getTags($row, $conf)
 	{
-		$type = !empty($conf['type']) ? $conf['type'] : 0;
+		$type = !empty($conf['type']) ? $conf['type'] : 1; // must be > 0!
 
 		$select = $this->select()
 			->setIntegrityCheck(false)
@@ -52,6 +52,7 @@ class Zx_Db_Table_Tags extends Zx_Db_Table#Zend_Db_Table_Abstract
 		}
 
 		#$select = $select->order('c.flag_order');
+		#d($select);
 		$res = $this->fetchAll($select); //Zend_Db_Table_Rowset
 
 		if (!empty($conf['array'])) {
