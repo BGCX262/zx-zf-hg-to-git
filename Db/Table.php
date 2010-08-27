@@ -283,6 +283,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		$row = $this->fetchRow($select)->toArray();
 
 		if ($isreg) {
+			if (!isset($reg[$what . 'Count'])) {$reg[$what . 'Count'] = array();}
 			$reg[$what . 'Count'][$id] =  $row['cnt'];
 		}
 
