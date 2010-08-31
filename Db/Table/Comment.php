@@ -120,15 +120,18 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 			->from($this->_name, 'COUNT(*) AS cnt')
 			->where('pid=?', $data['pid'])
 			->where('sid=?', $data['sid'])
-			#->where('user_id=?', $data['user_id'])
-			#->where('dt > DATE_SUB('.PHPNOW.', INTERVAL 1 DAY)')
+			->where('user_id=?', $data['user_id'])
+			->where("ts > DATE_SUB('" . dateMySQL() . "', INTERVAL 3 HOUR)")
 			->where('txt=?', $data['txt']);
+
+		l($select, __METHOD__);
 
 		$row = $this->fetchRow($select);
 
 		if ($row->cnt)
 		{
-			l('user: ' . $data['user_id'] . ', text: len=' . strlen($data['txt']) . ', md5=' . md5($data['txt']) , 'USER_COMMENT_FLOOD');
+			l('user: ' . $data['user_id'] . ', text: len=' . strlen($data['txt']) . ', md5=' . md5($data['txt']) , 'INVALID_COMMENT::FLOOD');
+			Zend_Registry::set('comment_error', FrontEnd::getMsg(array('comments', 'flood')));
 		}
 
 		return $row->cnt;
@@ -288,7 +291,8 @@ class Zx_Db_Table_Comment extends Zx_Db_Table
 
 			$res = $this->createComment($data);
 		} else {
-			l($formData, __METHOD__ . ': $formData invalid!', Zend_Log::DEBUG);
+			l($formData, __METHOD__ . ': INVALID_COMMENT::formData', Zend_Log::DEBUG);
+			Zend_Registry::set('comment_error', FrontEnd::getMsg(array('comments', 'fail')));
 		}
 
 		return $res;
