@@ -38,4 +38,14 @@ class Zx_Aux
 		}
 		return $password;
 	}
+
+	/**
+	 * Convert public resource path (physical to virtual)
+	 * @param <type> $path
+	 */
+	static function virtualPath($path)
+	{
+		$res = str_replace(PATH_PUB, '', $path);
+		return '/' . $res;
+	}
 }

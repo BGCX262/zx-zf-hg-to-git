@@ -1,5 +1,7 @@
 <?php
 define('PATH_ROOT', $root);
+define('PATH_PU', PATH_ROOT . 'public');
+define('PATH_PUB', PATH_PU . '/');
 
 //deprecated: 0ld core still used in CMS3
 if (!defined('PATH_CORE')) {define('PATH_CORE', PATH_ROOT . '../php.utf8/');}
