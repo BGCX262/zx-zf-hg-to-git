@@ -25,16 +25,21 @@ class Zx_Db_Table_Poll extends Zx_Db_Table
 
 	protected $_dependentTables = array('Zx_Db_Table_PollData', 'Zx_Db_Table_PollLog');
 
-/*
-	function init()
+	/**
+	* Fetch rows
+	* @return mixed
+	*/
+	function getItems()
 	{
-		parent::init();
+		$select = $this->select()
+			->where('flag_status = 1')
+			->order('dt DESC');
 
-		$this->_data = array_merge($this->_data, array(
-			'topicId' => 0,
-		));
+		$rows = $this->fetchAll($select);
+		return $rows;
 	}
-*/
+
+
 	/**
 	* Fetch row by id
 	* @return mixed
@@ -56,7 +61,6 @@ class Zx_Db_Table_Poll extends Zx_Db_Table
 		#$log = $row->findDependentRowset('Zx_Db_Table_PollLog', 'Poll');
 		return array('poll' => $row, 'data' => $data);#, 'log' => $log
 	}
-
 
 	/**
 	*/
