@@ -208,6 +208,7 @@ $config_general = array (
 	'routes' => true,
 
 	// Настройки соединения с БД
+/*
     'db' => array (
 		'adapter'   => 'MYSQLI',//PDO_MYSQL
 		'params'    => array(
@@ -215,7 +216,7 @@ $config_general = array (
 			'profiler'      => false,
 		),
 	),
-
+*/
     // Настройки URL адресов
     'url'   => array (
          // Базовый URL
