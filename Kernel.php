@@ -184,6 +184,15 @@ class Zx_Kernel
 
 		// Задание адаптера по умолчанию для наследников класса Zend_Db_Table_Abstract
 		Zend_Db_Table_Abstract::setDefaultAdapter($db);
+		
+		$cacheDir = LOCATION == 'stable' ? sys_get_temp_dir() : sys_get_temp_dir();
+		$frontendOptions = array('automatic_serialization' => true);
+		$backendOptions  = array(
+			'cache_dir' => $cacheDir,
+			'file_name_prefix' => !empty($conf->site->code) ? $conf->site->code : str_replace('.', '', $conf->site->url),
+		);
+		$cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+		Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
 
 		// Занесение объекта соединения c БД в реестр
 		Zend_Registry::set('db', $db);
