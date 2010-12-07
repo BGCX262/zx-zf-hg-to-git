@@ -25,7 +25,8 @@ class Zx_Controller_Plugin_Debug extends Zend_Controller_Plugin_Abstract
 	
 		if (!empty($conf->debug->on))
 		{
-			$db = Zend_Registry::get('db');
+			$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+			#$db = Zend_Registry::get('db');
 
 			$profiler = $db->getProfiler();
 			

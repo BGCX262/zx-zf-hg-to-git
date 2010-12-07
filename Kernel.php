@@ -194,8 +194,12 @@ class Zx_Kernel
 		$cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
 		Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
 
-		// Занесение объекта соединения c БД в реестр
-		Zend_Registry::set('db', $db);
+		/**
+		 * Занесение объекта соединения c БД в реестр
+		 * @deprecated
+		 * @see Zend_Db_Table_Abstract::setDefaultAdapter($db);
+		 */
+		#Zend_Registry::set('db', $db);
 
 		#l('DBCONN END');
 	 }
@@ -212,7 +216,8 @@ class Zx_Kernel
 		$conf = Zend_Registry::get('conf');
 		if (empty($conf->plugin_debugbar)) {return false;}
 
-		$db = Zend_Registry::get('db'); // Zend_Db_Adapter_Mysqli Object || Zend_Db_Adapter_Pdo_Mysql Object
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+		#$db = Zend_Registry::get('db'); // Zend_Db_Adapter_Mysqli Object || Zend_Db_Adapter_Pdo_Mysql Object
 
 		// Scienta ZF Debug Bar deprecated since 5/23/2009
 		if (!empty($conf->deprecated->debugbar))

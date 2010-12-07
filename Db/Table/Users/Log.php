@@ -28,6 +28,8 @@ class Zx_Db_Table_Users_Log extends Zx_Db_Table
 		}
 		$identity = $auth->getIdentity();
 
+		if (empty($identity->id)) {return false;}
+		
 		$data['user_id'] = $identity->id;
 
 		$r = Zend_Controller_Front::getInstance()->getRequest();

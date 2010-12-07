@@ -12,8 +12,9 @@ class Zx_View_Helper_DebugDump extends Zend_View_Helper_Abstract
 		
 		$conf = Zend_Registry::get('conf');
 		if (empty($conf->debug->on)) {return $content;}
-		
-		$db = Zend_Registry::get('db');
+
+		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
+		#$db = Zend_Registry::get('db');
 
 		$profiler = $db->getProfiler();
 		
