@@ -53,6 +53,8 @@ class Zx_View_Helper_PageHeadScript extends Zend_View_Helper_Abstract
 							if ($v[0]=='?')
 							{
 								$this->view->headScript()->appendFile('/scripts/' . $v . '.js?v=' . date('dmYH'));
+							} elseif ($v[0]=='!') {
+								$this->view->headScript()->appendFile('/scripts/' . substr($v, 1)); // as is!
 							} elseif (strpos($v, '.js') === false) {
 								$this->view->headScript()->appendFile('/scripts/' . $v . '.js');
 							} else {
