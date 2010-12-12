@@ -644,8 +644,10 @@ Array
 
 
 	/**
-	 *
+	 * @deprecated
+	 * @see Zx_View_Helper_AddPageResource
 	 * @param array $a
+	 * @param string $type
 	 */
 	function addPageResource($a, $type)
 	{
