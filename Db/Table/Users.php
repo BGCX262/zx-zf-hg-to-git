@@ -78,5 +78,18 @@ class Zx_Db_Table_Users extends Zx_Db_Table
 
 		return true;
 	}
+	
+	/**
+	 * If user_id is current user id
+	 * @param integer $id 
+	 */
+	static function itsMe($id)
+	{
+		$auth = Zend_Auth::getInstance();
+		$identity = $auth->getIdentity();
+		
+		return ($identity && $identity->id == $id);
+	}
+	
 
 }

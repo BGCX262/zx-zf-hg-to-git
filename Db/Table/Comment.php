@@ -11,6 +11,24 @@ class Zx_Db_Table_Row_Comment extends Zx_Db_Table_Row
 		return $this->getTable()->getServiceById($this->service_id);
 	}
 
+	function isEditable()
+	{
+		$date = new Zend_Date($this->dt . ' ' . $this->tm);#d($date->getTimestamp());
+		
+		$diff = time() - $date->getTimestamp();
+		return $diff <= Zx_Db_Table_Comment::EDIT_TIMELIMIT;
+
+		$res = $date->compare(Zx_Db_Table_Comment::EDIT_TIMELIMIT, Zend_Date::SECOND);
+		d($res);
+		
+		// 0 = equal, 1 = later, -1 = earlier
+		if ($res > -1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	function countComments($sid, $where = null)
 	{
 /*
