@@ -78,6 +78,23 @@ class Zx_Db_Table_Users extends Zx_Db_Table
 
 		return true;
 	}
+
+	/**
+	 * User is authorized
+	 * @return boolean
+	 */
+	static function imOk()
+	{
+		$auth = Zend_Auth::getInstance();
+
+        if ($auth->hasIdentity())
+		{
+			$identity = $auth->getIdentity();
+			return ($identity && $identity->id);
+		} else {
+			return false;
+		}
+	}
 	
 	/**
 	 * If user_id is current user id

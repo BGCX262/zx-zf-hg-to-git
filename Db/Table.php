@@ -412,6 +412,18 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		return $select;
 	}
 
+	
+	/**
+	* getRow() wrapper
+	* @return Zx_Db_Table_ContentRow
+	*/
+	function getItem($id, $conf = false)
+	{
+		$where = "id = '" . $id . "'";
+		$row = $this->getRow($where, $conf);
+		if (!$row) {throw new Zend_Controller_Action_Exception('Item in table ' . $this->_name . ' (' . $where . ') not found', 404);}
+		return $row;
+	}
 
 	/**
 	* Получить 1 запись контента
