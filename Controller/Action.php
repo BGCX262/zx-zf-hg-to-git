@@ -119,6 +119,7 @@ class Zx_Controller_Action extends Zend_Controller_Action
 */
 		$this->view->baseUrl = $this->getRequest()->getBaseUrl();
 		$this->view->requestUri = $this->getRequest()->getRequestUri();
+		#$this->view->refererUri = $this->getRequest()->getServer('HTTP_REFERER');#getHeader('REFERER')
 
 		// base current controller URI
 		$this->cURI = '/' . $this->p['controller'] . '/';
