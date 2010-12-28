@@ -39,12 +39,20 @@ class Zx_Db_Table_Tree extends Zx_Db_Table
 	* Получить всё дерево
 	* @return array
 	*/
-	function getTree()
+	function getTree($order = false)
 	{
+		if ($order) {
+			$fields = array('flag_order', 'title', 'code', 'announce', 'txt');
+		} else {
+			$fields = array('title', 'code', 'announce', 'txt');
+		}
+		
 		$select = $this->getAdapter()->select()
 		->from(array('p' => $this->_name), array('id', 'parent_id'))
-		->join(array('c' => $this->_dependentTables[0]), 'c.node_id = p.id', array('title', 'code', 'announce', 'txt'))
+		->join(array('c' => $this->_dependentTables[0]), 'c.node_id = p.id', $fields)
 		->where('c.flag_status = 1 AND p.parent_id IS NOT NULL');
+		
+		if ($order) {$select = $select->order('c.flag_order');}
 
  		$res = $this->getAdapter()->fetchAll($select);
 
@@ -53,6 +61,7 @@ class Zx_Db_Table_Tree extends Zx_Db_Table
 			$this->treeArray[$v->id] = $v;
 			#$aa[$v->parent_id][$v->id] = $v;
 		}
+		#d($this->treeArray);
 		return $this->treeArray;
 	}
 	
