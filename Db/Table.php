@@ -35,7 +35,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	protected $debug = false;
 
 	protected $_data = array(); // get / set array
-	
+
 	protected $imgs = array(
 		'folder' => '',
 		'folderFiles' => 0, // max files (files IDs exactly) per folder
@@ -246,7 +246,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		}
 		return $conf;
 	}
-	
+
 	/**
 	 * @param string $what
 	 * @param integer $id
@@ -256,11 +256,11 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	function getCountBy($what, $id, $isreg = true)
 	{
 		if (is_array($what)) {$isreg = false;}
-				
+
 		if ($isreg)
 		{
 			$reg = Zend_Registry::getInstance();
-	
+
 			if (isset($reg[$what . 'Count']) && isset($reg[$what . 'Count'][$id]) ) { // cache in registry (or better cache in SQL?)
 				return $reg[$what . 'Count'][$id];
 			}
@@ -272,14 +272,14 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		if (!$this->_ignoreStatus) {
 			$select = $select->where('flag_status=1');
 		}
-			
+
 		if (is_array($what)) {
 			foreach ($what as $k => $v) {
 				$select = $select->where($v . '_id=?', $id[$k]);
 			}
 		} else {
 			$select = $select->where($what . '_id=?', $id);
-		}				
+		}
 		$row = $this->fetchRow($select)->toArray();
 
 		if ($isreg) {
@@ -316,7 +316,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	/**
 	* WHERE with additional conditions (eg. RPN closed content)
 	* @param string $condition
-	* @param boolean $first - place condition first 
+	* @param boolean $first - place condition first
 	* @return string
 	*/
 	function getWhere($condition = null, $first = true)
@@ -412,7 +412,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		return $select;
 	}
 
-	
+
 	/**
 	* getRow() wrapper
 	* @return Zx_Db_Table_ContentRow
@@ -498,7 +498,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		if ( $this->isReturnPaginator ) {return $this->getPaginator();}
 
 		if (!count($rows)) {return false;}
-		
+
 		if (!empty($conf['array']))
 		{ // returns all data as an array (DEPRECATED SINCE 4/28/2009)
 			return $rows->toArray();
@@ -532,7 +532,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			$conf = $where;
 			$where = '';
 		}
-		
+
 		$NLS = $this->NLS;
 		if ($NLS && !empty($conf['skipNLS'])) {$NLS = false;}
 		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($NLS, 1) . "</textarea><br>";die;
@@ -643,9 +643,9 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			if ($conf['order'] === true) {
 				$select = $select->order('flag_order');
 			} else {
-				$select = $select->order($conf['order']);	
+				$select = $select->order($conf['order']);
 			}
-			
+
 		}
 
 		// LIMIT
@@ -845,7 +845,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		{
 			$name = get_class($this);
 		}
-		
+
 		$name .= 'Rows';
 		#d($name);
 
@@ -861,7 +861,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 				}
 			}
 		}
-		
+
 		// TODO: fetch row by id and class!!!
 		return false;
 	}
@@ -885,7 +885,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		} else {
 			$select = $select->where('id=?', $id);
 		}
-			
+
 		$res = $this->fetchRow($select);
 		return $res;
 	}
@@ -916,7 +916,9 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			return $this->getTubeFilename($conf['tube_id'], $conf['tube_uid'], 'image');
 	  	}
 
-		$fn = $this->getImage($id);#d($fn);
+        $conf['full'] = false;
+
+		$fn = $this->getImage($id, $conf);#d($fn);
 
 		$info = isset($conf['info']) ? $conf['info'] : false;
 		$default = isset($conf['default']) ? $conf['default'] : false;
@@ -1054,8 +1056,8 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 		$query = "INSERT INTO " . $this->quoteIdentifier($tableName) . $fieldString . " " . $select;
 		$this->_db->query($query);
 	}
-	
-	
+
+
 	/**
 	* Fetch row by id
 	* @return mixed
