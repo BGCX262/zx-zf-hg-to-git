@@ -29,7 +29,7 @@ class Zx_FrontEnd extends Zx_Site
 	public static function getPathParts($request)
 	{
 		$pathParts = $request->getParams();
-		l($pathParts, __METHOD__ . ' $request->getParams()');
+		l($pathParts, __METHOD__ . ' $request->getParams()', Zend_Log::DEBUG);
 
 		$pathParts['host'] = (!empty($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']) . "/"; // SERVER_NAME?
 		$pathParts['module'] = $request->getModuleName();
@@ -512,9 +512,9 @@ class Zx_FrontEnd extends Zx_Site
 
 		#d($dst);
 		$fo = dirname($dst);
-		
+
 		$pos = strpos($fo, PATH_PUB);#d($pos);
-		
+
 		if ($pos === false) {
 			$fo = PATH_PUB . $fo;
 			$fo = str_replace('//', '/', $fo);#d($fo);
