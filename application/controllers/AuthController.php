@@ -10,7 +10,7 @@ class AuthController extends MainController
    function init()
     {
 		parent::init();
-		
+
 		if (!$this->authAllowed) {
 			$this->_redirect('/');die;
 		}
@@ -217,7 +217,8 @@ class AuthController extends MainController
 
             if (!$error)
 			{
-				$db = Zend_Registry::get('db');// setup Zend_Auth adapter for a database table
+				#$db = Zend_Registry::get('db');// setup Zend_Auth adapter for a database table
+                $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 
 				#$authAdapter = new Zend_Auth_Adapter_DbTable($db, 'users', 'username', 'password', "MD5(?) AND flag_status = '1'");
  				$authAdapter = new Zend_Auth_Adapter_DbTable($db);

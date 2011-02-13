@@ -205,7 +205,7 @@ class Zx_Kernel
 		/**
 		 * Занесение объекта соединения c БД в реестр
 		 * @deprecated
-		 * @see Zend_Db_Table_Abstract::setDefaultAdapter($db);
+		 * @see Zend_Db_Table_Abstract::setDefaultAdapter($db); $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		 */
 		#Zend_Registry::set('db', $db);
 
