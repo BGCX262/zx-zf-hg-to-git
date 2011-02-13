@@ -50,9 +50,6 @@ class Zx_Kernel
 			// Занесение объекта конфигурации в реестр
 			Zend_Registry::set('conf', $conf);
 
-			// Подключение к базе данных
-			self::setDbAdapter();
-
 			// @todo обоснование (пока нужно только для перевода форм, более нигде)
 			try {
 				$locale = new Zend_Locale($conf->locale); // ru_RU.UTF8 -> ru
@@ -126,7 +123,11 @@ class Zx_Kernel
 			$frontController
 				->setBaseUrl($conf->url->base)
 				->throwexceptions(true);
-			
+
+            self::_initCache($conf);
+
+            self::_initDb();
+
 			self::_initFrontController($frontController, $conf);
 
 			self::_initZFDebug(); // ZFDebug_Controller_Plugin_Debug
@@ -151,15 +152,30 @@ class Zx_Kernel
 		}
     }
 
+
+    protected function _initCache($conf)
+    {
+        $cacheDir = LOCATION == 'stable' ? sys_get_temp_dir() : sys_get_temp_dir();
+        $frontendOptions = array('automatic_serialization' => true);
+        $backendOptions  = array(
+            'cache_dir' => $cacheDir,
+            'file_name_prefix' => !empty($conf->site->code) ? $conf->site->code : str_replace('.', '', $conf->site->url),
+        );
+        $cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+        Zend_Registry::set('cache', $cache);
+    }
+
+
 	/**
 	* Установка соединения с базой данных и помещение его объекта в реестр.
 	*/
-	 public static function setDbAdapter()
+	 protected function _initDb()
 	 {
 		 #l('DBCONN START');
 
 		// Получение объекта конфигурации из реестра
 		$conf = Zend_Registry::get('conf');
+        $cache = Zend_Registry::get('cache');
 
 		// Подключение к БД, так как Zend_Db "понимает" Zend_Config, нам достаточно передать специально сформированный объект конфигурации в метод factory
 		$db = Zend_Db::factory($conf->db); // Zend_Db_Adapter_*
@@ -184,14 +200,6 @@ class Zx_Kernel
 
 		// Задание адаптера по умолчанию для наследников класса Zend_Db_Table_Abstract
 		Zend_Db_Table_Abstract::setDefaultAdapter($db);
-		
-		$cacheDir = LOCATION == 'stable' ? sys_get_temp_dir() : sys_get_temp_dir();
-		$frontendOptions = array('automatic_serialization' => true);
-		$backendOptions  = array(
-			'cache_dir' => $cacheDir,
-			'file_name_prefix' => !empty($conf->site->code) ? $conf->site->code : str_replace('.', '', $conf->site->url),
-		);
-		$cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
 		Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
 
 		/**
@@ -204,11 +212,10 @@ class Zx_Kernel
 		#l('DBCONN END');
 	 }
 
-
 	/**
-	* ZFDebug_Controller_Plugin_Debug / Scienta_Controller_Plugin_Debug
+	* ZFDebug_Controller_Plugin_Debug
 	* http://code.google.com/p/zfdebug/
-	* @return mixed
+	* @return void
 	*/
     protected function _initZFDebug()
     {
@@ -219,38 +226,27 @@ class Zx_Kernel
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		#$db = Zend_Registry::get('db'); // Zend_Db_Adapter_Mysqli Object || Zend_Db_Adapter_Pdo_Mysql Object
 
-		// Scienta ZF Debug Bar deprecated since 5/23/2009
-		if (!empty($conf->deprecated->debugbar))
-		{
-			$options = array(
-				'database_adapter' => $db
-			);
-			if (LOCALHOST) {
-				$options['jquery_path'] = 'http://js/jquery/jquery.js';
-			}
-			$debug = new Scienta_Controller_Plugin_Debug($options);
+        $cache = Zend_Registry::get('cache');
 
-		// ZFDebug_Controller_Plugin_Debug
-		} else {
-			$options = array(
-				'plugins' => array(
-					'Variables',
-					'Registry',
-					'Database' => array('adapter' => array('standard' => $db)),
-					#'Database' => array('adapter' => $db),
-					'File' => array('basePath' => PATH_ROOT),
-					'Html',
-					'Memory',
-					'Time',
-					#'Cache' => array('backend' => $cache->getBackend()), //TODO
-					'Exception'
-			));
+        $options = array(
+            'plugins' => array(
+                'Variables',
+                'Registry',
+                'Database' => array('adapter' => array('standard' => $db)),
+                #'Database' => array('adapter' => $db),
+                'File' => array('basePath' => PATH_ROOT),
+                'Html',
+                'Memory',
+                'Time',
+                'Cache' => array('backend' => $cache->getBackend()),
+                'Exception'
+        ));
 
-			if (LOCALHOST) {
-				$options['jquery_path'] = 'http://js/jquery/jquery.js';
-			}
-			$debug = new ZFDebug_Controller_Plugin_Debug($options);
-		}
+        if (LOCALHOST)
+        {
+            $options['jquery_path'] = 'http://js.lh/jquery/jquery.js'; #'http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js',
+        }
+        $debug = new ZFDebug_Controller_Plugin_Debug($options);
 
 		if (is_array($conf->plugin_debugbar)) {
 			foreach ($conf->plugin_debugbar as $k => $v) {
@@ -260,14 +256,14 @@ class Zx_Kernel
 		$frontController = Zend_Controller_Front::getInstance();
 		$frontController->registerPlugin($debug);
 	}
-	
-	function _initFrontController(&$frontController, $conf)
+
+	protected function _initFrontController(&$frontController, $conf)
 	{
 		#$request = $frontController->getRequest();
 		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($request, 1) . "</textarea><br>";die;
-		
+
 		$frontController->setControllerDirectory($conf->path->controllers);
-		
+
 /* 		$a = explode('/', $_SERVER['REQUEST_URI']);
 		if (!empty($a[1])) {
 			// Ищем контроллер в пользовательской дериктории
@@ -277,12 +273,12 @@ class Zx_Kernel
 			}
 		}
  */		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($frontController->getControllerDirectory(), 1) . "</textarea><br>";die;
-		
+
 		//@TODO
 		#$frontController->addControllerDirectory($conf->path->controllersCommon);
 		#$res = $frontController->getControllerDirectory();
 		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($res, 1) . "</textarea><br>";die;
-		
+
 		//--< Plugins (since 11/21/2008)
 		if (!empty($conf->plugins))
 		{
@@ -293,7 +289,7 @@ class Zx_Kernel
 				$frontController->registerPlugin(new $plugin());
 			}
 		}
-/* 		
+/*
 	// Установка директории контроллеров, используемой по умолчанию
 	$front->setControllerDirectory('/controller_dir1/');
 
@@ -309,7 +305,7 @@ class Zx_Kernel
 		}
 	}
  */
-		
-		
+
+
 	}
 }

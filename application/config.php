@@ -320,16 +320,13 @@ if ( ZX_DEBUG )
 {
 	$config['debug']['on'] = true;
 
-	if (!empty($_GET['profiler']) && $_GET['profiler'] == 'fb') {
+	if (!empty($_GET['profiler']) && $_GET['profiler'] == 'fb')
+    {
 		$config['debug']['profile'] = 'FB'; // Profiling with Firebug http://framework.zend.com/manual/en/zend.db.profiler.html#zend.db.profiler.profilers.firebug
 		$config['db']['params']['profiler'] = true;
 	}
 
-	#if ( !empty($_GET['zdb']) )
-	#if (!isset($cachePage) || !$cachePage->getOption('caching'))
-	#{
-		$config['plugin_debugbar'] = true; // Scienta ZF Debug Bar (http://jokke.dk/software/scientadebugbar)
-	#}
+	$config['plugin_debugbar'] = true; // ZFDebug
 }
 
 /**
