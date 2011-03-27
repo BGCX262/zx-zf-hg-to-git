@@ -843,7 +843,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 	{
 		if ($name === null)
 		{
-			$name = get_class($this);
+			$name = get_class(self);
 		}
 
 		$name .= 'Rows';
@@ -1053,7 +1053,7 @@ class Zx_Db_Table extends Zend_Db_Table_Abstract
 			$fieldString = ' (' . implode(',', $fields) . ')';
 		}
 
-		$query = "INSERT INTO " . $this->quoteIdentifier($tableName) . $fieldString . " " . $select;
+		$query = "INSERT INTO " . $this->quoteIdentifier($this->info(Zend_Db_Table::NAME)) . $fieldString . " " . $select;
 		$this->_db->query($query);
 	}
 
