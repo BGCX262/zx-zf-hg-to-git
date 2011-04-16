@@ -63,13 +63,13 @@ class Zx_Controller_Action extends Zend_Controller_Action
 	* @var
 	*/
 	protected $NLSId = 1;
-	
+
 	protected $paginatorFile = 'partials/paginator.phtml';
-	
-	protected $authAllowed = false; // no FE-users 
+
+	protected $authAllowed = false; // no FE-users
 	protected $authRegistrationAllowed = false; // no FE-users registration (use BE!)
 	protected $authHTTPS = true; // via protected protocol
-	
+
 	#protected $reg; // Zend_Registry
 
 	protected $_flashMessenger = null;
@@ -206,7 +206,7 @@ Array
 		if ($fast) { // no complex calculations, just set it!
 			$this->view->mainHeader = $s;
 		} else {
-			$this->setVar('mainHeader', $s);	
+			$this->setVar('mainHeader', $s);
 		}
 	}
 
@@ -265,9 +265,9 @@ Array
         } else {
 			$this->loginActionDisplayForm = true;
 		}
-		
+
 		$auth = Zend_Auth::getInstance();
-        if ($auth->hasIdentity())
+    if ($auth->hasIdentity())
 		{
 			$this->view->identity = $auth->getIdentity();
 			#Zend_Registry::set('identity', $identity); // DRY! use $auth!
@@ -289,7 +289,7 @@ Array
 	{
 		l(__METHOD__. ' checkpoint', Zend_Log::DEBUG);
 		$this->view->pages = $this->conf->pages;// Главное навигационное меню
-		
+
 		if (!empty($this->conf->pages)) {
 			$this->view->aPages = $this->aPages = $this->conf->pages->toArray(); // pages array
 		}
@@ -509,7 +509,7 @@ Array
 		}
 		return $this->$model;
 	}
-	
+
 
 /**
 * DEPRECATED!
