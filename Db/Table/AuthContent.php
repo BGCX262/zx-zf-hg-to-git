@@ -16,7 +16,8 @@ class Zx_Db_Table_AuthContent extends Zx_Db_Table#Zend_Db_Table_Abstract
 	#protected $_dependentTables = array('Zx_Db_Table_Tags_Values');
 
 	protected $_roles = array(
-		0 => 'Все посетители',
+		-1 => 'Все посетители',
+		0 => 'Все пользователи сайта',
 		1 => 'Только участники',
 		2 => 'Только VIP',
 		3 => 'Только администрация',
@@ -38,9 +39,9 @@ class Zx_Db_Table_AuthContent extends Zx_Db_Table#Zend_Db_Table_Abstract
 	{
 		$pid = $row->id;
 		$role = $row->auth;
-
-		if (!$role) {return true;}
-		if ($role && !$identity) {return false;}
+		if ($role == -1) {return true;}
+		if ( ($role > -1) && !$identity) {return false;}
+		if ($identity->type_id == Users::_typeAdm) {return true;}
 
 		if ($role != 9) {
 			if ($role > $identity->type_id) {return false;} // превышение полномочий
