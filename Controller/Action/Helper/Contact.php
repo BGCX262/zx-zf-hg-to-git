@@ -14,10 +14,10 @@ class Zx_Controller_Action_Helper_Contact
 			if (!empty($config['options'])) {
 				$form = new Zx_Form_Contact($config['options']);
 			} else {
-				$form = new Zx_Form_Contact();	
+				$form = new Zx_Form_Contact();
 			}
 		}
-		
+
 		$conf = $controller->conf;
 
 		// post message
@@ -28,7 +28,7 @@ class Zx_Controller_Action_Helper_Contact
 			if ($form->isValid($formData))
 			{
 				$v = $form->getValues();
-				
+
 				if (!empty($config['options']['skip_person'])) {$v['person'] = 'Unknown person';}
 				if (!empty($config['options']['skip_email'])) {$v['email'] = 'Unknown E-mail';}
 				if (!empty($config['options']['skip_phone'])) {$v['phone'] = 'Unknown phone';}
@@ -60,14 +60,13 @@ class Zx_Controller_Action_Helper_Contact
 						}
 					// just one recipient
 					} else {
-						$mail->addTo($conf->site->admin->email, $conf->site->admin->title);	
+						$mail->addTo($conf->site->admin->email, $conf->site->admin->title);
 					}
-					
+
 					$mail->addCc($conf->support->email, $conf->support->title);
 					$mail->setSubject("Feedback from " . $conf->site->url);
 					if (LOCATION == 'stable') {
 						$res = $mail->send();
-						#return $res;
 					} else {
 						$res = true;
 					}
@@ -75,15 +74,14 @@ class Zx_Controller_Action_Helper_Contact
 					$controller->setVar('sent', $res);
 					if ($res) {
 						$controller->setVar('sentMsg', $controller->conf->msg->feedback->sent);
-						#$controller->setContent($controller->conf->msg->feedback->sent);
 					} else {
 						$controller->setVar('sentMsg', $controller->conf->msg->feedback->fail);
-						#$controller->setContent($controller->conf->msg->feedback->fail);
 					}
 
 					// save to DB
 					$feedback = new Zx_Db_Table_Feedback();
 					$row = $feedback->createRow();
+					$row->res = $res;
 					$row->person = $v['person'];
 					$row->phone = $v['phone'];
 					$row->email = $v['email'];
@@ -105,7 +103,7 @@ class Zx_Controller_Action_Helper_Contact
 		}
 
 		$controller->setVar('form', $form);
-		
+
 		// moved to ContactController 4/8/2009!
 		#if (!empty($config['text'])) {
 		#	$controller->textRow('contact');

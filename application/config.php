@@ -277,7 +277,7 @@ $config_general = array (
 	),
 */
     'support' => array (
-		'email' => 'avd@informproject.info',//@todo: 911@informproject.info
+		'email' => 'team@informproject.info',
 		'title' => 'Support informproject.info'
      ),
 
