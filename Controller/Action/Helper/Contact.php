@@ -66,7 +66,8 @@ class Zx_Controller_Action_Helper_Contact
 					$mail->addCc($conf->support->email, $conf->support->title);
 					$mail->setSubject("Feedback from " . $conf->site->url);
 					if (LOCATION == 'stable') {
-						$res = $mail->send();
+						$mail->send();
+						$res = true; // TODO!
 					} else {
 						$res = true;
 					}
