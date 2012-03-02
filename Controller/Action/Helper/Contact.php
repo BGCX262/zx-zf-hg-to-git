@@ -95,7 +95,13 @@ class Zx_Controller_Action_Helper_Contact
 					}
 					if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {$row->ip2 = ip2long($_SERVER['HTTP_X_FORWARDED_FOR']);}
 
-					$res = $row->save();
+					$row->save();
+
+					// log
+					$fn = PATH_ROOT . 'logs/' . $conf->site->url . '-mail.log';
+					$writer = new Zend_Log_Writer_Stream($fn);
+					$logger = new Zend_Log($writer);
+					l(print_r($row->toArray(), 1), $row->email, Zend_Log::INFO, $logger);
 				}
 			}
 
