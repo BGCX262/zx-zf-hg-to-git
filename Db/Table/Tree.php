@@ -15,7 +15,7 @@ class Zx_Db_Table_Tree extends Zx_Db_Table
 	* @param integer $id
 	* @return array
 	*/
-	function getById($id)
+	function getById($id, $field = '')
 	{
 		$select = $this->select()
 		->setIntegrityCheck(false)

@@ -2,20 +2,19 @@
 #require 'Zend/Loader.php';
 #require_once 'Zend/Loader/Autoloader.php'; // 1.8
 /**
-* Bootstrap for ZF (deprecated 1.7-old-school)
-* Главный системный класс, используется для настройки и запуска приложения
-* @version 8/15/2009
-* @todo deprecated!
-*/
+ * Bootstrap for ZF (deprecated 1.7-old-school)
+ * Главный системный класс, используется для настройки и запуска приложения
+ * @version 8/15/2009
+ * @todo deprecated!
+ */
 class Zx_Kernel
 {
 	/**
-	* Запуск приложения
-	*/
+	 * Запуск приложения
+	 */
 	public static function run($config)
 	{
-		try
-		{
+		try {
 			##Zend_Loader::registerAutoload(); // pre-1.8
 			#$autoloader = Zend_Loader_Autoloader::getInstance(); // 1.8+
 			#$autoloader->setFallbackAutoloader(true);
@@ -24,27 +23,27 @@ class Zx_Kernel
 			$conf = new Zend_Config($config);
 
 			//--< Zend_Log setup
-/*
-			if ( !Zend_Registry::isRegistered('logger') && !empty($conf->logger) )
-			{
-				$logger = new Zend_Log();
+			/*
+						if ( !Zend_Registry::isRegistered('logger') && !empty($conf->logger) )
+						{
+							$logger = new Zend_Log();
 
-				if ( !empty($conf->logger->writer) ) {
-					$logger->addWriter(new Zend_Log_Writer_Stream($conf->logger->writer, 'w')); // we care about log length :)
-				}
+							if ( !empty($conf->logger->writer) ) {
+								$logger->addWriter(new Zend_Log_Writer_Stream($conf->logger->writer, 'w')); // we care about log length :)
+							}
 
-				if ( !empty($conf->logger->firebug) ) {
-					$logger->addWriter(new Zend_Log_Writer_Firebug());
-				}
+							if ( !empty($conf->logger->firebug) ) {
+								$logger->addWriter(new Zend_Log_Writer_Firebug());
+							}
 
-				Zend_Registry::set('logger', $logger);
-				l($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'] . ' START');
+							Zend_Registry::set('logger', $logger);
+							l($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'] . ' START');
 
-				#$filter = new Zend_Log_Filter_Priority(Zend_Log::WARN);
-				#$writer->addFilter($filter);
-				#$logger = new Zend_Log($writer);
-			}
- */
+							#$filter = new Zend_Log_Filter_Priority(Zend_Log::WARN);
+							#$writer->addFilter($filter);
+							#$logger = new Zend_Log($writer);
+						}
+			 */
 			//-->
 
 			// Занесение объекта конфигурации в реестр
@@ -53,7 +52,8 @@ class Zx_Kernel
 			// @todo обоснование (пока нужно только для перевода форм, более нигде)
 			try {
 				$locale = new Zend_Locale($conf->locale); // ru_RU.UTF8 -> ru
-			} catch (Zend_Locale_Exception $e) {}
+			} catch (Zend_Locale_Exception $e) {
+			}
 			Zend_Locale::setDefault($locale->toString());
 			Zend_Registry::set('Zend_Locale', $locale);
 
@@ -71,7 +71,7 @@ class Zx_Kernel
 			$view = $layout->getView();
 
 			// since 4/28/2009
-			if ( !isset($conf->deprecated->noobjectkey) ) {
+			if (!isset($conf->deprecated->noobjectkey)) {
 				$view->partial()->setObjectKey('model');
 				$view->partialLoop()->setObjectKey('model');
 			}
@@ -87,7 +87,7 @@ class Zx_Kernel
 
 			// Сначала скрипт ищется в проекте, а уже потом - в общей либе
 			$view->addScriptPath($conf->path->viewsCommon . "scripts"); // 53.2.3. View Script Paths: http://framework.zend.com/manual/en/zend.view.controllers.html#zend.view.controllers.script-paths
-			$view->addScriptPath($conf->path->views . "scripts");//@todo!
+			$view->addScriptPath($conf->path->views . "scripts"); //@todo!
 			#$res = $view->getScriptPaths();
 			#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($res, 1) . "</textarea><br>";die;
 			#[0] => /mnt/win_d/srv.ntfs/sites/php/zf_ed/application/views/scripts/
@@ -112,7 +112,7 @@ class Zx_Kernel
 
 			//--< Подключение файла с правилами маршрутизации
 			$router = $frontController->getRouter();
-			if ( !isset($conf->deprecated->routes) ) {
+			if (!isset($conf->deprecated->routes)) {
 				$router->addConfig(new Zend_Config_Ini($conf->path->configs . 'routes.ini', 'default'), 'routes');
 			} else {
 				require $conf->path->settings . 'routes.php';
@@ -121,12 +121,12 @@ class Zx_Kernel
 			//-->
 
 			$frontController
-				->setBaseUrl($conf->url->base)
-				->throwexceptions(true);
+					->setBaseUrl($conf->url->base)
+					->throwexceptions(true);
 
-            self::_initCache($conf);
+			self::_initCache($conf);
 
-            self::_initDb();
+			self::_initDb();
 
 			self::_initFrontController($frontController, $conf);
 
@@ -136,13 +136,11 @@ class Zx_Kernel
 			#$frontController->registerPlugin(new Zx_Controller_Plugin_HttpConditional(), 101); //@todo TEST!!!
 			//-->
 
-           	// Запуск приложения, в качестве параметра передаем путь к папке с контроллерами
+			// Запуск приложения, в качестве параметра передаем путь к папке с контроллерами
 			l('RUN');
 			Zend_Controller_Front::run($frontController->getControllerDirectory());
 			l('FINISH');
-		}
-
-		// local or global handler
+		} // local or global handler
 		catch (Exception $e) {
 			if (!empty($config['handlers']['error'])) {
 				Error::catchException($e);
@@ -150,32 +148,30 @@ class Zx_Kernel
 				Zx_ErrorHandler::catchException($e);
 			}
 		}
-    }
+	}
 
-
-    protected function _initCache($conf)
-    {
-        $cacheDir = LOCATION == 'stable' ? sys_get_temp_dir() : sys_get_temp_dir();
-        $frontendOptions = array('automatic_serialization' => true);
-        $backendOptions  = array(
-            'cache_dir' => $cacheDir,
-            'file_name_prefix' => !empty($conf->site->code) ? $conf->site->code : str_replace('.', '', $conf->site->url),
-        );
-        $cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
-        Zend_Registry::set('cache', $cache);
-    }
-
+	protected static function _initCache($conf)
+	{
+		$cacheDir = LOCATION == 'stable' ? sys_get_temp_dir() : sys_get_temp_dir();
+		$frontendOptions = array('automatic_serialization' => true);
+		$backendOptions = array(
+			'cache_dir' => $cacheDir,
+			'file_name_prefix' => !empty($conf->site->code) ? $conf->site->code : str_replace('.', '', $conf->site->url),
+		);
+		$cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+		Zend_Registry::set('cache', $cache);
+	}
 
 	/**
-	* Установка соединения с базой данных и помещение его объекта в реестр.
-	*/
-	 protected function _initDb()
-	 {
-		 #l('DBCONN START');
+	 * Установка соединения с базой данных и помещение его объекта в реестр.
+	 */
+	protected static function _initDb()
+	{
+		#l('DBCONN START');
 
 		// Получение объекта конфигурации из реестра
 		$conf = Zend_Registry::get('conf');
-        $cache = Zend_Registry::get('cache');
+		$cache = Zend_Registry::get('cache');
 
 		// Подключение к БД, так как Zend_Db "понимает" Zend_Config, нам достаточно передать специально сформированный объект конфигурации в метод factory
 		$db = Zend_Db::factory($conf->db); // Zend_Db_Adapter_*
@@ -190,18 +186,16 @@ class Zx_Kernel
 		#$db->query('SET names UTF8'); // NB! use init-connect = "SET CHARACTER SET utf8"
 
 		//--< Profiling with Firebug http://framework.zend.com/manual/en/zend.db.profiler.html#zend.db.profiler.profilers.firebug
-		if ( !empty($conf->debug->profile) && ($conf->debug->profile == 'FB') )
-		{
+		if (!empty($conf->debug->profile) && ($conf->debug->profile == 'FB')) {
 			$profiler = new Zend_Db_Profiler_Firebug('SQL queries');
 			$profiler->setEnabled(true);
-			$db->setProfiler($profiler);// Attach the profiler to your db adapter
+			$db->setProfiler($profiler); // Attach the profiler to your db adapter
 		}
 		//-->
 
 		// Задание адаптера по умолчанию для наследников класса Zend_Db_Table_Abstract
 		Zend_Db_Table_Abstract::setDefaultAdapter($db);
 		Zend_Db_Table_Abstract::setDefaultMetadataCache($cache);
-
 		/**
 		 * Занесение объекта соединения c БД в реестр
 		 * @deprecated
@@ -210,43 +204,46 @@ class Zx_Kernel
 		#Zend_Registry::set('db', $db);
 
 		#l('DBCONN END');
-	 }
+	}
 
 	/**
-	* ZFDebug_Controller_Plugin_Debug
-	* http://code.google.com/p/zfdebug/
-	* @return void
-	*/
-    protected function _initZFDebug()
-    {
-		if ( empty($_GET['zdb']) ) {return false;}
+	 * ZFDebug_Controller_Plugin_Debug
+	 * http://code.google.com/p/zfdebug/
+	 * @return void
+	 */
+	protected static function _initZFDebug()
+	{
+		if (empty($_GET['zdb'])) {
+			return false;
+		}
 		$conf = Zend_Registry::get('conf');
-		if (empty($conf->plugin_debugbar)) {return false;}
+		if (empty($conf->plugin_debugbar)) {
+			return false;
+		}
 
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		#$db = Zend_Registry::get('db'); // Zend_Db_Adapter_Mysqli Object || Zend_Db_Adapter_Pdo_Mysql Object
 
-        $cache = Zend_Registry::get('cache');
+		$cache = Zend_Registry::get('cache');
 
-        $options = array(
-            'plugins' => array(
-                'Variables',
-                'Registry',
-                'Database' => array('adapter' => array('standard' => $db)),
-                #'Database' => array('adapter' => $db),
-                'File' => array('basePath' => PATH_ROOT),
-                'Html',
-                'Memory',
-                'Time',
-                'Cache' => array('backend' => $cache->getBackend()),
-                'Exception'
-        ));
+		$options = array(
+			'plugins' => array(
+				'Variables',
+				'Registry',
+				'Database' => array('adapter' => array('standard' => $db)),
+				#'Database' => array('adapter' => $db),
+				'File' => array('basePath' => PATH_ROOT),
+				'Html',
+				'Memory',
+				'Time',
+				'Cache' => array('backend' => $cache->getBackend()),
+				'Exception'
+			));
 
-        if (LOCALHOST)
-        {
-            $options['jquery_path'] = 'http://js.lh/jquery/jquery.js'; #'http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js',
-        }
-        $debug = new ZFDebug_Controller_Plugin_Debug($options);
+		if (LOCALHOST) {
+			$options['jquery_path'] = 'http://js.lh/jquery/jquery.js'; #'http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js',
+		}
+		$debug = new ZFDebug_Controller_Plugin_Debug($options);
 
 		if (is_array($conf->plugin_debugbar)) {
 			foreach ($conf->plugin_debugbar as $k => $v) {
@@ -257,22 +254,22 @@ class Zx_Kernel
 		$frontController->registerPlugin($debug);
 	}
 
-	protected function _initFrontController(&$frontController, $conf)
+	protected static function _initFrontController(&$frontController, $conf)
 	{
 		#$request = $frontController->getRequest();
 		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($request, 1) . "</textarea><br>";die;
 
 		$frontController->setControllerDirectory($conf->path->controllers);
 
-/* 		$a = explode('/', $_SERVER['REQUEST_URI']);
-		if (!empty($a[1])) {
-			// Ищем контроллер в пользовательской дериктории
-			if(!file_exists($conf->path->controllers . ucfirst($a[1]) . 'Controller.php'))
-			{
-				$frontController->setControllerDirectory($conf->path->controllersCommon);
-			}
-		}
- */		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($frontController->getControllerDirectory(), 1) . "</textarea><br>";die;
+		/* 		$a = explode('/', $_SERVER['REQUEST_URI']);
+				if (!empty($a[1])) {
+					// Ищем контроллер в пользовательской дериктории
+					if(!file_exists($conf->path->controllers . ucfirst($a[1]) . 'Controller.php'))
+					{
+						$frontController->setControllerDirectory($conf->path->controllersCommon);
+					}
+				}
+		 */ #echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($frontController->getControllerDirectory(), 1) . "</textarea><br>";die;
 
 		//@TODO
 		#$frontController->addControllerDirectory($conf->path->controllersCommon);
@@ -280,8 +277,7 @@ class Zx_Kernel
 		#echo "DEBUG:<br><textarea rows=10 cols=100>" . print_r($res, 1) . "</textarea><br>";die;
 
 		//--< Plugins (since 11/21/2008)
-		if (!empty($conf->plugins))
-		{
+		if (!empty($conf->plugins)) {
 			$plugins = $conf->plugins->toArray();
 
 			foreach ($plugins as $v) {
@@ -289,23 +285,21 @@ class Zx_Kernel
 				$frontController->registerPlugin(new $plugin());
 			}
 		}
-/*
-	// Установка директории контроллеров, используемой по умолчанию
-	$front->setControllerDirectory('/controller_dir1/');
+		/*
+			// Установка директории контроллеров, используемой по умолчанию
+			$front->setControllerDirectory('/controller_dir1/');
 
-	// Переопределяем директорию контроллеров, используемой по умолчанию
-	$controllerName = explode('/', $_SERVER['REQUEST_URI']);
+			// Переопределяем директорию контроллеров, используемой по умолчанию
+			$controllerName = explode('/', $_SERVER['REQUEST_URI']);
 
-	if(isset($controllerName[2]) && $controllerName[1] == 'admin')
-	{
-		// Ищем контроллер в пользовательской дериктории
-		if(file_exists('/controller_dir2/'.ucfirst($controllerName[2]).'Controller.php'))
-		{
-			$front->setControllerDirectory('/controller_dir2/');
-		}
-	}
- */
-
-
+			if(isset($controllerName[2]) && $controllerName[1] == 'admin')
+			{
+				// Ищем контроллер в пользовательской дериктории
+				if(file_exists('/controller_dir2/'.ucfirst($controllerName[2]).'Controller.php'))
+				{
+					$front->setControllerDirectory('/controller_dir2/');
+				}
+			}
+		 */
 	}
 }

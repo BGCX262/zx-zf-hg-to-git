@@ -117,7 +117,7 @@ class Zx_Db_Table_Content extends Zx_Db_Table
 	* getRow() wrapper
 	* @return Zx_Db_Table_ContentRow
 	*/
-	function getItem($id)
+	function getItem($id, $conf = false)
 	{
 		$conf = $this->isDates ? $this->confSQL('dtf') : '';
 		$where = "id = '" . $id . "'";
