@@ -44,7 +44,7 @@ class Zx_Db_Table_Poll extends Zx_Db_Table
 	* Fetch row by id
 	* @return mixed
 	*/
-	function getItem($id = 0)
+	function getItem($id, $conf = false)
 	{
 		if ($id) {
 			$row = $this->fetchById($id);
