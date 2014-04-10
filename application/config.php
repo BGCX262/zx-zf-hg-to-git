@@ -277,7 +277,7 @@ $config_general = array (
 	),
 */
     'support' => array (
-		'email' => 'team@informproject.info',
+		'email' => 'bermud@37.rospotrebnadzor.ru',
 		'title' => 'Support informproject.info'
      ),
 
